@@ -1,6 +1,10 @@
 {
   "name": "system-client",
-  "version": "1.0.0",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/system-admin-pro/system.git"
+  },
   "scripts": {
     "dev": "dojo build --mode dev --watch --serve",
     "build": "dojo build --mode dist",
@@ -11,9 +15,16 @@
     "test:all": "dojo build --mode unit && dojo build --mode functional && dojo test --all --config local"
   },
   "dependencies": {
+    "@types/bootstrap": "^4.3.1",
+    "@types/jquery": "^3.3.33",
     "@dojo/framework": "^6.0.4",
     "@dojo/widgets": "^6.2.0",
     "@dojo/themes": "^6.0.0",
+    "dojo-fontawesome": "^0.0.3-alpha.1",
+    "bootstrap-classes": "^0.0.3-alpha.3",
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.16.1",
     "tslib": "~1.11.1"
   },
   "devDependencies": {
@@ -22,5 +33,23 @@
     "@dojo/cli-test-intern": "^6.0.1",
     "@types/node": "~9.6.5",
     "typescript": "~3.4.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx,css}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": false,
+    "tabWidth": 4,
+    "useTabs": true,
+    "printWidth": 120,
+    "arrowParens": "always"
   }
 }
