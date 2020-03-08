@@ -58,7 +58,8 @@ export default factory(function Login({ properties, middleware: { icache, store,
                             <label for="loginName">用户名</label>
                             <input 
                                 type="input" 
-                                id="loginName" 
+                                id="loginName"
+                                autocomplete="username"
                                 focus={true} 
                                 classes={[c.form_control, loginNameValidity.valid? undefined : c.is_invalid]}
                                 oninput={(event: KeyboardEvent<HTMLInputElement>) => {
@@ -78,6 +79,7 @@ export default factory(function Login({ properties, middleware: { icache, store,
                             <input 
                                 type="password" 
                                 id="password" 
+                                autocomplete="current-password"
                                 classes={[c.form_control, passwordValidity.valid? undefined : c.is_invalid]} 
                                 oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
                                     const value = event.target.value;
@@ -93,7 +95,7 @@ export default factory(function Login({ properties, middleware: { icache, store,
                             {!passwordValidity.valid && <div classes={[c.invalid_tooltip]}>{passwordValidity.message}</div>}
                         </div>
 
-                        <button type="button" classes={[c.btn, c.btn_primary, c.btn_block]} onclick={() => {toLogin();}}>登 录</button>
+                        <button type="button" classes={[c.btn, c.btn_primary, c.btn_block, c.mt_5]} onclick={() => {toLogin();}}>登 录</button>
                     </form>
                 </div>
 
