@@ -4,8 +4,12 @@ import Outlet from '@dojo/framework/routing/Outlet';
 import dojo from '@dojo/themes/dojo';
 
 import Home from './pages/home';
-
+import Login from './pages/login';
+import Register from './pages/register';
+import * as icons from "./icons";
 import * as css from './App.m.css';
+
+icons.init();
 
 const factory = create({ theme });
 
@@ -16,7 +20,9 @@ export default factory(function App({ middleware: { theme } }) {
 	return (
 		<div classes={[css.root]}>
 			<div>
-				<Outlet key="home" id="home" renderer={() => <Home />} />
+				<Outlet id="login" renderer={() => <Login />} />
+				<Outlet id="register" renderer={() => <Register />} />
+				<Outlet id="home" renderer={() => <Home />} />
 			</div>
 		</div>
 	);

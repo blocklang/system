@@ -5,11 +5,12 @@ export default [
 		defaultRoute: true
 	},
 	{
-		path: 'about',
-		outlet: 'about'
+		path: 'login',
+		outlet: 'login'
+		
 	},
 	{
-		path: 'profile',
-		outlet: 'profile'
+		path: 'register',
+		outlet: 'register'
 	}
 ];
