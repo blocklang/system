@@ -13,7 +13,6 @@ export const registry = new Registry();
 const router = registerRouterInjector(config, registry, { HistoryManager: StateHistory });
 
 export default createStoreMiddleware<State>((store: Store) => {
-
     const session = global.sessionStorage.getItem("blocklang-session");
     if(session) {
         setSessionProcess(store)({session: JSON.parse(session)});

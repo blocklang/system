@@ -1,6 +1,6 @@
 import global from "@dojo/framework/shim/global";
 import { createProcess } from "@dojo/framework/stores/process";
-import {replace} from "@dojo/framework/stores/state/operations";
+import {replace, remove} from "@dojo/framework/stores/state/operations";
 import { commandFactory } from './utils';
 import * as request from './request';
 import { SetSessionPayload } from './interfaces';
@@ -10,29 +10,59 @@ const setSessionCommand = commandFactory<SetSessionPayload>(({ path, payload: { 
 });
 
 const loginCommand = commandFactory<{ username: string; password: string }>(async ({ path, payload: {username, password} }) => {
-    const response = await request.post("login", {username, password});
-	const user = await response.json();
+	const response = await request.post("users/login", {username, password});
+	const json = await response.json();
+	if (!response.ok) {
+		return [
+			replace(path("errors"), json.errors),
+			remove(path("session"))
+		];
+	}
 
-    global.sessionStorage.setItem("blocklang-session", JSON.stringify(user));
+    global.sessionStorage.setItem("blocklang-session", JSON.stringify(json.user));
 
 	return [
 		replace(path("routing", "outlet"), "home"),
-		replace(path("session"), user),
+		remove(path("errors")),
+		replace(path("session"), json.user),
 	];
 });
 
 const registerCommand = commandFactory<{ username: string; password: string }>(async ({ path, payload: {username, password} }) => {
-    const response = await request.post("users", {username, password});
-	const user = await response.json();
+	const response = await request.post("users", {username, password});
+	const json = await response.json();
+	if (!response.ok) {
+		return [
+			replace(path("errors"), json.errors),
+			remove(path("session"))
+		];
+	}
 
-    global.sessionStorage.setItem("blocklang-session", JSON.stringify(user));
+    global.sessionStorage.setItem("blocklang-session", JSON.stringify(json.user));
 
 	return [
 		replace(path("routing", "outlet"), "home"),
-		replace(path("session"), user),
+		remove(path("errors")),
+		replace(path("session"), json.user),
+	];
+});
+
+const checkUsernameCommand = commandFactory<{username: string}>(async ({path, payload: {username}}) => {
+	const response = await request.post("users/check-username", {username});
+	const json = await response.json();
+	if (!response.ok) {
+		return [
+			replace(path("errors"), json.errors),
+			remove(path("session"))
+		];
+	}
+
+	return [
+		remove(path("errors"))
 	];
 });
 
 export const setSessionProcess = createProcess("set-session", [setSessionCommand]);
 export const loginProcess = createProcess("login", [loginCommand]);
 export const registerProcess = createProcess("register", [registerCommand]);
+export const checkUsernameProcess = createProcess("check-username", [checkUsernameCommand]);

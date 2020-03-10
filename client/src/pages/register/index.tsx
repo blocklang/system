@@ -5,34 +5,47 @@ import store from '../../store';
 import errors from "../../middleware/errors";
 import * as c from "bootstrap-classes";
 import Link from '@dojo/framework/routing/Link';
-import { registerProcess } from '../../processes/loginProcesses';
+import { registerProcess, checkUsernameProcess } from '../../processes/loginProcesses';
+import * as css from "./index.m.css";
 
 export interface indexProperties {
 }
 
-const factory = create({icache, store, invalidator, errors}).properties<indexProperties>();
+const usernameIsBlank = "请输入用户名！";
+const passwordIsBlank = "请输入密码！";
+const retryPasswordIsBlank = "请确认密码！";
+const passwordIsNotMatch = "两次输入的密码不匹配!";
 
+const factory = create({icache, store, invalidator, errors}).properties<indexProperties>();
 export default factory(function Register({ properties, middleware: {icache, store, invalidator, errors} }){
     const {  } = properties();
-    const { executor } = store;
+    const {executor } = store;
 
     const username = icache.getOrSet<string>("username", "");
     const password = icache.getOrSet<string>("password", "");
     const retryPassword = icache.getOrSet<string>("retryPassword", "");
+    const serverUsernameErrors = errors.getServerFieldError("username");
 
     const toRegister = () => {
         // 客户端校验
         // 规则一：用户名和密码不能为空
         if (username.trim() === "") {
-            errors.rejectValue("username", "请输入用户名！");
+            errors.rejectValue("username", usernameIsBlank);
+        }else {
+            errors.passValue("username");
         }
         if (password === "") {
-            errors.rejectValue("password", "请输入密码！");
+            errors.rejectValue("password", passwordIsBlank);
+        }else {
+            errors.passValue("password");
         }
+
         if (retryPassword === "") {
-            errors.rejectValue("retryPassword", "请确认密码！");
+            errors.rejectValue("retryPassword", retryPasswordIsBlank);
         } else if(password !== retryPassword) {
-            errors.rejectValue("retryPassword", "两次输入的密码不匹配!");
+            errors.rejectValue("retryPassword", passwordIsNotMatch);
+        }else {
+            errors.passValue("retryPassword");
         }
 
         if (errors.hasErrors()) {
@@ -49,9 +62,14 @@ export default factory(function Register({ properties, middleware: {icache, stor
         }
     }
 
-    const usernameValidity = errors.getError("username");
-    const passwordValidity = errors.getError("password");
-    const retryPasswordValidity = errors.getError("retryPassword");
+    const clientUsernameErrors = errors.getFieldError("username");
+    const passwordErrors = errors.getFieldError("password");
+    const retryPasswordErrors = errors.getFieldError("retryPassword");
+
+    const usernameErrors = {
+        valid: clientUsernameErrors.valid && serverUsernameErrors.valid,
+        message: !serverUsernameErrors.valid ? serverUsernameErrors.message : clientUsernameErrors.message
+    }
 
     return (
         <div classes={["register-page"]}>
@@ -63,22 +81,26 @@ export default factory(function Register({ properties, middleware: {icache, stor
                     <div classes={[c.card_body, "register-card-body"]}>
                         <p classes={["login-box-msg"]}>注册用户</p>
                         <form classes={[c.needs_validation]} novalidate="novalidate">
-                            <div classes={[c.input_group, c.mb_3]}>
+                            <div classes={[c.input_group, usernameErrors.valid?css.marginBottom:undefined]}>
                                 <input 
                                     type="text" 
                                     autocomplete="username"
                                     placeholder="用户名" 
                                     focus={true} 
-                                    classes={[c.form_control, usernameValidity.valid ? undefined : c.is_invalid]} 
+                                    classes={[c.form_control, usernameErrors.valid ? undefined : c.is_invalid]} 
                                     onkeydown={handleKeyDown}
                                     oninput={(event: KeyboardEvent<HTMLInputElement>) => {
-                                        const value = event.target.value;
-                                        if (value.trim() === "") {
-                                            errors.rejectValue("username", "请输入用户名！");
-                                        } else {
-                                            errors.passValue("username");
+                                        errors.clearServerFieldError("username");
+                                        const value = event.target.value.trim();
+                                        if (value === "") {
+                                            errors.rejectValue("username", usernameIsBlank);
+                                            icache.set("username", value);
+                                            return;
                                         }
+                                        
+                                        errors.passValue("username");
                                         icache.set("username", value);
+                                        executor(checkUsernameProcess)({username: value});
                                     }}
                                 />
                                 <div classes={[c.input_group_append]}>
@@ -86,29 +108,25 @@ export default factory(function Register({ properties, middleware: {icache, stor
                                         <FontAwesomeIcon icon="user"/>
                                     </div>
                                 </div>
-                                {!usernameValidity.valid && <div classes={[c.invalid_feedback]}>{usernameValidity.message}</div>}
+                                {!usernameErrors.valid && <div  key="error" classes={[c.invalid_feedback, css.error]} innerHTML={usernameErrors.message}></div>}
                             </div>
-                            <div classes={[c.input_group, c.mb_3]}>
+                            <div classes={[c.input_group, passwordErrors.valid?css.marginBottom:undefined]}>
                                 <input 
                                     type="password" 
                                     autocomplete="current-password"
                                     placeholder="密码" 
-                                    classes={[c.form_control, passwordValidity.valid ? undefined : c.is_invalid]} 
+                                    classes={[c.form_control, passwordErrors.valid ? undefined : c.is_invalid]} 
                                     onkeydown={handleKeyDown}
                                     oninput={(event: KeyboardEvent<HTMLInputElement>) => {
                                         const value = event.target.value;
-                                        if (value.trim() === "") {
-                                            errors.rejectValue("password", "请输入密码！");
-                                        } else {
+                                        if (value === "") {
+                                            errors.rejectValue("password", passwordIsBlank);
+                                        }else {
                                             errors.passValue("password");
                                         }
-
                                         if(value !== retryPassword) {
-                                            errors.rejectValue("retryPassword", "两次输入的密码不匹配!");
-                                        }else {
-                                            errors.passValue("retryPassword");
+                                            errors.rejectValue("retryPassword", passwordIsNotMatch);
                                         }
-
                                         icache.set("password", value);
                                     }}
                                 />
@@ -117,20 +135,20 @@ export default factory(function Register({ properties, middleware: {icache, stor
                                         <FontAwesomeIcon icon="lock"/>
                                     </div>
                                 </div>
-                                {!passwordValidity.valid && <div classes={[c.invalid_feedback]}>{passwordValidity.message}</div>}
+                                {!passwordErrors.valid && <div key="error" classes={[c.invalid_feedback, css.error]}>{passwordErrors.message}</div>}
                             </div>
-                            <div classes={[c.input_group, c.mb_3]}>
+                            <div classes={[c.input_group, retryPasswordErrors.valid?css.marginBottom:undefined]}>
                                 <input 
                                     type="password" 
-                                    classes={[c.form_control, retryPasswordValidity.valid ? undefined : c.is_invalid]} 
+                                    classes={[c.form_control, retryPasswordErrors.valid ? undefined : c.is_invalid]} 
                                     placeholder="确认密码" 
                                     onkeydown={handleKeyDown}
                                     oninput={(event: KeyboardEvent<HTMLInputElement>) => {
                                         const value = event.target.value;
-                                        if (value.trim() === "") {
-                                            errors.rejectValue("retryPassword", "请确认密码！");
-                                        } else if(value !== password) {
-                                            errors.rejectValue("retryPassword", "两次输入的密码不匹配!");
+                                        if (value === "") {
+                                            errors.rejectValue("retryPassword", retryPasswordIsBlank);
+                                        }else if(value !== password) {
+                                            errors.rejectValue("retryPassword", passwordIsNotMatch);
                                         }else {
                                             errors.passValue("retryPassword");
                                         }
@@ -143,7 +161,7 @@ export default factory(function Register({ properties, middleware: {icache, stor
                                         <FontAwesomeIcon icon="lock"/>
                                     </div>
                                 </div>
-                                {!retryPasswordValidity.valid && <div classes={[c.invalid_feedback]}>{retryPasswordValidity.message}</div>}
+                                {!retryPasswordErrors.valid && <div key="error" classes={[c.invalid_feedback, css.error]}>{retryPasswordErrors.message}</div>}
                             </div>
                             <div classes={[c.row]}>
                                 <div classes={[c.col_8]}>

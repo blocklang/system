@@ -8,7 +8,14 @@ export interface Routing {
 	params: { [index: string]: string };
 }
 
+//[index: string]: string[];
+export interface Errors {
+    globalErrors: string[];
+    [index: string]: string[];
+}
+
 export interface State {
     routing: Routing;
     session: Session;
+    errors: Errors;
 }

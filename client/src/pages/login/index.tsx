@@ -6,31 +6,44 @@ import * as c from "bootstrap-classes";
 import { loginProcess } from '../../processes/loginProcesses';
 import errors from "../../middleware/errors";
 import Link from '@dojo/framework/routing/Link';
+import * as css from "./index.m.css";
 
 export interface LoginProperties {
-
 }
 
-const factory = create({ icache, store, invalidator, errors }).properties<LoginProperties>();
+const usernameIsBlank = "请输入用户名！";
+const passwordIsBlank = "请输入密码！";
+
+const factory = create({ icache,  store, invalidator, errors }).properties<LoginProperties>();
 
 export default factory(function Login({ properties, middleware: { icache, store, invalidator, errors } }) {
     const { } = properties();
     const { executor } = store;
 
+    const username = icache.getOrSet<string>("username", "");
+    const password = icache.getOrSet<string>("password", "");
+    const serverGlobalErrors = errors.getServerGlobalError();
+
     const toLogin = () => {
-        const username = icache.getOrSet<string>("username", "");
-        const password = icache.getOrSet<string>("password", "");
+        // 注意：
+        // 在点击登录按钮时，用户名和密码输入框都要校验
+        // 但只在用户名或密码输入框中输入文本时，则只校验当前输入的文本框，不要考虑其他输入框
 
         // 客户端校验
         // 规则一：用户名和密码不能为空
         if (username.trim() === "") {
-            errors.rejectValue("username", "请输入用户名！");
-        }
-        if (password.trim() === "") {
-            errors.rejectValue("password", "请输入密码！");
+            errors.rejectValue("username", usernameIsBlank);
+        }else {
+            errors.passValue("username");
         }
 
-        if (errors.hasErrors()) {
+        if (password.trim() === "") {
+            errors.rejectValue("password", passwordIsBlank);
+        } else {
+            errors.passValue("password");
+        }
+
+        if(errors.hasErrors()) {
             invalidator();
             return;
         }
@@ -44,8 +57,18 @@ export default factory(function Login({ properties, middleware: { icache, store,
         }
     }
 
-    const usernameValidity = errors.getError("username");
-    const passwordValidity = errors.getError("password");
+    const usernameErrors = errors.getFieldError("username");
+    const passwordErrors = errors.getFieldError("password");
+
+    const showMessage = () => {
+        let valid = true;
+        let message = "登录";
+        if(serverGlobalErrors) {
+            message = serverGlobalErrors;
+            valid = false;
+        }
+        return <p classes={["login-box-msg", valid?undefined: c.text_danger]}>{message}</p>
+    }
 
     return (
         <div classes={["login-page"]} >
@@ -55,24 +78,24 @@ export default factory(function Login({ properties, middleware: { icache, store,
                 </div>
                 <div classes={[c.card]}>
                     <div classes={[c.card_body, "login-card-body"]}>
-                        <p classes={["login-box-msg"]}>登录</p>
+                        {showMessage()}
                         <form classes={[c.needs_validation]} novalidate="novalidate">
-                            <div classes={[c.input_group, c.mb_3]}>
+                            <div key="username" classes={[c.input_group, usernameErrors.valid?css.marginBottom:undefined]}>
                                 <input
                                     type="text"
                                     autocomplete="username"
                                     placeholder="用户名"
                                     focus={true}
-                                    classes={[c.form_control, usernameValidity.valid ? undefined : c.is_invalid]}
+                                    classes={[c.form_control, usernameErrors.valid ? undefined : c.is_invalid]}
                                     onkeydown={handleKeyDown} 
                                     oninput={(event: KeyboardEvent<HTMLInputElement>) => {
-                                        const value = event.target.value;
-                                        if (value.trim() === "") {
-                                            errors.rejectValue("username", "请输入用户名！");
-                                        } else {
+                                        const username = event.target.value;
+                                        if (username.trim() === "") {
+                                            errors.rejectValue("username", usernameIsBlank);
+                                        }else {
                                             errors.passValue("username");
                                         }
-                                        icache.set("username", value);
+                                        icache.set("username", username);
                                     }}
                                 />
                                 <div classes={[c.input_group_append]}>
@@ -80,24 +103,22 @@ export default factory(function Login({ properties, middleware: { icache, store,
                                         <FontAwesomeIcon icon="user" />
                                     </div>
                                 </div>
-                                {!usernameValidity.valid && <div classes={[c.invalid_feedback]}>{usernameValidity.message}</div>}
+                                {!usernameErrors.valid && <div  key="error" classes={[c.invalid_feedback, css.error]}>{usernameErrors.message}</div>}
                             </div>
-
-                            <div classes={[c.input_group, c.mb_3]}>
+                            <div key="password" classes={[c.input_group, passwordErrors.valid?css.marginBottom:undefined]}>
                                 <input
                                     type="password"
                                     autocomplete="current-password"
                                     placeholder="密码"
-                                    classes={[c.form_control, passwordValidity.valid ? undefined : c.is_invalid]}
+                                    classes={[c.form_control, passwordErrors.valid ? undefined : c.is_invalid]}
                                     oninput={(event: KeyboardEvent<HTMLInputElement>) => {
-                                        const value = event.target.value;
-                                        if (value.trim() === "") {
-                                            errors.rejectValue("password", "请输入密码！");
+                                        const password = event.target.value;
+                                        if (password.trim() === "") {
+                                            errors.rejectValue("password", passwordIsBlank);
                                         } else {
                                             errors.passValue("password");
                                         }
-
-                                        icache.set("password", value);
+                                        icache.set("password", password);
                                     }}
                                     onkeydown={handleKeyDown} />
                                 <div classes={[c.input_group_append]}>
@@ -105,15 +126,13 @@ export default factory(function Login({ properties, middleware: { icache, store,
                                         <FontAwesomeIcon icon="lock" />
                                     </div>
                                 </div>
-                                {!passwordValidity.valid && <div classes={[c.invalid_feedback]}>{passwordValidity.message}</div>}
+                                {!passwordErrors.valid && <div key="error" classes={[c.invalid_feedback, css.error]}>{passwordErrors.message}</div>}
                             </div>
-
                             <div classes={[c.row]}>
                                 <div classes={[c.col_8]}>
                                     <div classes={["icheck-primary"]}>
                                         <input type="checkbox" id="remember" />
                                         <label for="remember">记住我</label>
-
                                     </div>
                                 </div>
                                 <div classes={[c.col_4]}>
@@ -125,9 +144,7 @@ export default factory(function Login({ properties, middleware: { icache, store,
                         还没有帐号？<Link to="register">立即注册</Link>
                         </p>
                     </div>
-
                 </div>
-
             </div>
         </div>
     );
