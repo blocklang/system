@@ -1,5 +1,7 @@
 package com.blocklang.system.controller;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -7,6 +9,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,15 +32,69 @@ public class LoginController {
 	@Autowired
 	private JwtService jwtService;
 	
+	/**
+	 * 注册用户
+	 */
+	@PostMapping("/users")
+	public ResponseEntity<Map<String, UserWithToken>> createUser(@Valid @RequestBody LoginParam registerParam, BindingResult bindingResult) {
+		checkInput(registerParam, bindingResult);
+
+		UserInfo user = new UserInfo();
+		user.setUsername(registerParam.getUsername().trim());
+		user.setPassword(encryptService.encrypt(registerParam.getPassword()));
+		user.setCreateTime(LocalDateTime.now());
+		user.setLastSignInTime(LocalDateTime.now());
+		
+		userService.save(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(userResponse(user));
+	}
+	
+	private void checkInput(LoginParam registerParam, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			throw new InvalidRequestException(bindingResult);
+		}
+		if (userService.findByUsername(registerParam.getUsername().trim()).isPresent()) {
+			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+registerParam.getUsername().trim()+"</strong> 已被占用");
+		}
+
+		if (bindingResult.hasErrors()) {
+			throw new InvalidRequestException(bindingResult);
+		}
+	}
+	
+	@PostMapping("/users/check-username")
+	public ResponseEntity<Map<String, Object>> checkUsername(
+			@Valid @RequestBody CheckUsernameParam param, 
+			BindingResult bindingResult) {
+		
+		if(userService.findByUsername(param.getUsername()).isPresent()) {
+			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+param.getUsername().trim()+"</strong> 已被占用");
+		}
+		
+		if(bindingResult.hasErrors()) {
+			throw new InvalidRequestException(bindingResult);
+		}
+		
+		return new ResponseEntity<Map<String,Object>>(new HashMap<String,Object>(), HttpStatus.OK);
+	}
+	
+	/**
+	 * 用户登录
+	 */
 	@PostMapping("/users/login")
-	public ResponseEntity<UserWithToken> userLogin(@Valid @RequestBody LoginParam loginParam, BindingResult bindingResult) {
+	public ResponseEntity<Map<String,UserWithToken>> userLogin(@Valid @RequestBody LoginParam loginParam, BindingResult bindingResult) {
 		Optional<UserInfo> userOption = userService.findByUsername(loginParam.getUsername());
 		if(userOption.isEmpty() || !encryptService.check(loginParam.getPassword(), userOption.get().getPassword())) {
-			bindingResult.rejectValue("password", "INVALID", "用户名或密码无效");
+			bindingResult.reject("INVALID", "用户名或密码无效！");
 			throw new InvalidRequestException(bindingResult);
 		}
 		UserInfo user = userOption.get();
-		return ResponseEntity.ok(new UserWithToken(user, jwtService.toToken(user)));
+		return ResponseEntity.ok(userResponse(user));
+	}
+	
+	private Map<String, UserWithToken> userResponse(UserInfo user) {
+		UserWithToken userWithToken = new UserWithToken(user, jwtService.toToken(user));
+		return Collections.singletonMap("user", userWithToken);
 	}
 
 }

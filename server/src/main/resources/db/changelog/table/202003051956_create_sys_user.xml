@@ -15,13 +15,14 @@
 				<constraints nullable="false" unique="true" uniqueConstraintName="UK_USERNAME"/>
 			</column>
 			<column name="nickname" remarks="昵称" type="varchar(64)" />
-			<column name="password" remarks="密码" type="varchar(64)">
+			<column name="password" remarks="密码" type="varchar(128)">
+				<constraints nullable="false" />
+			</column>
+			<column name="admin" remarks="是否管理员" type="boolean" defaultValueBoolean="false">
 				<constraints nullable="false" />
 			</column>
 			<column name="last_sign_in_time" remarks="最近登录时间" type="${datetime}" />
-			<column name="create_user_id" remarks="创建人标识" type="int">
-				<constraints nullable="false" />
-			</column>
+			<column name="create_user_id" remarks="创建人标识" type="int" />
 			<column name="create_time" remarks="创建时间" type="${datetime}">
 				<constraints nullable="false" />
 			</column>

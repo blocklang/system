@@ -9,4 +9,6 @@ public interface UserService {
 	Optional<UserInfo> findById(Integer userId);
 
 	Optional<UserInfo> findByUsername(String username);
+
+	UserInfo save(UserInfo user);
 }

@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -18,10 +19,15 @@ import com.blocklang.system.constant.WebSite;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+	
 	@Bean
 	public JwtTokenFilter jwtTokenFilter() {
 		return new JwtTokenFilter();
+	}
+	
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 	@Override
@@ -44,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// 允许访问所有静态资源
 				.antMatchers(HttpMethod.GET, "/**/*.js", "/**/*.css", "/**/*.map").permitAll()
 				.antMatchers(HttpMethod.GET, WebSite.HOME_URL, "/login","/register").permitAll()
-				.antMatchers(HttpMethod.POST, "/users", "/users/login").permitAll()
+				.antMatchers(HttpMethod.POST, "/users", "/users/login", "/users/check-username").permitAll()
 				.anyRequest().authenticated();
 
 		http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -66,4 +72,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
+	
 }

@@ -16,11 +16,13 @@ public class UserInfo extends PartialIdField {
 	private String username;
 	@Column(name = "password", nullable = false, length = 64, unique = true)
 	private String password;
-	@Column(name = "nickname", nullable = true, length = 64)
+	@Column(name = "nickname", nullable = true, length = 128)
 	private String nickname;
-	@Column(name = "last_sign_in_time")
+	@Column(name = "last_sign_in_time", insertable = true, updatable = true, nullable = false)
 	private LocalDateTime lastSignInTime;
-	@Column(name = "create_user_id", insertable = true, updatable = false, nullable = false)
+	@Column(name = "admin", nullable = false)
+	private Boolean admin = false;
+	@Column(name = "create_user_id", insertable = true, updatable = false)
 	private Integer createUserId;
 	@Column(name = "create_time", insertable = true, updatable = false, nullable = false)
 	private LocalDateTime createTime;
@@ -51,6 +53,54 @@ public class UserInfo extends PartialIdField {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public LocalDateTime getLastSignInTime() {
+		return lastSignInTime;
+	}
+
+	public void setLastSignInTime(LocalDateTime lastSignInTime) {
+		this.lastSignInTime = lastSignInTime;
+	}
+
+	public Integer getCreateUserId() {
+		return createUserId;
+	}
+
+	public void setCreateUserId(Integer createUserId) {
+		this.createUserId = createUserId;
+	}
+
+	public LocalDateTime getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(LocalDateTime createTime) {
+		this.createTime = createTime;
+	}
+
+	public Integer getLastUpdateUserId() {
+		return lastUpdateUserId;
+	}
+
+	public void setLastUpdateUserId(Integer lastUpdateUserId) {
+		this.lastUpdateUserId = lastUpdateUserId;
+	}
+
+	public LocalDateTime getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(LocalDateTime lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+	public Boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(Boolean admin) {
+		this.admin = admin;
 	}
 
 }
