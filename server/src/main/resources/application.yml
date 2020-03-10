@@ -25,3 +25,6 @@ server:
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css,image/jpg,image/png,image/gif
+jwt:
+  secret: nRvyYC4soFxBdZ-F-5Nwzz5USXstR1YylsTd-wfeAEfeg98Kdw#52-TiuDapkLiUxogO3JOK7kwZisrHp6wA
+  sessionTime: 86400

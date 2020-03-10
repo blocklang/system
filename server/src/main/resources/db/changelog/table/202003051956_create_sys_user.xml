@@ -11,8 +11,8 @@
 			<column name="dbid" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" primaryKeyName="PK_SYS_USER" />
 			</column>
-			<column name="login_name" remarks="登录名" type="varchar(32)">
-				<constraints nullable="false" unique="true" uniqueConstraintName="UK_LOGIN_NAME"/>
+			<column name="username" remarks="登录名" type="varchar(32)">
+				<constraints nullable="false" unique="true" uniqueConstraintName="UK_USERNAME"/>
 			</column>
 			<column name="nickname" remarks="昵称" type="varchar(64)" />
 			<column name="password" remarks="密码" type="varchar(64)">
