@@ -3,11 +3,19 @@ import theme from '@dojo/framework/core/middleware/theme';
 import Outlet from '@dojo/framework/routing/Outlet';
 import dojo from '@dojo/themes/dojo';
 
+
+import * as icons from "./icons";
+import * as css from './App.m.css';
+
 import Home from './pages/home';
 import Login from './pages/login';
 import Register from './pages/register';
-import * as icons from "./icons";
-import * as css from './App.m.css';
+import Users from './pages/users';
+import Roles from './pages/roles';
+import Menus from './pages/menus';
+import Departments from './pages/departments';
+import LayoutManager from "./pages/layoutManager";
+
 
 icons.init();
 
@@ -19,11 +27,15 @@ export default factory(function App({ middleware: { theme } }) {
 	}
 	return (
 		<div classes={[css.root]}>
-			<div>
+			<LayoutManager>
 				<Outlet id="login" renderer={() => <Login />} />
 				<Outlet id="register" renderer={() => <Register />} />
 				<Outlet id="home" renderer={() => <Home />} />
-			</div>
+				<Outlet id="users" renderer={() => <Users />} />
+				<Outlet id="roles" renderer={() => <Roles />} />
+				<Outlet id="menus" renderer={() => <Menus />} />
+				<Outlet id="departments" renderer={() => <Departments />} />
+			</LayoutManager>
 		</div>
 	);
 });

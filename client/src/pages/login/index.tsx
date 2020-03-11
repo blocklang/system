@@ -71,7 +71,7 @@ export default factory(function Login({ properties, middleware: { icache, store,
     }
 
     return (
-        <div classes={["login-page"]} >
+        <div key="root" classes={["login-page"]} >
             <div classes={["login-box"]}>
                 <div classes={["login-logo"]}>
                     后台管理系统

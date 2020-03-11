@@ -72,7 +72,7 @@ export default factory(function Register({ properties, middleware: {icache, stor
     }
 
     return (
-        <div classes={["register-page"]}>
+        <div key="root" classes={["register-page"]}>
             <div classes={["register-box"]}>
                 <div classes={["register-logo"]}>
                     后台管理系统

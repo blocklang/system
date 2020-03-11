@@ -10,7 +10,7 @@ import { changeRouteProcess } from './processes/routeProcesses';
 import { setSessionProcess } from './processes/loginProcesses';
 
 export const registry = new Registry();
-const router = registerRouterInjector(config, registry, { HistoryManager: StateHistory });
+const router = registerRouterInjector(config, registry, { HistoryManager: StateHistory, autostart: false});
 
 export default createStoreMiddleware<State>((store: Store) => {
     const session = global.sessionStorage.getItem("blocklang-session");
@@ -20,7 +20,7 @@ export default createStoreMiddleware<State>((store: Store) => {
 
     router.on("nav", ({outlet, context}: any) => {
         changeRouteProcess(store)({outlet, context});
-    });
+	});
 
     function onRouteChange() {
 		const outlet = store.get(store.path("routing", "outlet"));
@@ -36,3 +36,5 @@ export default createStoreMiddleware<State>((store: Store) => {
 	store.onChange(store.path("routing", "outlet"), onRouteChange);
 	store.onChange(store.path("routing", "params"), onRouteChange);
 });
+
+router.start();

@@ -12,5 +12,21 @@ export default [
 	{
 		path: 'register',
 		outlet: 'register'
+	}, 
+	{
+		path: "users",
+		outlet: "users"
+	}, 
+	{
+		path: "roles",
+		outlet: "roles"
+	}, 
+	{
+		path: "menus",
+		outlet: "menus"
+	}, 
+	{
+		path: "departments",
+		outlet: "departments"
 	}
 ];

@@ -62,7 +62,13 @@ const checkUsernameCommand = commandFactory<{username: string}>(async ({path, pa
 	];
 });
 
+const logoutCommand = commandFactory(({ path }) => {
+	global.sessionStorage.removeItem("blocklang-session");
+	return [remove(path("session")), replace(path("routing", "outlet"), "home")];
+});
+
 export const setSessionProcess = createProcess("set-session", [setSessionCommand]);
 export const loginProcess = createProcess("login", [loginCommand]);
 export const registerProcess = createProcess("register", [registerCommand]);
 export const checkUsernameProcess = createProcess("check-username", [checkUsernameCommand]);
+export const logoutProcess = createProcess("logout", [logoutCommand]);

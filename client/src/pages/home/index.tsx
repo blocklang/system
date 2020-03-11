@@ -2,7 +2,6 @@ import { create, tsx } from '@dojo/framework/core/vdom';
 import store from "../../store";
 import { redirectToLoginProcess } from '../../processes/routeProcesses';
 
-
 export interface HomeProperties {
 }
 
@@ -24,12 +23,6 @@ export default factory(function Home({ properties, middleware: {store} }){
         executor(redirectToLoginProcess)({});
         return;
     }
-
     
-    
-    
-
-    return (
-        <div>Home</div>
-    );
+    return (<div></div>);
 });
