@@ -9,5 +9,6 @@
 	<property dbms="mysql" name="datetime" value="DATETIME"/>
 	
 	<include file="db/changelog/table/202003051956_create_sys_user.xml" />
+	<include file="db/changelog/table/202003121156_create_sys_app.xml" />
 	
 </databaseChangeLog>
