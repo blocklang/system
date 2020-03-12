@@ -7,7 +7,6 @@ export default [
 	{
 		path: 'login',
 		outlet: 'login'
-		
 	},
 	{
 		path: 'register',
@@ -28,5 +27,9 @@ export default [
 	{
 		path: "departments",
 		outlet: "departments"
+	},
+	{
+		path: "apps",
+		outlet: "apps"
 	}
 ];

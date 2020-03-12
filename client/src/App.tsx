@@ -7,6 +7,7 @@ import dojo from '@dojo/themes/dojo';
 import * as icons from "./icons";
 import * as css from './App.m.css';
 
+import LayoutManager from "./pages/layoutManager";
 import Home from './pages/home';
 import Login from './pages/login';
 import Register from './pages/register';
@@ -14,8 +15,7 @@ import Users from './pages/users';
 import Roles from './pages/roles';
 import Menus from './pages/menus';
 import Departments from './pages/departments';
-import LayoutManager from "./pages/layoutManager";
-
+import Apps from './pages/apps';
 
 icons.init();
 
@@ -35,6 +35,7 @@ export default factory(function App({ middleware: { theme } }) {
 				<Outlet id="roles" renderer={() => <Roles />} />
 				<Outlet id="menus" renderer={() => <Menus />} />
 				<Outlet id="departments" renderer={() => <Departments />} />
+				<Outlet id="apps" renderer={() => <Apps />} />
 			</LayoutManager>
 		</div>
 	);

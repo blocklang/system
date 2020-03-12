@@ -60,6 +60,13 @@ const menus: MenuInfo[] = [
         url: "departments",
         icon: ["far","circle"],
         menuType: 2
+    }, {
+        id: 6,
+        parentId: 1,
+        name: "APP管理",
+        url: "apps",
+        icon: ["far","circle"],
+        menuType: 2
     }
 ]
 
