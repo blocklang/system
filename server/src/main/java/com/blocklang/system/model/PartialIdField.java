@@ -3,8 +3,6 @@ package com.blocklang.system.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
@@ -17,17 +15,17 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class PartialIdField implements Serializable{
 
-	private static final long serialVersionUID = -4423291672427341387L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "dbid", updatable = false)
-	private Integer id;
+	private static final long serialVersionUID = -880253821847574972L;
 
-	public Integer getId() {
+	@Id
+	@Column(name = "dbid", length=32, updatable = false)
+	private String id;
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 }

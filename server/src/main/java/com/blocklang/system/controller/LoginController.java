@@ -21,6 +21,7 @@ import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
 import com.blocklang.system.service.JwtService;
 import com.blocklang.system.service.UserService;
+import com.blocklang.system.utils.IdGenerator;
 
 @RestController
 public class LoginController {
@@ -40,8 +41,11 @@ public class LoginController {
 		checkInput(registerParam, bindingResult);
 
 		UserInfo user = new UserInfo();
+		String id = IdGenerator.uuid();
+		user.setId(id);
 		user.setUsername(registerParam.getUsername().trim());
 		user.setPassword(encryptService.encrypt(registerParam.getPassword()));
+		user.setCreateUserId(id);
 		user.setCreateTime(LocalDateTime.now());
 		user.setLastSignInTime(LocalDateTime.now());
 		
