@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.blocklang.system.model.UserInfo;
 
-public interface UserDao extends JpaRepository<UserInfo, Integer>{
+public interface UserDao extends JpaRepository<UserInfo, String>{
 	
-	Optional<UserInfo> findById(Integer userId);
+	Optional<UserInfo> findById(String userId);
 
 	Optional<UserInfo> findByUsername(String username);
 

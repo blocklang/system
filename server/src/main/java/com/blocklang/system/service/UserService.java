@@ -6,7 +6,7 @@ import com.blocklang.system.model.UserInfo;
 
 public interface UserService {
 
-	Optional<UserInfo> findById(Integer userId);
+	Optional<UserInfo> findById(String userId);
 
 	Optional<UserInfo> findByUsername(String username);
 

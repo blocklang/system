@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 	
 	@Override
-	public Optional<UserInfo> findById(Integer userId) {
+	public Optional<UserInfo> findById(String userId) {
 		return userDao.findById(userId);
 	}
 

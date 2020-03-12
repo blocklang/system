@@ -34,10 +34,10 @@ public class JwtServiceImpl implements JwtService {
 	}
 
 	@Override
-	public Optional<Integer> getSubFromToken(String token) {
+	public Optional<String> getSubFromToken(String token) {
 		try {
 			Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-			return Optional.ofNullable(Integer.valueOf(claimsJws.getBody().getSubject()));
+			return Optional.ofNullable(claimsJws.getBody().getSubject());
 		} catch (Exception e) {
 			return Optional.empty();
 		}
