@@ -15,18 +15,20 @@
     "test:all": "dojo build --mode unit && dojo build --mode functional && dojo test --all --config local"
   },
   "dependencies": {
+    "@dojo/framework": "^6.0.4",
+    "@dojo/themes": "^6.0.0",
+    "@dojo/widgets": "^6.2.0",
     "@types/bootstrap": "^4.3.1",
     "@types/jquery": "^3.3.33",
-    "@dojo/framework": "^6.0.4",
-    "@dojo/widgets": "^6.2.0",
-    "@dojo/themes": "^6.0.0",
-    "dojo-fontawesome": "^0.0.3-alpha.1",
-    "bootstrap-classes": "^0.0.3-alpha.3",
+    "@types/moment": "2.13.0",
+    "admin-lte": "^3.0.2",
     "bootstrap": "^4.4.1",
+    "bootstrap-classes": "^0.0.3-alpha.5",
+    "dojo-fontawesome": "^0.0.3-alpha.1",
     "jquery": "^3.4.1",
     "popper.js": "^1.16.1",
-    "tslib": "~1.11.1",
-    "admin-lte": "^3.0.2"
+    "moment": "2.24.0",
+    "tslib": "~1.11.1"
   },
   "devDependencies": {
     "@dojo/cli": "^6.0.0",
