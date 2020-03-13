@@ -22,9 +22,6 @@ public class AppInfo extends PartialOperateFields {
 	@Column(name = "description")
 	private String description;
 	
-	@Column(name = "seq", nullable = false)
-	private Integer seq;
-	
 	@Column(name = "active", nullable = false)
 	private Boolean active = true;
 
@@ -58,14 +55,6 @@ public class AppInfo extends PartialOperateFields {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Integer getSeq() {
-		return seq;
-	}
-
-	public void setSeq(Integer seq) {
-		this.seq = seq;
 	}
 
 	public Boolean getActive() {
