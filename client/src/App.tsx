@@ -16,6 +16,8 @@ import Roles from './pages/roles';
 import Menus from './pages/menus';
 import Departments from './pages/departments';
 import Apps from './pages/apps';
+import NewApp from './pages/apps/New';
+import EditApp from './pages/apps/Edit';
 
 icons.init();
 
@@ -36,6 +38,8 @@ export default factory(function App({ middleware: { theme } }) {
 				<Outlet id="menus" renderer={() => <Menus />} />
 				<Outlet id="departments" renderer={() => <Departments />} />
 				<Outlet id="apps" renderer={() => <Apps />} />
+				<Outlet id="new-app" renderer={() => <NewApp />} />
+				<Outlet id="edit-app" renderer={(details) => <EditApp appId={details.params.appId}/>} />
 			</LayoutManager>
 		</div>
 	);

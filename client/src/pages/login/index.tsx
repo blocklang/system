@@ -130,10 +130,13 @@ export default factory(function Login({ properties, middleware: { icache, store,
                             </div>
                             <div classes={[c.row]}>
                                 <div classes={[c.col_8]}>
-                                    <div classes={["icheck-primary"]}>
-                                        <input type="checkbox" id="remember" />
-                                        <label for="remember">记住我</label>
-                                    </div>
+                                    {
+                                        // <div classes={["icheck-primary"]}>
+                                        // <input type="checkbox" id="remember" />
+                                        // <label for="remember">记住我</label>
+                                        // </div>
+                                    }
+                                    
                                 </div>
                                 <div classes={[c.col_4]}>
                                     <button type="button" classes={[c.btn, c.btn_primary, c.btn_block]} onclick={() => { toLogin(); }}>登录</button>

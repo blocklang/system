@@ -18,6 +18,13 @@ const redirectToLoginCommand = commandFactory(({ path }) => {
 	];
 });
 
+const redirectToCommand = commandFactory<{outlet: string;}>(({path, payload: {outlet}}) => {
+	return [
+		replace(path("routing", "outlet"), outlet),
+		remove(path("errors"))
+	];
+});
 
 export const changeRouteProcess = createProcess("change-route", [changeRouteCommand]);
 export const redirectToLoginProcess = createProcess("redirect-to-login", [redirectToLoginCommand]);
+export const redirectToProcess = createProcess("redirect-to", [redirectToCommand]);

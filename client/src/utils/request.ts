@@ -12,16 +12,24 @@ export function getHeaders(token?: string):  { [key: string]: string } {
 	return headers;
 }
 
-export function post(url: string, jsonData: any): Promise<Response> {
+export function get(url: string, token?: string): Promise<Response> {
     return fetch(`${baseUrl}${url}`, {
-        method: "POST",
-        body: JSON.stringify(jsonData),
-        headers: getHeaders()
+        headers: getHeaders(token)
     });
 }
 
-export function get(url: string): Promise<Response> {
+export function post(url: string, jsonData: any, token?: string): Promise<Response> {
     return fetch(`${baseUrl}${url}`, {
-        headers: getHeaders()
+        method: "POST",
+        body: JSON.stringify(jsonData),
+        headers: getHeaders(token)
+    });
+}
+
+export function put(url: string, jsonData: any, token?: string): Promise<Response> {
+    return fetch(`${baseUrl}${url}`, {
+        method: "PUT",
+        body: JSON.stringify(jsonData),
+        headers: getHeaders(token)
     });
 }

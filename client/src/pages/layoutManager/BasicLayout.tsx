@@ -8,6 +8,7 @@ import * as c from "bootstrap-classes";
 import { IconProp} from '@fortawesome/fontawesome-svg-core';
 import * as css from "./BasicLayout.m.css";
 import { logoutProcess } from '../../processes/loginProcesses';
+import ActiveLink from '@dojo/framework/routing/ActiveLink';
 
 interface MenuInfo {
     id: number;
@@ -80,19 +81,33 @@ export default factory(function BasicLayout({ properties, children, middleware: 
     const {get, path, executor} = store;
     const sidebarOpen = icache.getOrSet<boolean>("sidebarOpen", true);
     const {username} = get(path("session"));
+    const outlet = get(path("routing", "outlet"));
 
     const activeMenuId = icache.getOrSet<number>("activeMenuId", -1);
-    const activeMenuIndex =  findIndex(menus, item => item.id === activeMenuId);
-    const activeMenuPath:number[]= [];
-    let currentMenuId = activeMenuId;
-    for(let i = activeMenuIndex; i >= 0; i--) {
-        const currentMenu = menus[i]
-        if(currentMenuId === currentMenu.id) {
-            activeMenuPath.push(currentMenuId);
-        }
-        currentMenuId = currentMenu.parentId;
+    let activeMenuIndex = -1;
+    if(activeMenuId !== -1) {
+        activeMenuIndex =  findIndex(menus, item => item.id === activeMenuId);
     }
-    activeMenuPath.reverse();
+    if(activeMenuIndex == -1) {
+        activeMenuIndex =  findIndex(menus, item => item.url === outlet);
+    }
+
+    const activeMenuPath:number[]= [];
+    // 不需要设置叶节点，因为 ActiveLink 已支持自动激活
+    if(activeMenuIndex > -1){
+        let currentMenuId = menus[activeMenuIndex].id;
+        for(let i = activeMenuIndex; i >= 0; i--) {
+            const currentMenu = menus[i]
+            if(currentMenuId === currentMenu.id) {
+                activeMenuPath.push(currentMenuId);
+            }
+            currentMenuId = currentMenu.parentId;
+        }
+        activeMenuPath.reverse();
+    }
+    
+    
+    debugger;
 
     const getChildren = (id: number) => {
         return menus.filter(item => item.parentId === id);
@@ -101,8 +116,10 @@ export default factory(function BasicLayout({ properties, children, middleware: 
     const renderMenuItem = (menuItem: MenuInfo) => {
         const menuId = menuItem.id;
         const isFolder = menuItem.menuType === 1;
-        const isActive = findIndex(activeMenuPath, item => item === menuId) > -1;
+        
         if(isFolder) { // 目录
+            const isActive = findIndex(activeMenuPath, item => item === menuId) > -1;
+            debugger;
             const openState = icache.getOrSet<boolean>(`folderOpenState-${menuId}`, false);
             
             return (<li classes={[c.nav_item, "has-treeview", openState? "menu-open": undefined]}>
@@ -125,14 +142,12 @@ export default factory(function BasicLayout({ properties, children, middleware: 
 
         // 菜单
         return (<li classes={[c.nav_item]}>
-            <Link to={menuItem.url!} classes={[c.nav_link, isActive?c.active : undefined]} onClick={(event: MouseEvent<EventTarget>)=>{
-                icache.set<number>("activeMenuId", menuId);
-            }}>
+            <ActiveLink to={menuItem.url!} activeClasses={[c.active]} classes={[c.nav_link]}>
                 <FontAwesomeIcon classes={["nav-icon", css.navIcon]} icon={menuItem.icon}/>
                 <p>
                     {menuItem.name}
                 </p>
-            </Link>
+            </ActiveLink>
         </li>);
     }
 

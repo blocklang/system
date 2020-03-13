@@ -31,5 +31,13 @@ export default [
 	{
 		path: "apps",
 		outlet: "apps"
+	},
+	{
+		path: "apps/new",
+		outlet: "new-app"
+	},
+	{
+		path: "apps/{appId}/edit",
+		outlet: "edit-app"
 	}
 ];

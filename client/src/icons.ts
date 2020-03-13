@@ -10,8 +10,8 @@ import  { faUserEdit } from "@fortawesome/free-solid-svg-icons/faUserEdit";
 import  { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
 import  { faCircle } from "@fortawesome/free-regular-svg-icons/faCircle";
 import  { faSignOutAlt } from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
-
+import  { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 
 export function init() {
-	library.add(faUser, faLock, faBars, faCog, faAngleLeft, faAngleDown, faUserEdit,faUsers,faCircle, faSignOutAlt);
+	library.add(faUser, faLock, faBars, faCog, faAngleLeft, faAngleDown, faUserEdit,faUsers,faCircle, faSignOutAlt,faPlus);
 }

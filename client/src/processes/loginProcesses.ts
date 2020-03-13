@@ -2,7 +2,7 @@ import global from "@dojo/framework/shim/global";
 import { createProcess } from "@dojo/framework/stores/process";
 import {replace, remove} from "@dojo/framework/stores/state/operations";
 import { commandFactory } from './utils';
-import * as request from './request';
+import * as request from '../utils/request';
 import { SetSessionPayload } from './interfaces';
 
 const setSessionCommand = commandFactory<SetSessionPayload>(({ path, payload: { session } }) => {

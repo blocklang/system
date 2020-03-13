@@ -3,6 +3,14 @@ export interface Session {
     token: string;
 }
 
+export interface AppInfo{
+    id: string;
+    name: string;
+    icon: string;
+    url: string;
+    description: string;
+    createTime: string
+}
 
 export interface Routing {
 	outlet: string;
