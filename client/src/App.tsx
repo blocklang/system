@@ -18,6 +18,7 @@ import Departments from './pages/departments';
 import Apps from './pages/apps';
 import NewApp from './pages/apps/New';
 import EditApp from './pages/apps/Edit';
+import NotFoundPage from './pages/error/404';
 
 icons.init();
 
@@ -40,6 +41,7 @@ export default factory(function App({ middleware: { theme } }) {
 				<Outlet id="apps" renderer={() => <Apps />} />
 				<Outlet id="new-app" renderer={() => <NewApp />} />
 				<Outlet id="edit-app" renderer={(details) => <EditApp appId={details.params.appId}/>} />
+				<Outlet id="errorOutlet" renderer={() => <NotFoundPage />}/>
 			</LayoutManager>
 		</div>
 	);

@@ -89,7 +89,7 @@ export default factory(function BasicLayout({ properties, children, middleware: 
         activeMenuIndex =  findIndex(menus, item => item.id === activeMenuId);
     }
     if(activeMenuIndex == -1) {
-        activeMenuIndex =  findIndex(menus, item => item.url === outlet);
+        activeMenuIndex =  outlet?findIndex(menus, item => item.url === outlet):-1;
     }
 
     const activeMenuPath:number[]= [];
@@ -105,9 +105,6 @@ export default factory(function BasicLayout({ properties, children, middleware: 
         }
         activeMenuPath.reverse();
     }
-    
-    
-    debugger;
 
     const getChildren = (id: number) => {
         return menus.filter(item => item.parentId === id);
@@ -119,7 +116,6 @@ export default factory(function BasicLayout({ properties, children, middleware: 
         
         if(isFolder) { // 目录
             const isActive = findIndex(activeMenuPath, item => item === menuId) > -1;
-            debugger;
             const openState = icache.getOrSet<boolean>(`folderOpenState-${menuId}`, false);
             
             return (<li classes={[c.nav_item, "has-treeview", openState? "menu-open": undefined]}>
