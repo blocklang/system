@@ -4,12 +4,13 @@ import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -39,8 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 			// 认证过程中发生异常时的处理类
 			.exceptionHandling()
-				// 如果出现异常，则跳转到首页（单页面应用只有一个页面，即首页）
-				.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(WebSite.HOME_URL))
+				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 				.and()
 			.sessionManagement() // 因为使用token，所以禁用 Session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
