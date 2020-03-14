@@ -19,19 +19,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
-import com.blocklang.system.service.JwtService;
-import com.blocklang.system.service.UserService;
 import com.blocklang.system.test.AbstractControllerTest;
 
 import io.restassured.http.ContentType;
 
 @WebMvcTest(LoginController.class)
 public class LoginControllerTest extends AbstractControllerTest{
-	
-	@MockBean
-	private UserService userService;
-	@MockBean
-	private JwtService jwtService;
+
 	@MockBean
 	private EncryptService encryptService;
 	
