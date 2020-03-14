@@ -1,5 +1,8 @@
 package com.blocklang.system.test;
 
-public class AbstractSpringTest {
+import org.springframework.test.context.ActiveProfiles;
+
+@ActiveProfiles("test")
+public abstract class AbstractSpringTest {
 
 }

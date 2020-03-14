@@ -72,7 +72,7 @@ public class LoginController {
 			BindingResult bindingResult) {
 		
 		if(userService.findByUsername(param.getUsername()).isPresent()) {
-			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+param.getUsername().trim()+"</strong>已被占用");
+			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+param.getUsername().trim()+"</strong>已被占用！");
 		}
 		
 		if(bindingResult.hasErrors()) {
