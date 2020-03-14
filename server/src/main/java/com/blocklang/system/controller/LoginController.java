@@ -58,7 +58,7 @@ public class LoginController {
 			throw new InvalidRequestException(bindingResult);
 		}
 		if (userService.findByUsername(registerParam.getUsername().trim()).isPresent()) {
-			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+registerParam.getUsername().trim()+"</strong> 已被占用");
+			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+registerParam.getUsername().trim()+"</strong>已被占用！");
 		}
 
 		if (bindingResult.hasErrors()) {
@@ -72,14 +72,13 @@ public class LoginController {
 			BindingResult bindingResult) {
 		
 		if(userService.findByUsername(param.getUsername()).isPresent()) {
-			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+param.getUsername().trim()+"</strong> 已被占用");
+			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+param.getUsername().trim()+"</strong>已被占用");
 		}
 		
 		if(bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		
-		return new ResponseEntity<Map<String,Object>>(new HashMap<String,Object>(), HttpStatus.OK);
+		return ResponseEntity.ok(new HashMap<String,Object>());
 	}
 	
 	/**
