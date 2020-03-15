@@ -12,3 +12,13 @@
 数据库表参考
 
 https://github.com/gitlabhq/gitlabhq/blob/master/db/schema.rb#L4303
+
+
+权限关系
+
+1. 为每个 APP 配置一套资源
+2. 为每个 APP 配置一套角色
+3. 授权只能在同一个 APP 下的角色和资源建立关系
+4. 但是可以为一个用户配置多个 APP 下的角色
+
+详见 [PPT](./system.pptx)
