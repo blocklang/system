@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet author="Zhengwei Jin" id="202003151713">
+		<createTable tableName="sys_role" remarks="角色信息">
+			<column name="dbid" type="varchar(32)">
+				<constraints primaryKey="true" nullable="false" primaryKeyName="PK_SYS_ROLE" />
+			</column>
+			<column name="app_id" remarks="APP 标识" type="varchar(32)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="role_name" remarks="角色名称" type="varchar(64)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="description" remarks="角色描述" type="${clob}" />
+			<column name="seq" remarks="显示顺序" type="int" defaultValueNumeric="1">
+				<constraints nullable="false"/>
+			</column>
+			<column name="active" remarks="是否启用" type="boolean" defaultValueBoolean="true">
+				<constraints nullable="false" />
+			</column>
+			<column name="create_user_id" remarks="创建人标识" type="varchar(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="create_time" remarks="创建时间" type="${datetime}">
+				<constraints nullable="false" />
+			</column>
+			<column name="last_update_user_id" remarks="最近修改人标识" type="varchar(32)" />
+			<column name="last_update_time" remarks="最近修改时间" type="${datetime}" />
+		</createTable>
+		<addUniqueConstraint columnNames="app_id,role_name"
+			constraintName="UK_ROLE_ON_APP_NAME" tableName="sys_role" />
+	</changeSet>
+
+</databaseChangeLog>

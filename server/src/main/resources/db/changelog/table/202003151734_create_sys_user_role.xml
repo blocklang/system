@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet author="Zhengwei Jin" id="202003151734">
+		<createTable tableName="sys_user_role" remarks="用户和角色关联表">
+			<column name="dbid" type="varchar(32)">
+				<constraints primaryKey="true" nullable="false" primaryKeyName="PK_SYS_USER_ROLE" />
+			</column>
+			<column name="user_id" remarks="用户标识" type="varchar(32)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="role_id" remarks="角色标识" type="varchar(32)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="create_user_id" remarks="创建人标识" type="varchar(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="create_time" remarks="创建时间" type="${datetime}">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addUniqueConstraint columnNames="user_id,role_id"
+			constraintName="UK_USER_ROLE_ON_USER_ROLE" tableName="sys_user_role" />
+	</changeSet>
+
+</databaseChangeLog>

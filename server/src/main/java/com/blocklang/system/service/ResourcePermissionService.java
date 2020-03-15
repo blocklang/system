@@ -2,6 +2,8 @@ package com.blocklang.system.service;
 
 import java.util.Optional;
 
+import com.blocklang.system.constant.Auth;
+
 /**
  * 资源分为功能模块、程序模块和操作按钮等，本服务用于对程序模块和操作按钮进行权限控制。
  * 
@@ -15,7 +17,7 @@ public interface ResourcePermissionService {
 	 * 
 	 * @param userId        登录用户标识
 	 * @param resourceId    资源标识
-	 * @param auth          权限标签，用一个自定义的字符串表示一个程序模块中的权限，常用标签有 query(查询)，new(新增)，edit(修改)，remove(删除)
+	 * @param auth          权限标签，用一个自定义的字符串表示一个程序模块中的权限，常用权限标记有 query(查询)，new(新增)，edit(修改)，remove(删除)，一些常用操作存在 {@link Auth} 常量类中。
 	 * @return 如果有权则返回 <code>true</code>；否则返回 <code>false</code>
 	 */
 	Optional<Boolean> canAccess(String userId, String resourceId, String auth);
