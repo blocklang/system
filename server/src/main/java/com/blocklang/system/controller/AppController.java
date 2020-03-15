@@ -39,7 +39,7 @@ public class AppController {
 			@RequestParam("resid") String resourceId,
 			@RequestBody AppInfo appInfo, BindingResult bindingResult
 		) {
-		permissionService.canAccess(user.getId(), resourceId, "new").orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user.getId(), resourceId, "new").orElseThrow(NoAuthorizationException::new);
 		
 		appInfo.setId(IdGenerator.uuid());
 		appInfo.setCreateTime(LocalDateTime.now());
@@ -63,7 +63,7 @@ public class AppController {
 			@AuthenticationPrincipal UserInfo user, 
 			@PathVariable String appId,
 			@RequestParam("resid") String resourceId) {
-		permissionService.canAccess(user.getId(), resourceId, "query").orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user.getId(), resourceId, "query").orElseThrow(NoAuthorizationException::new);
 		AppInfo app = appService.findById(appId).orElseThrow(ResourceNotFoundException::new);
 		return ResponseEntity.ok(app);
 	}

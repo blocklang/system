@@ -15,7 +15,7 @@ public class UserInfo extends PartialOperateFields {
 	@Column(name = "username", nullable = false, length = 64, unique = true)
 	private String username;
 	
-	@Column(name = "password", nullable = false, length = 64, unique = true)
+	@Column(name = "password", nullable = false, length = 64)
 	private String password;
 	
 	@Column(name = "nickname", nullable = true, length = 128)
