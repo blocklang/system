@@ -13,9 +13,9 @@ POST /users/check-username
 
 Form data
 
-| Name        | Type     | Description              |
-| ----------- | -------- | ------------------------ |
-| `username` | `string` | **Required**. 用户名 |
+| Name             | Type     | Description          |
+| ---------------- | -------- | -------------------- |
+| `username`(body) | `string` | **Required**. 用户名 |
 
 ## Response
 

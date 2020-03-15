@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blocklang.system.exception.NoAuthorizationException;
@@ -20,20 +21,25 @@ import com.blocklang.system.exception.ResourceNotFoundException;
 import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.AppService;
+import com.blocklang.system.service.ResourcePermissionService;
 import com.blocklang.system.utils.IdGenerator;
 
 @RestController
 public class AppController {
 
 	@Autowired
+	private ResourcePermissionService permissionService;
+	
+	@Autowired
 	private AppService appService;
 	
 	@PostMapping("/apps")
-	public ResponseEntity<AppInfo> newApp(@AuthenticationPrincipal UserInfo user, @RequestBody AppInfo appInfo, BindingResult bindingResult) {
-		if(user == null) {
-			throw new NoAuthorizationException();
-		}
-		// TODO: 完善校验逻辑
+	public ResponseEntity<AppInfo> newApp(
+			@AuthenticationPrincipal UserInfo user, 
+			@RequestParam("resid") String resourceId,
+			@RequestBody AppInfo appInfo, BindingResult bindingResult
+		) {
+		permissionService.canAccess(user.getId(), resourceId, "new").orElseThrow(NoAuthorizationException::new);
 		
 		appInfo.setId(IdGenerator.uuid());
 		appInfo.setCreateTime(LocalDateTime.now());
@@ -53,10 +59,11 @@ public class AppController {
 	}
 	
 	@GetMapping("/apps/{appId}")
-	public ResponseEntity<AppInfo> getApp(@AuthenticationPrincipal UserInfo user, @PathVariable String appId) {
-		if(user == null) {
-			throw new NoAuthorizationException();
-		}
+	public ResponseEntity<AppInfo> getApp(
+			@AuthenticationPrincipal UserInfo user, 
+			@PathVariable String appId,
+			@RequestParam("resid") String resourceId) {
+		permissionService.canAccess(user.getId(), resourceId, "query").orElseThrow(NoAuthorizationException::new);
 		AppInfo app = appService.findById(appId).orElseThrow(ResourceNotFoundException::new);
 		return ResponseEntity.ok(app);
 	}

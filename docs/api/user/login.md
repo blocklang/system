@@ -10,10 +10,10 @@ POST /users/login
 
 ## Parameters
 
-| Name       | Type     | Description          |
-| ---------- | -------- | -------------------- |
-| `username` | `string` | **Required**. 用户名 |
-| `password` | `string` | **Required**. 密码   |
+| Name             | Type     | Description          |
+| ---------------- | -------- | -------------------- |
+| `username`(body) | `string` | **Required**. 用户名 |
+| `password`(body) | `string` | **Required**. 密码   |
 
 ## Response
 
