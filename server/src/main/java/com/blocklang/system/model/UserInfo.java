@@ -3,8 +3,12 @@ package com.blocklang.system.model;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import com.blocklang.system.constant.Sex;
+import com.blocklang.system.constant.converter.SexConverter;
 
 @Entity
 @Table(name = "sys_user")
@@ -20,7 +24,14 @@ public class UserInfo extends PartialOperateFields {
 	
 	@Column(name = "nickname", nullable = true, length = 128)
 	private String nickname;
+	
+	@Convert(converter = SexConverter.class)
+	@Column(name = "sex", length = 1)
+	private Sex sex;
 
+	@Column(name = "phone_number", length = 11)
+	private String phoneNumber;
+	
 	@Column(name = "admin", nullable = false)
 	private Boolean admin = false;
 
@@ -76,6 +87,22 @@ public class UserInfo extends PartialOperateFields {
 
 	public void setSignInCount(Integer signInCount) {
 		this.signInCount = signInCount;
+	}
+
+	public Sex getSex() {
+		return sex;
+	}
+
+	public void setSex(Sex sex) {
+		this.sex = sex;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 }

@@ -6,7 +6,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 	<changeSet author="Zhengwei Jin" id="202003161630">
 		<insert tableName="sys_resource">
-			<column name="dbid" value="1" />
+			<column name="dbid" value="01" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="系统管理" />
 			<column name="parent_id" value="-1" />
@@ -22,10 +22,10 @@
 		</insert>
 		<!-- APP管理 -->
 		<insert tableName="sys_resource">
-			<column name="dbid" value="2" />
+			<column name="dbid" value="0101" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="APP管理" />
-			<column name="parent_id" value="1" />
+			<column name="parent_id" value="01" />
 			<column name="seq" valueNumeric="1" />
 			<column name="url" value="apps"/>
 			<column name="icon" value="circle"/>
@@ -37,10 +37,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="3" />
+			<column name="dbid" value="010101" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="查询APP列表" />
-			<column name="parent_id" value="2" />
+			<column name="parent_id" value="0101" />
 			<column name="seq" valueNumeric="1" />
 			<column name="url"/>
 			<column name="icon" value="search"/>
@@ -52,10 +52,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="4" />
+			<column name="dbid" value="010102" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="查询APP记录" />
-			<column name="parent_id" value="2" />
+			<column name="parent_id" value="0101" />
 			<column name="seq" valueNumeric="2" />
 			<column name="url" />
 			<column name="icon" value="search"/>
@@ -67,10 +67,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="5" />
+			<column name="dbid" value="010103" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="新增APP" />
-			<column name="parent_id" value="2" />
+			<column name="parent_id" value="0101" />
 			<column name="seq" valueNumeric="3" />
 			<column name="url" />
 			<column name="icon" value="save"/>
@@ -82,10 +82,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="6" />
+			<column name="dbid" value="010104" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="修改APP" />
-			<column name="parent_id" value="2" />
+			<column name="parent_id" value="0101" />
 			<column name="seq" valueNumeric="4" />
 			<column name="url" />
 			<column name="icon" value="save"/>
@@ -97,10 +97,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="7" />
+			<column name="dbid" value="010105" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="删除APP" />
-			<column name="parent_id" value="2" />
+			<column name="parent_id" value="0101" />
 			<column name="seq" valueNumeric="5" />
 			<column name="url" />
 			<column name="icon" value="times"/>
@@ -113,11 +113,11 @@
 		</insert>
 		<!-- 资源管理 -->
 		<insert tableName="sys_resource">
-			<column name="dbid" value="8" />
+			<column name="dbid" value="0102" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="资源管理" />
-			<column name="parent_id" value="1" />
-			<column name="seq" valueNumeric="21" />
+			<column name="parent_id" value="01" />
+			<column name="seq" valueNumeric="2" />
 			<column name="url" value="resources"/>
 			<column name="icon" value="circle"/>
 			<column name="resource_type" value="02"/>
@@ -128,10 +128,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="9" />
+			<column name="dbid" value="010201" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="查询资源列表" />
-			<column name="parent_id" value="8" />
+			<column name="parent_id" value="0102" />
 			<column name="seq" valueNumeric="1" />
 			<column name="url"/>
 			<column name="icon" value="search"/>
@@ -143,10 +143,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="10" />
+			<column name="dbid" value="010202" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="查询资源记录" />
-			<column name="parent_id" value="8" />
+			<column name="parent_id" value="0102" />
 			<column name="seq" valueNumeric="2" />
 			<column name="url" />
 			<column name="icon" value="search"/>
@@ -158,10 +158,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="11" />
+			<column name="dbid" value="010203" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="新增资源" />
-			<column name="parent_id" value="8" />
+			<column name="parent_id" value="0102" />
 			<column name="seq" valueNumeric="3" />
 			<column name="url" />
 			<column name="icon" value="save"/>
@@ -173,10 +173,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="12" />
+			<column name="dbid" value="010204" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="修改资源" />
-			<column name="parent_id" value="8" />
+			<column name="parent_id" value="0102" />
 			<column name="seq" valueNumeric="4" />
 			<column name="url" />
 			<column name="icon" value="save"/>
@@ -188,10 +188,10 @@
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
 		<insert tableName="sys_resource">
-			<column name="dbid" value="13" />
+			<column name="dbid" value="010205" />
 			<column name="app_id" value="1" />
 			<column name="res_name" value="删除资源" />
-			<column name="parent_id" value="8" />
+			<column name="parent_id" value="0102" />
 			<column name="seq" valueNumeric="5" />
 			<column name="url" />
 			<column name="icon" value="times"/>
