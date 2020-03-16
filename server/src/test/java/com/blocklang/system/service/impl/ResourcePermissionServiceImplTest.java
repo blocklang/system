@@ -298,8 +298,6 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		String resourceId1 = "resourceId1";
 		String resourceId2 = "resourceId2";
 		String appId = "appId1";
-		String roleId = "roleId1";
-		String userRoleId = "userRoleId1";
 		
 		UserInfo user = new UserInfo();
 		user.setId(userId);
