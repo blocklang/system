@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.blocklang.system.constant.Auth;
 import com.blocklang.system.exception.NoAuthorizationException;
 import com.blocklang.system.exception.ResourceNotFoundException;
 import com.blocklang.system.model.AppInfo;
@@ -39,7 +40,7 @@ public class AppController {
 			@RequestParam("resid") String resourceId,
 			@RequestBody AppInfo appInfo, BindingResult bindingResult
 		) {
-		permissionService.canExecute(user.getId(), resourceId, "new").orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user, resourceId, Auth.NEW).orElseThrow(NoAuthorizationException::new);
 		
 		appInfo.setId(IdGenerator.uuid());
 		appInfo.setCreateTime(LocalDateTime.now());
@@ -63,7 +64,7 @@ public class AppController {
 			@AuthenticationPrincipal UserInfo user, 
 			@PathVariable String appId,
 			@RequestParam("resid") String resourceId) {
-		permissionService.canExecute(user.getId(), resourceId, "query").orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user, resourceId, Auth.QUERY).orElseThrow(NoAuthorizationException::new);
 		AppInfo app = appService.findById(appId).orElseThrow(ResourceNotFoundException::new);
 		return ResponseEntity.ok(app);
 	}

@@ -19,6 +19,7 @@ import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.model.AuthInfo;
 import com.blocklang.system.model.ResourceInfo;
 import com.blocklang.system.model.RoleInfo;
+import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.model.UserRoleInfo;
 import com.blocklang.system.service.ResourcePermissionService;
 
@@ -37,49 +38,49 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 	private RoleDao roleDao;
 	
 	@Override
-	public Optional<Boolean> canExecute(String userId, String resourceId, String auth) {
+	public Optional<Boolean> canExecute(UserInfo user, String resourceId, String auth) {
+		if(user == null) {
+			return Optional.empty();
+		}
+		String userId = user.getId();
 		if(userId == null || userId.isBlank()) {
 			return Optional.empty();
 		}
 		if(resourceId == null || resourceId.isBlank()) {
 			return Optional.empty();
 		}
-		if(auth == null || auth.isBlank()) {
-			return Optional.empty();
-		}
-		if(auth == Auth.INDEX) { // 本方法不适用于页面，而 Auth.INDEX 专用于页面
-			return Optional.empty();
-		}
-		
-		// 获取为用户配置的角色
-		// TODO: 过滤掉失效的角色，如果角色已失效，则直接删除为角色配置的模块信息？
-		// 那么当角色激活之后，又要重新配置？
-		List<UserRoleInfo> userRoles = userRoleDao.findAllByUserId(userId);
-		if(userRoles.isEmpty()) {
+		// 本方法不适用于页面，而 Auth.INDEX 专用于页面
+		if(auth == null || auth.isBlank() || auth == Auth.INDEX) {
 			return Optional.empty();
 		}
 		
-		// 获取程序模块标识，如果 auth 的值为 index，则直接 resourceId
+		// 确保当前资源存在，且没有失效
 		Optional<ResourceInfo> resourceOption = resourceDao.findByParentIdAndAuth(resourceId, auth);
 		if(resourceOption.isEmpty()) {
 			return Optional.empty();
 		}
+		// 管理员可以访问所有存在的资源，包括失效的资源
+		if(user.isAdmin()) {
+			return Optional.of(true);
+		}
+
 		ResourceInfo resource = resourceOption.get();
+		// 本方法只用于校验按钮的操作权限
 		if(resource.getResourceType() != ResourceType.OPERATOR) {
 			return Optional.empty();
 		}
 		
+		// 确保资源所归属的 APP 存在且没有失效
 		Optional<AppInfo> appOption = appDao.findById(resource.getAppId());
 		if(appOption.isEmpty() || !appOption.get().getActive()) {
 			return Optional.empty();
 		}
 		
+		// 确保所有父资源都没有失效，如果有一个失效则无权访问该资源
 		String parentResourceId = resource.getParentId();
 		while(parentResourceId != Tree.ROOT_PARENT_ID) {
 			Optional<ResourceInfo> parentResourceOption = resourceDao.findById(parentResourceId);
-			if(parentResourceOption.isEmpty()) {
-				return Optional.empty();
-			}
+			// 无需判断 parentResourceOption 是否为 empty，能执行到此处必然有值
 			ResourceInfo parentResource = parentResourceOption.get();
 			if(!parentResource.getActive()) {
 				return Optional.empty();
@@ -87,8 +88,9 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 			parentResourceId = parentResource.getParentId();
 		}
 		
-		// 获取为操作按钮关联的角色信息
-		List<AuthInfo> authes = authDao.findAllByResourceId(resource.getId()).stream().filter(authInfo -> {
+		// 获取为用户配置的角色，过滤掉失效的角色。
+		// 此处过滤掉失效的角色后，就无需过滤授权信息中的失效角色。
+		List<UserRoleInfo> userRoles = userRoleDao.findAllByUserId(userId).stream().filter(authInfo -> {
 			Optional<RoleInfo> roleOption = roleDao.findById(authInfo.getRoleId());
 			if(roleOption.isEmpty()) {
 				return false;
@@ -96,9 +98,14 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 			if(!roleOption.get().getActive()) {
 				return false;
 			}
-			
 			return true;
 		}).collect(Collectors.toList());
+		if(userRoles.isEmpty()) {
+			return Optional.empty();
+		}
+		
+		// 获取为操作按钮关联的角色信息
+		List<AuthInfo> authes = authDao.findAllByResourceId(resource.getId());
 		
 		// 匹配 userRoles 和 authes 中的角色列表，有一个能匹配上就称为有权限
 		boolean matched = false;

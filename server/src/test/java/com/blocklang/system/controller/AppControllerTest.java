@@ -51,7 +51,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 		app.setName("app1");
 		String resourceId = "res1";
 
-		when(permissionService.canExecute(eq(user.getId()), eq(resourceId), anyString())).thenReturn(Optional.empty());
+		when(permissionService.canExecute(eq(user), eq(resourceId), anyString())).thenReturn(Optional.empty());
 		
 		given()
 			.contentType("application/json")
@@ -78,7 +78,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 		app.setIcon(icon);
 		app.setDescription(description);
 
-		when(permissionService.canExecute(eq(user.getId()), eq(resourceId), anyString())).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(eq(user), eq(resourceId), anyString())).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType("application/json")
@@ -117,10 +117,26 @@ public class AppControllerTest extends TestWithCurrentUser {
 	}
 	
 	@Test
+	public void getApp_invalid_token() {
+		String resourceId = "res1";
+		String auth = "query";
+		when(permissionService.canExecute(eq(user), eq(resourceId), eq(auth))).thenReturn(Optional.empty());
+
+		given()
+			.contentType("application/json")
+			.header("Authorization", /*"Token " + */token)
+			.queryParam("resid", resourceId)
+		.when()
+			.get("/apps/{appId}", "app1")
+		.then()
+			.statusCode(HttpStatus.SC_UNAUTHORIZED);
+	}
+	
+	@Test
 	public void getApp_user_has_no_permission() {
 		String resourceId = "res1";
 		String auth = "query";
-		when(permissionService.canExecute(eq(user.getId()), eq(resourceId), eq(auth))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(eq(user), eq(resourceId), eq(auth))).thenReturn(Optional.empty());
 
 		given()
 			.contentType("application/json")
@@ -137,7 +153,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 		String resourceId = "res1";
 		String appId = "app1";
 		String auth = "query";
-		when(permissionService.canExecute(eq(user.getId()), eq(resourceId), eq(auth))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(eq(user), eq(resourceId), eq(auth))).thenReturn(Optional.of(true));
 		
 		AppInfo app = new AppInfo();
 		app.setId(appId);
