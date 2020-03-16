@@ -2,15 +2,23 @@ package com.blocklang.system.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.blocklang.system.constant.Auth;
+import com.blocklang.system.constant.ResourceType;
+import com.blocklang.system.constant.Tree;
+import com.blocklang.system.dao.AppDao;
 import com.blocklang.system.dao.AuthDao;
 import com.blocklang.system.dao.ResourceDao;
+import com.blocklang.system.dao.RoleDao;
 import com.blocklang.system.dao.UserRoleDao;
+import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.model.AuthInfo;
 import com.blocklang.system.model.ResourceInfo;
+import com.blocklang.system.model.RoleInfo;
 import com.blocklang.system.model.UserRoleInfo;
 import com.blocklang.system.service.ResourcePermissionService;
 
@@ -18,11 +26,15 @@ import com.blocklang.system.service.ResourcePermissionService;
 public class ResourcePermissionServiceImpl implements ResourcePermissionService {
 
 	@Autowired
+	private AppDao appDao;
+	@Autowired
 	private UserRoleDao userRoleDao;
 	@Autowired
 	private ResourceDao resourceDao;
 	@Autowired
 	private AuthDao authDao;
+	@Autowired
+	private RoleDao roleDao;
 	
 	@Override
 	public Optional<Boolean> canExecute(String userId, String resourceId, String auth) {
@@ -33,6 +45,9 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 			return Optional.empty();
 		}
 		if(auth == null || auth.isBlank()) {
+			return Optional.empty();
+		}
+		if(auth == Auth.INDEX) { // 本方法不适用于页面，而 Auth.INDEX 专用于页面
 			return Optional.empty();
 		}
 		
@@ -49,9 +64,41 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 		if(resourceOption.isEmpty()) {
 			return Optional.empty();
 		}
+		ResourceInfo resource = resourceOption.get();
+		if(resource.getResourceType() != ResourceType.OPERATOR) {
+			return Optional.empty();
+		}
+		
+		Optional<AppInfo> appOption = appDao.findById(resource.getAppId());
+		if(appOption.isEmpty() || !appOption.get().getActive()) {
+			return Optional.empty();
+		}
+		
+		String parentResourceId = resource.getParentId();
+		while(parentResourceId != Tree.ROOT_PARENT_ID) {
+			Optional<ResourceInfo> parentResourceOption = resourceDao.findById(parentResourceId);
+			if(parentResourceOption.isEmpty()) {
+				return Optional.empty();
+			}
+			ResourceInfo parentResource = parentResourceOption.get();
+			if(!parentResource.getActive()) {
+				return Optional.empty();
+			}
+			parentResourceId = parentResource.getParentId();
+		}
 		
 		// 获取为操作按钮关联的角色信息
-		List<AuthInfo> authes = authDao.findAllByResourceId(resourceOption.get().getId());
+		List<AuthInfo> authes = authDao.findAllByResourceId(resource.getId()).stream().filter(authInfo -> {
+			Optional<RoleInfo> roleOption = roleDao.findById(authInfo.getRoleId());
+			if(roleOption.isEmpty()) {
+				return false;
+			}
+			if(!roleOption.get().getActive()) {
+				return false;
+			}
+			
+			return true;
+		}).collect(Collectors.toList());
 		
 		// 匹配 userRoles 和 authes 中的角色列表，有一个能匹配上就称为有权限
 		boolean matched = false;
