@@ -92,6 +92,7 @@ public class LoginController {
 			throw new InvalidRequestException(bindingResult);
 		}
 		UserInfo user = userOption.get();
+		userService.login(user);
 		return ResponseEntity.ok(userResponse(user));
 	}
 	

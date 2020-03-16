@@ -1,5 +1,6 @@
 package com.blocklang.system.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,14 @@ public class UserServiceImpl implements UserService {
 			user.setAdmin(true);
 		}
 		return userDao.save(user);
+	}
+
+	@Override
+	public UserInfo login(UserInfo user) {
+		user.setLastSignInTime(LocalDateTime.now());
+		user.setSignInCount(user.getSignInCount() + 1);
+		userDao.save(user);
+		return user;
 	}
 
 }

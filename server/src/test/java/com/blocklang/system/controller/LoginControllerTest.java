@@ -190,6 +190,8 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.statusCode(HttpStatus.SC_OK)
 			.body("user.username", equalTo(username))
 			.body("user.token", equalTo("token123"));
+		
+		verify(userService).login(any());
 	}
 
 	@Test
