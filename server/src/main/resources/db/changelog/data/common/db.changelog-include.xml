@@ -2,13 +2,8 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
 	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-	
-	<property dbms="postgresql, mysql" name="clob" value="text"/>
-	
-	<!-- 表结构 -->
-	<include file="db/changelog/table/db.changelog-include.xml" context="test, dev"/>
 
-	<!-- 数据 -->
-	<include file="db/changelog/data/db.changelog-include.xml"/>
-
+	<include file="db/changelog/data/common/202003161629_insert_sys_app.xml" />
+	<include file="db/changelog/data/common/202003161630_insert_sys_resource.xml" />
+	
 </databaseChangeLog>

@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+	<changeSet author="Zhengwei Jin" id="202003161629">
+		<insert tableName="sys_app">
+			<column name="dbid" value="1" />
+			<column name="app_name" value="系统管理" />
+			<column name="url" value="system" />
+			<column name="icon" />
+			<column name="description" value="用于人员管理、机构管理和权限管理等" />
+			<column name="active" valueBoolean="true" />
+			<!-- "-1" 表示是系统初始化数据 -->
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+	</changeSet>
+</databaseChangeLog>
