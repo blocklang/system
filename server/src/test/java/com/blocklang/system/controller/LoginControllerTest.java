@@ -248,7 +248,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
-			.post("/users/check-username")
+			.post("/user/check-username")
 		.then()
 			.statusCode(HttpStatus.SC_OK)
 			.body(equalTo("{}"));
