@@ -5,7 +5,7 @@
 1. 用户名或密码无效
 
 ```text
-POST /users/login
+POST /user/login
 ```
 
 ## Parameters

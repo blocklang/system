@@ -7,7 +7,7 @@
 3. 密码不能为空
 
 ```text
-POST /users
+POST /user/register
 ```
 
 ## Parameters

@@ -6,7 +6,7 @@
 2. 用户名未被占用
 
 ```text
-POST /users/check-username
+POST /user/check-username
 ```
 
 ## Parameters

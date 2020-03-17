@@ -10,11 +10,20 @@
 
 1. TBD = to be determined
 
-## 用户
+## 用户登录
 
 1. [注册用户](./user/register.md)
 2. [用户登录](./user/login.md)
 3. [校验用户名](./user/check-username.md)
+
+## 用户管理
+
+不能提供删除用户的操作，最多让用户失效。
+
+1. [获取用户列表](./users/list-users.md)
+2. [获取一个用户信息](./users/get-a-user.md)
+3. [创建一个用户](./users/create-a-user.md)
+4. [更新一个用户](./users/update-a-user.md)
 
 ## APP 管理
 

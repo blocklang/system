@@ -7,7 +7,7 @@
 3. APP 信息存在
 
 ```text
-GET /apps/{appId}?resId={resId}
+GET /apps/{appId}?resid={resId}
 ```
 
 ## Parameters
