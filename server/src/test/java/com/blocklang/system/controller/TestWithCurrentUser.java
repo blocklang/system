@@ -6,8 +6,10 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.blocklang.system.model.UserInfo;
+import com.blocklang.system.service.ResourcePermissionService;
 import com.blocklang.system.test.AbstractControllerTest;
 
 abstract class TestWithCurrentUser extends AbstractControllerTest {
@@ -15,6 +17,9 @@ abstract class TestWithCurrentUser extends AbstractControllerTest {
 	protected UserInfo user;
 	protected String token;
 	protected String username;
+	
+	@MockBean
+	protected ResourcePermissionService permissionService;
 
 	protected void userFixture() {
 		username = "jack";

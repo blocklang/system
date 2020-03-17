@@ -50,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// 允许访问所有静态资源
 				.antMatchers(HttpMethod.GET, "/**/*.js", "/**/*.css", "/**/*.map").permitAll()
 				.antMatchers(HttpMethod.GET, WebSite.HOME_URL, "/login","/register").permitAll()
-				.antMatchers(HttpMethod.POST, "/users", "/users/login", "/users/check-username").permitAll()
+				.antMatchers(HttpMethod.POST, "/user/register", "/user/login", "/user/check-username").permitAll()
 				.anyRequest().authenticated();
 
 		http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

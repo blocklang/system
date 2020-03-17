@@ -1,4 +1,4 @@
-package com.blocklang.system.controller;
+package com.blocklang.system.controller.param;
 
 import com.blocklang.system.model.UserInfo;
 

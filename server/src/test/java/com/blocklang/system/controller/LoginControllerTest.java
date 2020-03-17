@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.blocklang.system.controller.param.CheckUsernameParam;
+import com.blocklang.system.controller.param.LoginParam;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
 import com.blocklang.system.test.AbstractControllerTest;
@@ -42,7 +44,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
-			.post("users")
+			.post("user/register")
 		.then()
 			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
 			.body("errors.username.size()", is(1))
@@ -65,7 +67,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
-			.post("users")
+			.post("user/register")
 		.then()
 			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
 			.body("errors.username.size()", is(1))
@@ -85,7 +87,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
-			.post("users")
+			.post("user/register")
 		.then()
 			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
 			.body("errors.password.size()", is(1))
@@ -108,7 +110,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
-			.post("users")
+			.post("user/register")
 		.then()
 			.statusCode(HttpStatus.SC_CREATED)
 			.body("user.username", equalTo("jack"))
@@ -133,7 +135,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType("application/json")
 			.body(param)
 		.when()
-			.post("/users/login")
+			.post("/user/login")
 		.then()
 			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
 			.body("errors.globalErrors", hasItem("用户名或密码无效！"))
@@ -158,7 +160,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType("application/json")
 			.body(param)
 		.when()
-			.post("/users/login")
+			.post("/user/login")
 		.then()
 			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
 			.body("errors.globalErrors", hasItem("用户名或密码无效！"))
@@ -185,7 +187,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType("application/json")
 			.body(param)
 		.when()
-			.post("/users/login")
+			.post("/user/login")
 		.then()
 			.statusCode(HttpStatus.SC_OK)
 			.body("user.username", equalTo(username))
@@ -205,7 +207,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
-			.post("/users/check-username")
+			.post("/user/check-username")
 		.then()
 			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
 			.body("errors.username.size()", is(1))
@@ -226,7 +228,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
-			.post("/users/check-username")
+			.post("/user/check-username")
 		.then()
 			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
 			.body("errors.username.size()", is(1))

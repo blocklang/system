@@ -2,6 +2,8 @@ package com.blocklang.system.constant;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * 性别
  *
@@ -19,6 +21,7 @@ public enum Sex {
 		this.value = value;
 	}
 	
+	@JsonValue
 	public String getKey() {
 		return this.key;
 	}

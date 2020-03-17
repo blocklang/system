@@ -18,17 +18,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.blocklang.system.constant.Auth;
 import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.service.AppService;
-import com.blocklang.system.service.ResourcePermissionService;
 
 @WebMvcTest(AppController.class)
 public class AppControllerTest extends TestWithCurrentUser {
 	
 	@MockBean
 	private AppService appService;
-	@MockBean
-	private ResourcePermissionService permissionService;
 
 	// 匿名用户就是指请求时未携带合法的 Authorization header
 	@Test
@@ -51,7 +49,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 		app.setName("app1");
 		String resourceId = "res1";
 
-		when(permissionService.canExecute(eq(user), eq(resourceId), anyString())).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(resourceId), anyString())).thenReturn(Optional.empty());
 		
 		given()
 			.contentType("application/json")
@@ -78,7 +76,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 		app.setIcon(icon);
 		app.setDescription(description);
 
-		when(permissionService.canExecute(eq(user), eq(resourceId), anyString())).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(resourceId), anyString())).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType("application/json")
@@ -111,7 +109,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType("application/json")
 		.when()
-			.get("/apps/{appId}", "1")
+			.get("/users", "1")
 		.then()
 			.statusCode(HttpStatus.SC_UNAUTHORIZED);
 	}
@@ -119,8 +117,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	@Test
 	public void getApp_invalid_token() {
 		String resourceId = "res1";
-		String auth = "query";
-		when(permissionService.canExecute(eq(user), eq(resourceId), eq(auth))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.empty());
 
 		given()
 			.contentType("application/json")
@@ -135,8 +132,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	@Test
 	public void getApp_user_has_no_permission() {
 		String resourceId = "res1";
-		String auth = "query";
-		when(permissionService.canExecute(eq(user), eq(resourceId), eq(auth))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.empty());
 
 		given()
 			.contentType("application/json")
@@ -152,8 +148,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	public void getApp_success() {
 		String resourceId = "res1";
 		String appId = "app1";
-		String auth = "query";
-		when(permissionService.canExecute(eq(user), eq(resourceId), eq(auth))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
 		
 		AppInfo app = new AppInfo();
 		app.setId(appId);

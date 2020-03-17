@@ -2,6 +2,9 @@ package com.blocklang.system.service;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.blocklang.system.model.UserInfo;
 
 public interface UserService {
@@ -19,4 +22,6 @@ public interface UserService {
 	 * @return 更新之后的用户信息
 	 */
 	UserInfo login(UserInfo user);
+
+	Page<UserInfo> findAll(Pageable pageable);
 }

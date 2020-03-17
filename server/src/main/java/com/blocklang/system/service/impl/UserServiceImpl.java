@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.blocklang.system.dao.UserDao;
@@ -42,6 +44,11 @@ public class UserServiceImpl implements UserService {
 		user.setSignInCount(user.getSignInCount() + 1);
 		userDao.save(user);
 		return user;
+	}
+
+	@Override
+	public Page<UserInfo> findAll(Pageable pageable) {
+		return userDao.findAll(pageable);
 	}
 
 }

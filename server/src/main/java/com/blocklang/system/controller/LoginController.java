@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.blocklang.system.controller.param.CheckUsernameParam;
+import com.blocklang.system.controller.param.LoginParam;
+import com.blocklang.system.controller.param.UserWithToken;
 import com.blocklang.system.exception.InvalidRequestException;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
@@ -36,7 +39,7 @@ public class LoginController {
 	/**
 	 * 注册用户
 	 */
-	@PostMapping("/users")
+	@PostMapping("/user/register")
 	public ResponseEntity<Map<String, UserWithToken>> createUser(@Valid @RequestBody LoginParam registerParam, BindingResult bindingResult) {
 		checkInput(registerParam, bindingResult);
 
@@ -66,7 +69,7 @@ public class LoginController {
 		}
 	}
 	
-	@PostMapping("/users/check-username")
+	@PostMapping("/user/check-username")
 	public ResponseEntity<Map<String, Object>> checkUsername(
 			@Valid @RequestBody CheckUsernameParam param, 
 			BindingResult bindingResult) {
@@ -84,7 +87,7 @@ public class LoginController {
 	/**
 	 * 用户登录
 	 */
-	@PostMapping("/users/login")
+	@PostMapping("/user/login")
 	public ResponseEntity<Map<String,UserWithToken>> userLogin(@Valid @RequestBody LoginParam loginParam, BindingResult bindingResult) {
 		Optional<UserInfo> userOption = userService.findByUsername(loginParam.getUsername());
 		if(userOption.isEmpty() || !encryptService.check(loginParam.getPassword(), userOption.get().getPassword())) {

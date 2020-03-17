@@ -38,7 +38,8 @@ public class AppController {
 	public ResponseEntity<AppInfo> newApp(
 			@AuthenticationPrincipal UserInfo user, 
 			@RequestParam("resid") String resourceId,
-			@RequestBody AppInfo appInfo, BindingResult bindingResult
+			@RequestBody AppInfo appInfo, 
+			BindingResult bindingResult
 		) {
 		permissionService.canExecute(user, resourceId, Auth.NEW).orElseThrow(NoAuthorizationException::new);
 		
