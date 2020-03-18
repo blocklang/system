@@ -261,6 +261,32 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	}
 	
 	@Test
+	public void updateRole_app_id_is_not_exist() {
+		NewRoleParam param = new NewRoleParam();
+		String appId = "appId1";
+		String roleName = "role1";
+		param.setAppId(appId);
+		param.setName(roleName);
+		
+		String resourceId = "res1";
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
+		
+		when(appService.findById(appId)).thenReturn(Optional.empty());
+		
+		given()
+			.contentType(ContentType.JSON)
+			.header("Authorization", "Token " + token)
+			.queryParam("resid", resourceId)
+			.body(param)
+		.when()
+			.put("roles/{roleId}", appId)
+		.then()
+			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+			.body("errors.appId.size()", is(1))
+			.body("errors.appId", hasItem("<strong>appId1</strong>不存在！"));
+	}
+	
+	@Test
 	public void updateRole_name_is_blank() {
 		NewRoleParam param = new NewRoleParam();
 		param.setAppId("appId1");
