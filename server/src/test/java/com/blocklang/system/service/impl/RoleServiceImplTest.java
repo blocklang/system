@@ -71,11 +71,10 @@ public class RoleServiceImplTest extends AbstractServiceTest{
 		role2.setAppId(appId);
 		role2.setCreateTime(LocalDateTime.now());
 		role2.setCreateUserId("1");
-		
+		roleService.save(role2);
 		// 如果使用 save 则不会做真正的保存，所以不会抛异常
 		// 这里需要立即生效，所以加上 flush 操作
 		assertThrows(DataIntegrityViolationException.class, ()-> {
-			roleService.save(role2);
 			roleDao.flush();
 		});
 	}
