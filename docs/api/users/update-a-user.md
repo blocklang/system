@@ -56,7 +56,7 @@ Status: 422 Unprocessable Entity
 2. 用户名已被占用时返回 `<strong>{username}</strong>已被占用！`（注意当与原用户名相同时不提示）
 3. 密码为空时返回 `请输入密码！`
 
-获取成功
+更新成功
 
 ```text
 Status: 200 OK

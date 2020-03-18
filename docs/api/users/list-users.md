@@ -49,6 +49,7 @@ Status: 200 OK
     "content": []
 }
 ```
+默认每页显式 15 条记录。
 
 `content` 数组中的 JSON 对象字段为：
 
