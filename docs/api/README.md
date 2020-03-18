@@ -27,5 +27,12 @@
 
 ## APP 管理
 
-1. [创建 APP](./app/create-a-app.md)
-2. [获取一个 APP 信息](./app/get-a-app.md)
+1. [创建 APP](./apps/create-a-app.md)
+2. [获取一个 APP 信息](./apps/get-a-app.md)
+
+## 角色管理
+
+1. [获取角色列表](./roles/list-roles.md)
+2. [获取一个角色信息](./roles/get-a-role.md)
+3. [创建一个角色](./roles/create-a-role.md)
+4. [更新一个角色](./roles/update-a-role.md)

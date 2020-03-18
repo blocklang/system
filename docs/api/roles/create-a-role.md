@@ -1,0 +1,78 @@
+# 新增一个角色
+
+校验规则：
+
+1. APP 标识不能为空
+2. 角色名不能为空
+3. APP 标识指定的 APP 不存在
+4. APP 下的角色名不存在
+
+```text
+POST /roles?resid={resId}
+```
+
+## Parameters
+
+| Name                | Type     | Description            |
+| ------------------- | -------- | ---------------------- |
+| `resId`(queryParam) | `string` | **Required**. 资源标识 |
+| `appId`(body)       | `string` | **Required**. APP 标识 |
+| `name`(body)        | `string` | **Required**. 角色名   |
+| `description`(body) | `string` | 角色描述               |
+
+## Response
+
+用户未登录
+
+```text
+Status: 401 UNAUTHORIZED
+```
+
+用户无权访问
+
+```text
+Status: 403 FORBIDDEN
+```
+
+校验未通过
+
+```text
+Status: 422 Unprocessable Entity
+```
+
+```json
+{
+    "errors": {
+        "username": ["${filedErrorMessage}"],
+        "password": ["${filedErrorMessage}"]
+    }
+}
+```
+
+`filedErrorMessage` 的值为：
+
+1. APP 标识为空时返回 `请选择一个APP！`
+2. 角色名为空时返回 `请输入角色名！`
+3. APP 标识指定的 APP 不存在时返回 `<strong>{appId}</strong>不存在！`
+4. APP 下的角色名已被占用时返回 `<strong>{roleName}</strong>已被占用！`
+
+校验通过
+
+```text
+Status: 201 CREATED
+```
+
+返回一个 JSON 对象，其中包括角色信息
+
+| Name               | Type      | Description      |
+| ------------------ | --------- | ---------------- |
+| `id`               | `string`  | 发行版标识       |
+| `appId`            | `string`  | APP 标识         |
+| `name`             | `string`  | 角色名称         |
+| `description`      | `string`  | 角色描述         |
+| `seq`              | `int`     | 显示顺序         |
+| `active`           | `boolean` | 是否启用         |
+| `createUserId`     | `string`  | 创建用户标识     |
+| `createTime`       | `string`  | 创建时间         |
+| `lastUpdateUserId` | `string`  | 最近修改用户标识 |
+| `lastUpdateTime`   | `string`  | 最近修改时间     |
