@@ -113,7 +113,7 @@ public class UserController {
 		userService.save(updatedUser);
 		
 		updatedUser.setPassword(null); // 不能返回用户密码
-		return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+		return ResponseEntity.ok(updatedUser);
 	}
 
 	@GetMapping("/users")

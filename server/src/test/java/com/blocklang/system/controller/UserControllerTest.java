@@ -52,7 +52,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	@Test
 	public void listUser_user_has_no_permission() {
 		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), anyString())).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -68,7 +68,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	public void listUser_success_no_data() {
 		String resourceId = "res1";
 		// 注意：在做权限校验时，此处不能传 eq(user)，否则不能精准匹配
-		when(permissionService.canExecute(any(), eq(resourceId), anyString())).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
 		
 		Page<UserInfo> result = new PageImpl<UserInfo>(Collections.emptyList());
 		when(userService.findAll(any())).thenReturn(result);
@@ -190,7 +190,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	@Test
 	public void getUser_user_has_no_permission() {
 		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), anyString())).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -205,7 +205,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	@Test
 	public void getUser_not_found() {
 		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), anyString())).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
 		// 注意在 TestWithCurrentUser 中已 mock 一个登录用户
 		// 此处要模拟查不到用户的情况，就要避开此用户
 		
@@ -227,7 +227,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	@Test
 	public void getUser_success() {
 		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), anyString())).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(resourceId),eq(Auth.QUERY))).thenReturn(Optional.of(true));
 		
 		String userId = "2";
 		Assert.isTrue(!userId.equals(user.getId()), "");
@@ -423,7 +423,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	}
 	
 	@Test
-	public void updateUser_anonymous_user_can_not_create() {
+	public void updateUser_anonymous_user_can_not_update() {
 		given()
 			.contentType(ContentType.JSON)
 		.when()
