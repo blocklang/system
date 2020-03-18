@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.blocklang.system.dao.RoleDao;
 import com.blocklang.system.model.RoleInfo;
@@ -101,7 +103,8 @@ public class RoleServiceImplTest extends AbstractServiceTest{
 	
 	@Test
 	public void findAllByAppId_no_data() {
-		assertThat(roleService.findAllByAppId("1", null)).isEmpty();
+		Pageable pageable = PageRequest.of(0, 1);
+		assertThat(roleService.findAllByAppId("1", pageable)).isEmpty();
 	}
 	
 	@Test
@@ -124,6 +127,7 @@ public class RoleServiceImplTest extends AbstractServiceTest{
 		role2.setCreateUserId("1");
 		roleDao.save(role2);
 		
-		assertThat(roleService.findAllByAppId(appId, null)).hasSize(2);
+		Pageable pageable = PageRequest.of(0, 2);
+		assertThat(roleService.findAllByAppId(appId, pageable)).hasSize(2);
 	}
 }

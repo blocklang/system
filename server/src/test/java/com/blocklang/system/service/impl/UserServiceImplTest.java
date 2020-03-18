@@ -1,11 +1,15 @@
 package com.blocklang.system.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.blocklang.system.dao.UserDao;
 import com.blocklang.system.model.UserInfo;
@@ -27,6 +31,86 @@ public class UserServiceImplTest extends AbstractServiceTest{
 	@Test
 	public void findByUsername_no_data() {
 		assertThat(userService.findByUsername("jack")).isEmpty();
+	}
+	
+	@Test
+	public void save_first_user_is_admin() {
+		UserInfo user1 = new UserInfo();
+		user1.setId("1");
+		user1.setUsername("jack");
+		user1.setPassword("123");
+		user1.setLastSignInTime(LocalDateTime.now());
+		user1.setCreateTime(LocalDateTime.now());
+		user1.setCreateUserId("1");
+		userService.save(user1);
+		
+		UserInfo user2 = new UserInfo();
+		user2.setId("2");
+		user2.setUsername("jack1");
+		user2.setPassword("123");
+		user2.setLastSignInTime(LocalDateTime.now());
+		user2.setCreateTime(LocalDateTime.now());
+		user2.setCreateUserId("1");
+		userService.save(user2);
+		
+		assertThat(userService.findById("1").get().isAdmin()).isTrue();
+		assertThat(userService.findById("2").get().isAdmin()).isFalse();
+	}
+	
+	@Test
+	public void save_username_is_duplicated() {
+		String username = "jack";
+		
+		UserInfo user1 = new UserInfo();
+		user1.setId("1");
+		user1.setUsername(username);
+		user1.setPassword("123");
+		user1.setLastSignInTime(LocalDateTime.now());
+		user1.setCreateTime(LocalDateTime.now());
+		user1.setCreateUserId("1");
+		userService.save(user1);
+		
+		UserInfo user2 = new UserInfo();
+		user2.setId("2");
+		user2.setUsername(username);
+		user2.setPassword("123");
+		user2.setLastSignInTime(LocalDateTime.now());
+		user2.setCreateTime(LocalDateTime.now());
+		user2.setCreateUserId("1");
+		userService.save(user2);
+		
+		assertThrows(DataIntegrityViolationException.class, ()-> {
+			userDao.flush();
+		});
+	}
+	
+	@Test
+	public void save_phone_number_is_duplicated() {
+		String phoneNumber = "111";
+		
+		UserInfo user1 = new UserInfo();
+		user1.setId("1");
+		user1.setUsername("jack");
+		user1.setPassword("123");
+		user1.setPhoneNumber(phoneNumber);
+		user1.setLastSignInTime(LocalDateTime.now());
+		user1.setCreateTime(LocalDateTime.now());
+		user1.setCreateUserId("1");
+		userService.save(user1);
+		
+		UserInfo user2 = new UserInfo();
+		user2.setId("2");
+		user2.setUsername("jack1");
+		user2.setPassword("123");
+		user2.setPhoneNumber(phoneNumber);
+		user2.setLastSignInTime(LocalDateTime.now());
+		user2.setCreateTime(LocalDateTime.now());
+		user2.setCreateUserId("1");
+		userService.save(user2);
+		
+		assertThrows(DataIntegrityViolationException.class, ()-> {
+			userDao.flush();
+		});
 	}
 	
 	@Test
@@ -63,5 +147,11 @@ public class UserServiceImplTest extends AbstractServiceTest{
 		savedUser = userService.findById(user.getId()).get();
 		assertThat(savedUser.getSignInCount()).isEqualTo(2);
 		assertThat(savedUser.getLastSignInTime()).isAfter(lastSignInTime);
+	}
+	
+	@Test
+	public void findAll_no_data() {
+		Pageable pageable = PageRequest.of(0, 1);
+		assertThat(userService.findAll(pageable)).isEmpty();
 	}
 }
