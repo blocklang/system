@@ -17,8 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.blocklang.system.controller.param.CheckUsernameParam;
-import com.blocklang.system.controller.param.LoginParam;
+import com.blocklang.system.controller.data.CheckUsernameParam;
+import com.blocklang.system.controller.data.LoginParam;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
 import com.blocklang.system.test.AbstractControllerTest;

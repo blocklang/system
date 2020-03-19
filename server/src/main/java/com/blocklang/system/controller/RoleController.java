@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blocklang.system.constant.Auth;
 import com.blocklang.system.constant.WebSite;
-import com.blocklang.system.controller.param.NewRoleParam;
+import com.blocklang.system.controller.data.NewRoleParam;
 import com.blocklang.system.exception.InvalidRequestException;
 import com.blocklang.system.exception.NoAuthorizationException;
 import com.blocklang.system.exception.ResourceNotFoundException;

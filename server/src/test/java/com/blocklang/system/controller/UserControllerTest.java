@@ -26,8 +26,8 @@ import org.springframework.util.Assert;
 
 import com.blocklang.system.constant.Auth;
 import com.blocklang.system.constant.Sex;
-import com.blocklang.system.controller.param.NewUserParam;
-import com.blocklang.system.controller.param.UpdateUserParam;
+import com.blocklang.system.controller.data.NewUserParam;
+import com.blocklang.system.controller.data.UpdateUserParam;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
 

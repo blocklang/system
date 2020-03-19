@@ -1,4 +1,4 @@
-package com.blocklang.system.controller.param;
+package com.blocklang.system.controller.data;
 
 import javax.validation.constraints.NotBlank;
 

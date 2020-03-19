@@ -23,7 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 import com.blocklang.system.constant.Auth;
-import com.blocklang.system.controller.param.NewRoleParam;
+import com.blocklang.system.controller.data.NewRoleParam;
 import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.model.RoleInfo;
 import com.blocklang.system.service.AppService;

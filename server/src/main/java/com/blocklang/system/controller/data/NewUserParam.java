@@ -1,6 +1,7 @@
-package com.blocklang.system.controller.param;
+package com.blocklang.system.controller.data;
 
-public class UpdateUserParam extends CheckUsernameParam {
+public class NewUserParam extends LoginParam {
+
 	private String nickname;
 	private String sex;
 	private String phoneNumber;
@@ -28,4 +29,5 @@ public class UpdateUserParam extends CheckUsernameParam {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+
 }
