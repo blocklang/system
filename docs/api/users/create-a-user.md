@@ -12,14 +12,15 @@ POST /users?resid={resId}
 
 ## Parameters
 
-| Name                | Type     | Description            |
-| ------------------- | -------- | ---------------------- |
-| `resId`(queryParam) | `string` | **Required**. 资源标识 |
-| `username`(body)    | `string` | **Required**. 用户名   |
-| `password`(body)    | `string` | **Required**. 密码     |
-| `nickname`(body)    | `string` | 昵称                   |
-| `sex`(body)         | `string` | 性别                   |
-| `phoneNumber`(body) | `string` | 手机号码               |
+| Name                    | Type     | Description                    |
+| ----------------------- | -------- | ------------------------------ |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token |
+| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
+| `username`(body)        | `string` | **Required**. 用户名           |
+| `password`(body)        | `string` | **Required**. 密码             |
+| `nickname`(body)        | `string` | 昵称                           |
+| `sex`(body)             | `string` | 性别                           |
+| `phoneNumber`(body)     | `string` | 手机号码                       |
 
 ## Response
 

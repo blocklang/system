@@ -11,10 +11,11 @@ GET /users/{userId}?resid={resId}
 
 ## Parameters
 
-| Name                | Type     | Description            |
-| ------------------- | -------- | ---------------------- |
-| `userId`(path)      | `string` | **Required**. 用户标识 |
-| `resId`(queryParam) | `string` | **Required**. 资源标识 |
+| Name                    | Type     | Description                    |
+| ----------------------- | -------- | ------------------------------ |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token |
+| `userId`(path)          | `string` | **Required**. 用户标识         |
+| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 
 ## Response
 

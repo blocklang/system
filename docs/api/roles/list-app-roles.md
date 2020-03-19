@@ -13,11 +13,12 @@ GET /roles?page={page}&resid={resId}&appid={appId}
 
 ## Parameters
 
-| Name                | Type     | Description             |
-| ------------------- | -------- | ----------------------- |
-| `page`(queryParam)  | `int`    | 当前页码，从 0 开始计数 |
-| `resId`(queryParam) | `string` | **Required**. 资源标识  |
-| `appId`(queryParam) | `string` | **Required**. APP 标识  |
+| Name                    | Type     | Description                    |
+| ----------------------- | -------- | ------------------------------ |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token |
+| `page`(queryParam)      | `int`    | 当前页码，从 0 开始计数        |
+| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
+| `appId`(queryParam)     | `string` | **Required**. APP 标识         |
 
 ## Response
 

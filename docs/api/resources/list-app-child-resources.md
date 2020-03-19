@@ -13,11 +13,12 @@ GET /resources/{resourceId}/children?&resid={resId}&appid={appId}
 
 ## Parameters
 
-| Name                | Type     | Description                          |
-| ------------------- | -------- | ------------------------------------ |
-| `resourceId`(path)  | `string` | **Required**. 资源标识               |
-| `resId`(queryParam) | `string` | **Required**. 资源管理模块的资源标识 |
-| `appId`(queryParam) | `string` | **Required**. APP 标识               |
+| Name                    | Type     | Description                          |
+| ----------------------- | -------- | ------------------------------------ |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token       |
+| `resourceId`(path)      | `string` | **Required**. 资源标识               |
+| `resId`(queryParam)     | `string` | **Required**. 资源管理模块的资源标识 |
+| `appId`(queryParam)     | `string` | **Required**. APP 标识               |
 
 
 注意：

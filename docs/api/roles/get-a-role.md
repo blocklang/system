@@ -12,10 +12,11 @@ GET /roles/{roleId}?resid={resId}
 
 ## Parameters
 
-| Name                | Type     | Description            |
-| ------------------- | -------- | ---------------------- |
-| `roleId`(path)      | `string` | **Required**. 角色标识 |
-| `resId`(queryParam) | `string` | **Required**. 资源标识 |
+| Name                    | Type     | Description                    |
+| ----------------------- | -------- | ------------------------------ |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token |
+| `roleId`(path)          | `string` | **Required**. 角色标识         |
+| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 
 ## Response
 

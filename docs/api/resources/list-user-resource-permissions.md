@@ -12,9 +12,10 @@ GET /user/resources/{resourceId}/permissions
 
 ## Parameters
 
-| Name               | Type     | Description            |
-| ------------------ | -------- | ---------------------- |
-| `resourceId`(path) | `string` | **Required**. 资源标识 |
+| Name                    | Type     | Description                    |
+| ----------------------- | -------- | ------------------------------ |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token |
+| `resourceId`(path)      | `string` | **Required**. 资源标识         |
 
 
 注意：
@@ -53,4 +54,6 @@ Status: 200 OK
 
 注意：
 
-1. `permissions` 只存储用户有权访问的操作，而不是资源的所有操作。
+1. `canAccess` 属于程序模块一级的权限，用于判断登录用户是否有权访问程序模块
+2. `permissions` 属于操作一级的权限，只存储用户有权执行的操作，而不是资源的所有操作
+3. `canAccess` 和 `permissions` 必须显式独立设置，互不依赖，遵循“皮之不存，毛将焉附”的原则，即使 `permissions` 中有操作权限，`canAccess` 为 `false` 时也无权访问程序模块

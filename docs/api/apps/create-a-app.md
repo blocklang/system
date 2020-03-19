@@ -12,13 +12,14 @@ POST /apps?resid={resid}
 
 ## Parameters
 
-| Name                | Type     | Description            |
-| ------------------- | -------- | ---------------------- |
-| `name`(body)        | `string` | **Required**. app 名称 |
-| `url`(body)         | `string` | app 访问地址           |
-| `icon`(body)        | `string` | app 图标               |
-| `description`(body) | `string` | 详细描述               |
-| `resid`(queryParam) | `string` | **Required**. 资源标识 |
+| Name                    | Type     | Description                    |
+| ----------------------- | -------- | ------------------------------ |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token |
+| `name`(body)            | `string` | **Required**. app 名称         |
+| `url`(body)             | `string` | app 访问地址                   |
+| `icon`(body)            | `string` | app 图标                       |
+| `description`(body)     | `string` | 详细描述                       |
+| `resid`(queryParam)     | `string` | **Required**. 资源标识         |
 
 ## Response
 

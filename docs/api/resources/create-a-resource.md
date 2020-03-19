@@ -14,18 +14,19 @@ POST /resources?resid={resId}
 
 ## Parameters
 
-| Name                 | Type      | Description              |
-| -------------------- | --------- | ------------------------ |
-| `resId`(queryParam)  | `string`  | **Required**. 资源标识   |
-| `parentId`(body)     | `string`  | **Required**. 父资源标识 |
-| `appId`(body)        | `string`  | **Required**. APP 标识   |
-| `name`(body)         | `string`  | **Required**. 资源名     |
-| `url`(body)          | `string`  | 访问路径                 |
-| `icon`(body)         | `string`  | 资源图标                 |
-| `resourceType`(body) | `string`  | 资源类型                 |
-| `description`(body)  | `string`  | 资源描述                 |
-| `active`(body)       | `boolean` | 是否启用                 |
-| `auth`(body)         | `string`  | 权限标识                 |
+| Name                    | Type      | Description                    |
+| ----------------------- | --------- | ------------------------------ |
+| `Authorization`(header) | `string`  | **Required**. 登录用户的 token |
+| `resId`(queryParam)     | `string`  | **Required**. 资源标识         |
+| `parentId`(body)        | `string`  | **Required**. 父资源标识       |
+| `appId`(body)           | `string`  | **Required**. APP 标识         |
+| `name`(body)            | `string`  | **Required**. 资源名           |
+| `url`(body)             | `string`  | 访问路径                       |
+| `icon`(body)            | `string`  | 资源图标                       |
+| `resourceType`(body)    | `string`  | 资源类型                       |
+| `description`(body)     | `string`  | 资源描述                       |
+| `active`(body)          | `boolean` | 是否启用                       |
+| `auth`(body)            | `string`  | 权限标识                       |
 
 注意：
 

@@ -13,13 +13,14 @@ PUT /roles/{roleId}?resid={resId}
 
 ## Parameters
 
-| Name                | Type     | Description            |
-| ------------------- | -------- | ---------------------- |
-| `roleId`(path)      | `string` | **Required**. 角色标识 |
-| `resId`(queryParam) | `string` | **Required**. 资源标识 |
-| `appId`(body)       | `string` | **Required**. APP 标识 |
-| `name`(body)        | `string` | **Required**. 角色名称 |
-| `description`(body) | `string` | 角色描述               |
+| Name                    | Type     | Description                    |
+| ----------------------- | -------- | ------------------------------ |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token |
+| `roleId`(path)          | `string` | **Required**. 角色标识         |
+| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
+| `appId`(body)           | `string` | **Required**. APP 标识         |
+| `name`(body)            | `string` | **Required**. 角色名称         |
+| `description`(body)     | `string` | 角色描述                       |
 
 ## Response
 

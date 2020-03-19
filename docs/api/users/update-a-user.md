@@ -12,14 +12,15 @@ PUT /users/{userId}?resid={resId}
 
 ## Parameters
 
-| Name                | Type     | Description            |
-| ------------------- | -------- | ---------------------- |
-| `userId`(path)      | `string` | **Required**. 用户标识 |
-| `resId`(queryParam) | `string` | **Required**. 资源标识 |
-| `username`(body)    | `string` | **Required**. 用户名   |
-| `nickname`(body)    | `string` | 昵称                   |
-| `sex`(body)         | `string` | 性别                   |
-| `phoneNumber`(body) | `string` | 手机号码               |
+| Name                    | Type     | Description                    |
+| ----------------------- | -------- | ------------------------------ |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token |
+| `userId`(path)          | `string` | **Required**. 用户标识         |
+| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
+| `username`(body)        | `string` | **Required**. 用户名           |
+| `nickname`(body)        | `string` | 昵称                           |
+| `sex`(body)             | `string` | 性别                           |
+| `phoneNumber`(body)     | `string` | 手机号码                       |
 
 ## Response
 
