@@ -1,9 +1,11 @@
 package com.blocklang.system.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.blocklang.system.constant.ResourceType;
 import com.blocklang.system.model.ResourceInfo;
 
 public interface ResourceDao extends JpaRepository<ResourceInfo, String> {
@@ -16,5 +18,7 @@ public interface ResourceDao extends JpaRepository<ResourceInfo, String> {
 	 * @return 资源信息
 	 */
 	Optional<ResourceInfo> findByParentIdAndAuth(String resourceId, String auth);
+
+	List<ResourceInfo> findAllByParentIdAndResourceType(String resourceId, ResourceType resourceType);
 
 }

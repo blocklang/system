@@ -4,10 +4,13 @@ import java.util.Optional;
 
 import com.blocklang.system.constant.Auth;
 import com.blocklang.system.constant.ResourceType;
+import com.blocklang.system.controller.data.ResourcePermissionData;
 import com.blocklang.system.model.UserInfo;
 
 /**
  * 资源分为功能模块、程序模块和操作按钮等，本服务用于对程序模块和操作按钮进行权限控制。
+ * 
+ * TODO: 如果经测试存在性能问题，则新增一个 sql 联合查询的版本，不能删除此纯 JPA 版本。
  * 
  * @author Zhengwei Jin
  *
@@ -29,5 +32,7 @@ public interface ResourcePermissionService {
 	 * @return 如果有权访问则返回 <code>true</code>；否则返回 <code>false</code>。
 	 */
 	Optional<Boolean> canExecute(UserInfo user, String resourceId, String auth);
+
+	ResourcePermissionData getPermission(UserInfo user, String resourceId);
 
 }

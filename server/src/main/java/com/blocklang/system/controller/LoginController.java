@@ -11,19 +11,23 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.blocklang.system.controller.param.CheckUsernameParam;
-import com.blocklang.system.controller.param.LoginParam;
-import com.blocklang.system.controller.param.UserWithToken;
+import com.blocklang.system.controller.data.ResourcePermissionData;
+import com.blocklang.system.controller.data.CheckUsernameParam;
+import com.blocklang.system.controller.data.LoginParam;
+import com.blocklang.system.controller.data.UserWithToken;
 import com.blocklang.system.exception.InvalidRequestException;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
 import com.blocklang.system.service.JwtService;
+import com.blocklang.system.service.ResourcePermissionService;
 import com.blocklang.system.service.UserService;
 import com.blocklang.system.utils.IdGenerator;
 
@@ -36,6 +40,8 @@ public class LoginController {
 	private UserService userService;
 	@Autowired
 	private JwtService jwtService;
+	@Autowired
+	private ResourcePermissionService permissionService;
 	
 	/**
 	 * 注册用户
@@ -106,5 +112,10 @@ public class LoginController {
 	}
 
 	@GetMapping("/user/resources/{resourceId}/permissions")
-	public ResponseEntity<>
+	public ResponseEntity<ResourcePermissionData> getUserResourcePermissions(
+			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
+			@PathVariable String resourceId) {
+		ResourcePermissionData permission = permissionService.getPermission(currentUser, resourceId);
+		return ResponseEntity.ok(permission);
+	}
 }

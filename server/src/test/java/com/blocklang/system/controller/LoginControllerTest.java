@@ -3,6 +3,7 @@ package com.blocklang.system.controller;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,6 +11,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
 
 import org.apache.http.HttpStatus;
@@ -17,16 +20,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.blocklang.system.constant.Auth;
 import com.blocklang.system.controller.data.CheckUsernameParam;
 import com.blocklang.system.controller.data.LoginParam;
+import com.blocklang.system.controller.data.ResourcePermissionData;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
-import com.blocklang.system.test.AbstractControllerTest;
 
 import io.restassured.http.ContentType;
 
 @WebMvcTest(LoginController.class)
-public class LoginControllerTest extends AbstractControllerTest{
+public class LoginControllerTest extends TestWithCurrentUser{
 
 	@MockBean
 	private EncryptService encryptService;
@@ -252,5 +256,38 @@ public class LoginControllerTest extends AbstractControllerTest{
 		.then()
 			.statusCode(HttpStatus.SC_OK)
 			.body(equalTo("{}"));
+	}
+
+	@Test
+	public void getUserResourcePermissions_anonymous_user_can_not_get() {
+		String resourceId = "1";
+		
+		given()
+			.contentType(ContentType.JSON)
+		.when()
+			.get("/user/resources/{resourceId}/permissions", resourceId)
+		.then()
+			.statusCode(HttpStatus.SC_UNAUTHORIZED);
+	}
+	
+	@Test
+	public void getUserResourcePermissions_success() {
+		String resourceId = "resId1";
+		
+		ResourcePermissionData permission = new ResourcePermissionData(resourceId);
+		permission.setCanAccess(true);
+		permission.setPermissions(new HashSet<String>(Arrays.asList(Auth.NEW, Auth.EDIT)));
+		when(permissionService.getPermission(eq(user), eq(resourceId))).thenReturn(permission);
+		
+		given()
+			.contentType(ContentType.JSON)
+			.header("Authorization", "Token " + token)
+		.when()
+			.get("/user/resources/{resourceId}/permissions", resourceId)
+		.then()
+			.statusCode(HttpStatus.SC_OK)
+			.body("id", equalTo(resourceId))
+			.body("canAccess", is(true))
+			.body("permissions", hasItems(Auth.NEW, Auth.EDIT));
 	}
 }
