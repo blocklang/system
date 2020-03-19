@@ -1,4 +1,4 @@
-# 获取角色列表
+# 获取 APP 的角色列表
 
 获取 __指定 APP__ 下的角色列表。
 
@@ -59,7 +59,7 @@ Status: 200 OK
 
 | Name               | Type      | Description      |
 | ------------------ | --------- | ---------------- |
-| `id`               | `string`  | 发行版标识       |
+| `id`               | `string`  | 角色标识         |
 | `appId`            | `string`  | APP 标识         |
 | `name`             | `string`  | 角色名称         |
 | `description`      | `string`  | 角色描述         |

@@ -4,6 +4,7 @@
 
 1. 用户已登录
 2. 用户有权访问
+3. 角色存在
 
 ```text
 GET /roles/{roleId}?resid={resId}
@@ -30,6 +31,12 @@ Status: 401 UNAUTHORIZED
 Status: 403 FORBIDDEN
 ```
 
+角色不存在
+
+```text
+Status: 404 NOT FOUND
+```
+
 获取成功
 
 ```text
@@ -40,7 +47,7 @@ Status: 200 OK
 
 | Name               | Type      | Description      |
 | ------------------ | --------- | ---------------- |
-| `id`               | `string`  | 发行版标识       |
+| `id`               | `string`  | 角色标识         |
 | `appId`            | `string`  | APP 标识         |
 | `name`             | `string`  | 角色名称         |
 | `description`      | `string`  | 角色描述         |

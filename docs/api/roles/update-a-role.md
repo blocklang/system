@@ -44,8 +44,8 @@ Status: 422 Unprocessable Entity
 ```json
 {
     "errors": {
-        "username": ["${filedErrorMessage}"],
-        "password": ["${filedErrorMessage}"]
+        "name": ["${filedErrorMessage}"],
+        "appId": ["${filedErrorMessage}"]
     }
 }
 ```
@@ -54,8 +54,8 @@ Status: 422 Unprocessable Entity
 
 1. APP 标识为空时返回 `请选择一个APP！`
 2. 角色名为空时返回 `请输入角色名！`
-3. APP 标识指定的 APP 不存在时返回 `<strong>{appId}</strong>不存在！`（注意当与原角色名相同时不提示）
-4. APP 下的角色名已被占用时返回 `<strong>{roleName}</strong>已被占用！`
+3. APP 标识指定的 APP 不存在时返回 `<strong>{appId}</strong>不存在！`
+4. APP 下的角色名已被占用时返回 `<strong>{roleName}</strong>已被占用！`（注意当与原角色名相同时不提示）
 
 更新成功
 
@@ -67,7 +67,7 @@ Status: 200 OK
 
 | Name               | Type      | Description      |
 | ------------------ | --------- | ---------------- |
-| `id`               | `string`  | 发行版标识       |
+| `id`               | `string`  | 角色标识         |
 | `appId`            | `string`  | APP 标识         |
 | `name`             | `string`  | 角色名称         |
 | `description`      | `string`  | 角色描述         |

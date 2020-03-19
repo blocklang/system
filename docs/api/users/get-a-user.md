@@ -40,7 +40,7 @@ Status: 200 OK
 
 | Name               | Type      | Description      |
 | ------------------ | --------- | ---------------- |
-| `id`               | `string`  | 发行版标识       |
+| `id`               | `string`  | 用户标识         |
 | `username`         | `string`  | 用户名           |
 | `nickname`         | `string`  | 昵称             |
 | `sex`              | `string`  | 性别             |

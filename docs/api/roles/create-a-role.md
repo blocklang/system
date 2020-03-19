@@ -66,7 +66,7 @@ Status: 201 CREATED
 
 | Name               | Type      | Description      |
 | ------------------ | --------- | ---------------- |
-| `id`               | `string`  | 发行版标识       |
+| `id`               | `string`  | 角色标识         |
 | `appId`            | `string`  | APP 标识         |
 | `name`             | `string`  | 角色名称         |
 | `description`      | `string`  | 角色描述         |
