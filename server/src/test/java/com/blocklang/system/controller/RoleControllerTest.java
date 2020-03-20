@@ -122,7 +122,7 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		String resourceId = "res1";
 		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
-		when(appService.findById(appId)).thenReturn(Optional.empty());
+		when(appService.findById(eq(appId))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -137,7 +137,7 @@ public class RoleControllerTest extends TestWithCurrentUser{
 			.body("errors.appId", hasItem("<strong>appId1</strong>不存在！"));
 	}
 	
-	// 不同的 APP 下，name 可以重名
+	// 不同的 APP 下，name 不可以重名
 	@Test
 	public void newRole_app_id_and_name_is_duplicated() {
 		NewRoleParam param = new NewRoleParam();
@@ -149,7 +149,7 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		String resourceId = "res1";
 		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
-		when(appService.findById(appId)).thenReturn(Optional.of(new AppInfo()));
+		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
 		RoleInfo existRole = new RoleInfo();
 		when(roleService.findByAppIdAndName(eq(appId), eq(roleName))).thenReturn(Optional.of(existRole));
@@ -181,7 +181,7 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		String resourceId = "res1";
 		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
-		when(appService.findById(appId)).thenReturn(Optional.of(new AppInfo()));
+		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		when(roleService.findByAppIdAndName(eq(appId), eq(name))).thenReturn(Optional.empty());
 
 		given()
@@ -262,16 +262,17 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateRole_app_id_is_not_exist() {
-		NewRoleParam param = new NewRoleParam();
 		String appId = "appId1";
 		String roleName = "role1";
+		
+		NewRoleParam param = new NewRoleParam();
 		param.setAppId(appId);
 		param.setName(roleName);
 		
 		String resourceId = "res1";
 		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
-		when(appService.findById(appId)).thenReturn(Optional.empty());
+		when(appService.findById(eq(appId))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -308,8 +309,7 @@ public class RoleControllerTest extends TestWithCurrentUser{
 			.body("errors.name", hasItem("请输入角色名！"));
 	}
 	
-	
-	// 不同的 APP 下，name 可以重名
+	// 不同的 APP 下，name 不可以重名
 	@Test
 	public void updateRole_app_id_and_new_name_is_duplicated() {
 		NewRoleParam param = new NewRoleParam();
@@ -322,7 +322,7 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		String resourceId = "res1";
 		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
-		when(appService.findById(appId)).thenReturn(Optional.of(new AppInfo()));
+		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
 		RoleInfo existRole = new RoleInfo();
 		String existedRoleId = "2";
@@ -356,10 +356,10 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		String resourceId = "res1";
 		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
-		when(appService.findById(appId)).thenReturn(Optional.of(new AppInfo()));
+		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
 		RoleInfo existRole = new RoleInfo();
-		String existedRoleId = "1"; // 说明角色名未修改
+		String existedRoleId = updateRoleId; // 说明角色名未修改
 		existRole.setId(existedRoleId);
 		when(roleService.findByAppIdAndName(eq(appId), eq(roleName))).thenReturn(Optional.of(existRole));
 		
@@ -530,7 +530,7 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		.when()
 			.get("roles/{roleId}", roleId)
 		.then()
-			.statusCode(HttpStatus.SC_FORBIDDEN);		
+			.statusCode(HttpStatus.SC_FORBIDDEN);
 	}
 	
 	@Test

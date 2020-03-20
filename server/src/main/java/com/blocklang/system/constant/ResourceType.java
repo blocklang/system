@@ -2,6 +2,8 @@ package com.blocklang.system.constant;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * 资源类型
  *
@@ -20,6 +22,7 @@ public enum ResourceType {
 		this.value = value;
 	}
 	
+	@JsonValue
 	public String getKey() {
 		return this.key;
 	}

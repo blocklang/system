@@ -1,14 +1,12 @@
 package com.blocklang.system.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
@@ -24,33 +22,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blocklang.system.constant.Auth;
-import com.blocklang.system.constant.WebSite;
-import com.blocklang.system.controller.data.NewRoleParam;
+import com.blocklang.system.constant.ResourceType;
+import com.blocklang.system.controller.data.NewResourceParam;
 import com.blocklang.system.exception.InvalidRequestException;
 import com.blocklang.system.exception.NoAuthorizationException;
 import com.blocklang.system.exception.ResourceNotFoundException;
-import com.blocklang.system.model.RoleInfo;
+import com.blocklang.system.model.ResourceInfo;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.AppService;
 import com.blocklang.system.service.ResourcePermissionService;
-import com.blocklang.system.service.RoleService;
+import com.blocklang.system.service.ResourceService;
 import com.blocklang.system.utils.IdGenerator;
 
 @RestController
-public class RoleController {
-
+public class ResourceController {
+	
 	@Autowired
 	private ResourcePermissionService permissionService;
 	@Autowired
 	private AppService appService;
 	@Autowired
-	private RoleService roleService;
+	private ResourceService resourceService;
 	
-	@PostMapping("/roles")
-	public ResponseEntity<RoleInfo> newRole(
+	@PostMapping("/resources")
+	public ResponseEntity<ResourceInfo> newResource(
 			@AuthenticationPrincipal UserInfo currentUser,
 			@RequestParam("resid") String resourceId,
-			@Valid @RequestBody NewRoleParam param,
+			@Valid @RequestBody NewResourceParam param,
 			BindingResult bindingResult) {
 		permissionService.canExecute(currentUser, resourceId, Auth.NEW).orElseThrow(NoAuthorizationException::new);
 		
@@ -63,32 +61,39 @@ public class RoleController {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		if(roleService.findByAppIdAndName(param.getAppId(), param.getName().trim()).isPresent()) {
+		if(resourceService.findBy(param.getAppId(), param.getParentId(), param.getName().trim()).isPresent()) {
 			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
 		
-		RoleInfo role = new RoleInfo();
-		role.setId(IdGenerator.uuid());
-		role.setAppId(param.getAppId());
-		role.setName(param.getName().trim());
-		role.setDescription(param.getDescription().trim());
-		role.setCreateUserId(currentUser.getId());
-		role.setCreateTime(LocalDateTime.now());
+		ResourceInfo resource = new ResourceInfo();
+		resource.setId(IdGenerator.uuid());
+		resource.setAppId(param.getAppId());
+		resource.setParentId(param.getParentId());
+		resource.setName(param.getName());
+		resource.setUrl(param.getUrl());
+		resource.setIcon(param.getIcon());
+		resource.setResourceType(ResourceType.fromKey(param.getResourceType()));
+		resource.setDescription(param.getDescription());
+		resource.setActive(param.getActive());
+		resource.setAuth(param.getAuth());
+		resource.setActive(true);
+		resource.setCreateUserId(currentUser.getId());
+		resource.setCreateTime(LocalDateTime.now());
 		
-		roleService.save(role);
+		resourceService.save(resource);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(role);
+		return ResponseEntity.status(HttpStatus.CREATED).body(resource);
 	}
 	
-	@PutMapping("/roles/{roleId}")
-	public ResponseEntity<RoleInfo> updateRole(
+	@PutMapping("/resources/{resourceId}")
+	public ResponseEntity<ResourceInfo> updateResource(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@RequestParam("resid") String resourceId,
-			@PathVariable String roleId,
-			@Valid @RequestBody NewRoleParam param,
+			@RequestParam("resid") String resourceId, // 资源管理模块自身的标识
+			@PathVariable("resourceId") String updatedResourceId, // 当前正在修改的标识
+			@Valid @RequestBody NewResourceParam param,
 			BindingResult bindingResult) {
 		permissionService.canExecute(currentUser, resourceId, Auth.EDIT).orElseThrow(NoAuthorizationException::new);
 		
@@ -101,46 +106,53 @@ public class RoleController {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		Optional<RoleInfo> duplicatedRole = roleService.findByAppIdAndName(param.getAppId(), param.getName().trim());
-		if(duplicatedRole.isPresent() && !duplicatedRole.get().getId().equals(roleId)) {
+		Optional<ResourceInfo> duplicatedResource = resourceService.findBy(param.getAppId(), param.getParentId(), param.getName().trim());
+		if(duplicatedResource.isPresent() && !duplicatedResource.get().getId().equals(updatedResourceId)) {
 			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		
-		RoleInfo updatedRole = roleService.findById(roleId).orElseThrow(ResourceNotFoundException::new);
-		// 在此处不需要修改 appId，因为约定这个值不能改变
-		updatedRole.setName(param.getName().trim());
-		updatedRole.setDescription(param.getDescription());
-		updatedRole.setLastUpdateUserId(currentUser.getId());
-		updatedRole.setLastUpdateTime(LocalDateTime.now());
-		
-		roleService.save(updatedRole);
-		return ResponseEntity.ok(updatedRole);
-	}
-	
-	@GetMapping("/roles")
-	public ResponseEntity<Page<RoleInfo>> listRole(
-			@AuthenticationPrincipal UserInfo user, 
-			@RequestParam("resid") String resourceId, 
-			@RequestParam String appId,
-			@RequestParam(required = false, defaultValue = "0") Integer page) {
-		permissionService.canExecute(user, resourceId, Auth.LIST).orElseThrow(NoAuthorizationException::new);
 
-		Sort sort = Sort.by(Direction.ASC, "seq", "name");
-		Pageable pageable = PageRequest.of(page, WebSite.PAGE_SIZE, sort);
-		Page<RoleInfo> roles = roleService.findAllByAppId(appId, pageable);
-		return ResponseEntity.ok(roles);
+		ResourceInfo updatedResource = resourceService.findById(updatedResourceId).orElseThrow(ResourceNotFoundException::new);
+		// 在此处不需要设置 appId 和 parentId，因为约定这两个值不能改变
+		updatedResource.setName(param.getName().trim());
+		updatedResource.setUrl(param.getUrl().trim());
+		updatedResource.setIcon(param.getIcon().trim());
+		updatedResource.setResourceType(ResourceType.fromKey(param.getResourceType()));
+		updatedResource.setDescription(param.getDescription());
+		updatedResource.setAuth(param.getAuth().trim());
+		updatedResource.setLastUpdateUserId(currentUser.getId());
+		updatedResource.setLastUpdateTime(LocalDateTime.now());
+
+		resourceService.save(updatedResource);
+		return ResponseEntity.ok(updatedResource);
 	}
 	
-	@GetMapping("/roles/{roleId}")
-	public ResponseEntity<RoleInfo> getRole(
-			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@PathVariable String roleId,
-			@RequestParam("resid") String resourceId) {
-		permissionService.canExecute(currentUser, resourceId, Auth.QUERY).orElseThrow(NoAuthorizationException::new);
-		RoleInfo role = roleService.findById(roleId).orElseThrow(ResourceNotFoundException::new);
-		return ResponseEntity.ok(role);
+	@GetMapping("/resources/{resourceId}/children")
+	public ResponseEntity<List<ResourceInfo>> listResource(
+			@AuthenticationPrincipal UserInfo user, 
+			@RequestParam("resid") String resourceId, // 资源管理模块自身的标识
+			@RequestParam String appId,
+			@PathVariable("resourceId") String parentResourceId // 要获取此资源下的所有直属资源
+		) {
+		permissionService.canExecute(user, resourceId, Auth.LIST).orElseThrow(NoAuthorizationException::new);
+		
+		Sort sort = Sort.by(Direction.ASC, "seq", "name");
+		List<ResourceInfo> resources = resourceService.findChildren(appId, parentResourceId, sort);
+		
+		return ResponseEntity.ok(resources);
 	}
+	
+	@GetMapping("/resources/{resourceId}")
+	public ResponseEntity<ResourceInfo> getResource(
+			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
+			@PathVariable("resourceId") String queryResourceId, // 要查询的资源模块标识
+			@RequestParam("resid") String resourceId // 资源管理模块的标识
+		) {
+		permissionService.canExecute(currentUser, resourceId, Auth.QUERY).orElseThrow(NoAuthorizationException::new);
+		ResourceInfo resource = resourceService.findById(queryResourceId).orElseThrow(ResourceNotFoundException::new);
+		return ResponseEntity.ok(resource);
+	}
+	
 }

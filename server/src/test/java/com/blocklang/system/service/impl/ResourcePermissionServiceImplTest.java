@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.blocklang.system.constant.Auth;
@@ -88,6 +90,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 	 * 3. 角色信息
 	 */
 	@Test
+	@Timeout(value = 20, unit = TimeUnit.MILLISECONDS)
 	public void canExecute_success() {
 		String userId = "userId1";
 		String resourceId1 = "resourceId1";
@@ -896,6 +899,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 	}
 	
 	@Test
+	@Timeout(value = 50, unit = TimeUnit.MILLISECONDS)
 	public void getPermission_success() {
 		String userId = "userId1";
 		String resourceId1 = "resourceId1";
