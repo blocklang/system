@@ -25,7 +25,6 @@ POST /resources?resid={resId}
 | `icon`(body)            | `string`  | 资源图标                       |
 | `resourceType`(body)    | `string`  | 资源类型                       |
 | `description`(body)     | `string`  | 资源描述                       |
-| `active`(body)          | `boolean` | 是否启用                       |
 | `auth`(body)            | `string`  | 权限标识                       |
 
 注意：
@@ -56,7 +55,7 @@ Status: 422 Unprocessable Entity
 ```json
 {
     "errors": {
-        "resourceId": ["${filedErrorMessage}"],
+        "parentId": ["${filedErrorMessage}"],
         "appId": ["${filedErrorMessage}"],
         "name": ["${filedErrorMessage}"]
     }
@@ -69,7 +68,7 @@ Status: 422 Unprocessable Entity
 2. 父资源标识为空时返回 `请选择一个父资源！`
 3. 资源名为空时返回 `请输入资源名！`
 4. APP 标识指定的 APP 不存在时返回 `<strong>{appId}</strong>不存在！`
-5. APP 下的某资源下的资源名已被占用时返回 `{parentResourceName}下已存在<strong>{resourceName}</strong>！`
+5. APP 下的某资源下的资源名已被占用时返回 `<strong>{resourceName}</strong>已被占用！`
 
 校验通过
 

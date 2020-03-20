@@ -1,11 +1,11 @@
 # REST API
 
-输入参数分三种：
+输入参数分四种：
 
-1. path，如 `a/{b}/c`
-2. queryParam, 如 `a?b={b}`
-3. body, 如 POST 或 PUT 提交时传入的 JSON 数据
-4. header，存储在 http request 中的 header 中
+1. path - 如 `my/{path}` 中的 `path`
+2. queryParam - 如 `my/path?query={query}` 中的 `query`
+3. body - POST 或 PUT 提交时传入的 JSON 数据
+4. header - 存储在 http request 中的 header 中
    1. Authorization 的格式为 `Token {tokenValue}`
 
 关键字：

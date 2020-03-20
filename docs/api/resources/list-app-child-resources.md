@@ -20,7 +20,6 @@ GET /resources/{resourceId}/children?&resid={resId}&appid={appId}
 | `resId`(queryParam)     | `string` | **Required**. 资源管理模块的资源标识 |
 | `appId`(queryParam)     | `string` | **Required**. APP 标识               |
 
-
 注意：
 
 1. `resId` 是资源管理模块的资源标识，在资源管理模块中管理所有资源
