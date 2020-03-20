@@ -3,6 +3,7 @@ package com.blocklang.system.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.blocklang.system.constant.ResourceType;
@@ -20,5 +21,9 @@ public interface ResourceDao extends JpaRepository<ResourceInfo, String> {
 	Optional<ResourceInfo> findByParentIdAndAuth(String resourceId, String auth);
 
 	List<ResourceInfo> findAllByParentIdAndResourceType(String resourceId, ResourceType resourceType);
+
+	Optional<ResourceInfo> findByAppIdAndParentIdAndName(String appId, String parentResourceId, String resourceName);
+
+	List<ResourceInfo> findAllByAppIdAndParentId(String appId, String resourceId, Sort sort);
 
 }

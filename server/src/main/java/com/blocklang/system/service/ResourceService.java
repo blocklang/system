@@ -9,7 +9,7 @@ import com.blocklang.system.model.ResourceInfo;
 
 public interface ResourceService {
 
-	Optional<ResourceInfo> findBy(String appId, String parentResourceId, String resourceName);
+	Optional<ResourceInfo> find(String appId, String parentResourceId, String resourceName);
 
 	ResourceInfo save(ResourceInfo resource);
 

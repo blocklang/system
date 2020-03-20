@@ -61,7 +61,7 @@ public class ResourceController {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		if(resourceService.findBy(param.getAppId(), param.getParentId(), param.getName().trim()).isPresent()) {
+		if(resourceService.find(param.getAppId(), param.getParentId(), param.getName().trim()).isPresent()) {
 			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
@@ -106,7 +106,7 @@ public class ResourceController {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		Optional<ResourceInfo> duplicatedResource = resourceService.findBy(param.getAppId(), param.getParentId(), param.getName().trim());
+		Optional<ResourceInfo> duplicatedResource = resourceService.find(param.getAppId(), param.getParentId(), param.getName().trim());
 		if(duplicatedResource.isPresent() && !duplicatedResource.get().getId().equals(updatedResourceId)) {
 			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
 		}

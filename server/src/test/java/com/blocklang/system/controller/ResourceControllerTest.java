@@ -180,7 +180,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
-		when(resourceService.findBy(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.of(new ResourceInfo()));
+		when(resourceService.find(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.of(new ResourceInfo()));
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -221,7 +221,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
-		when(resourceService.findBy(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.empty());
+		when(resourceService.find(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -402,7 +402,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		ResourceInfo existResource = new ResourceInfo();
 		String existResourceId = "2";
 		existResource.setId(existResourceId);
-		when(resourceService.findBy(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.of(existResource));
+		when(resourceService.find(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.of(existResource));
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -447,7 +447,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		ResourceInfo existResource = new ResourceInfo();
 		String existResourceId = updateResourceId;
 		existResource.setId(existResourceId);
-		when(resourceService.findBy(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.of(existResource));
+		when(resourceService.find(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.of(existResource));
 		
 		ResourceInfo updatedResource = new ResourceInfo();
 		updatedResource.setId(updateResourceId);
