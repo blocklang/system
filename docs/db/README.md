@@ -8,6 +8,7 @@
 4. [SYS_ROLE](SYS_ROLE.md)
 5. [SYS_USER_ROLE](SYS_USER_ROLE.md)
 6. [SYS_AUTH](SYS_AUTH.md)
+7. [SYS_DEPT](SYS_DEPT.md)
 
 ## 默认数据
 
