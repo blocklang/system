@@ -167,7 +167,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	// 不同的 APP 下，同一级下 name 不可以重名
 	@Test
-	public void newResource_app_id_and_project_id_and_name_is_duplicated() {
+	public void newResource_app_id_and_parent_id_and_name_is_duplicated() {
 		NewResourceParam param = new NewResourceParam();
 		String appId = "appId1";
 		String parentId = "parentId1";
@@ -385,7 +385,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	// 不同的 APP 下，同一级下 name 不可以重名
 	@Test
-	public void updateResource_app_id_project_id_and_new_name_is_duplicated() {
+	public void updateResource_app_id_parent_id_and_new_name_is_duplicated() {
 		NewResourceParam param = new NewResourceParam();
 		String appId = "appId1";
 		String parentId = "parentId1";
@@ -500,7 +500,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 		.when()
-			.get("resources")
+			.get("resources/{resourceId}/children", "1")
 		.then()
 			.statusCode(HttpStatus.SC_UNAUTHORIZED);
 	}
@@ -526,10 +526,10 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	@Test
 	public void listResource_success_no_data() {
 		String resourceId = "res1"; // 资源管理模块的标识
-		String appId = "appId";
-		String parentResourceId = "1"; // 在资源管理模块中管理的资源标识
 		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
 		
+		String appId = "appId";
+		String parentResourceId = "1"; // 在资源管理模块中管理的资源标识
 		when(resourceService.findChildren(eq(appId), eq(parentResourceId), any())).thenReturn(Collections.emptyList());
 		
 		given()
@@ -547,6 +547,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	@Test
 	public void listResource_success_one_data() {
 		String resourceId = "res1"; // 资源管理模块的标识
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
 		
 		String existedResourceId = "resourceId1";
 		String appId = "appId";
@@ -576,9 +577,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		actualResource.setCreateTime(LocalDateTime.now());
 		actualResource.setLastUpdateUserId(user.getId());
 		actualResource.setLastUpdateTime(LocalDateTime.now());
-		
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
-		
 		when(resourceService.findChildren(eq(appId), eq(parentResourceId), any())).thenReturn(Collections.singletonList(actualResource));
 		
 		given()
@@ -656,6 +654,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	@Test
 	public void getResource_success() {
 		String resourceId = "res1"; // 资源管理模块的标识
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
 		
 		String queryResourceId = "resourceId1";
 		String appId = "appId";
@@ -685,9 +684,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		actualResource.setCreateTime(LocalDateTime.now());
 		actualResource.setLastUpdateUserId(user.getId());
 		actualResource.setLastUpdateTime(LocalDateTime.now());
-		
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
-		
 		when(resourceService.findById(eq(queryResourceId))).thenReturn(Optional.of(actualResource));
 		
 		given()

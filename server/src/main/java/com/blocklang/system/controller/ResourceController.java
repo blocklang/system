@@ -77,7 +77,6 @@ public class ResourceController {
 		resource.setIcon(param.getIcon());
 		resource.setResourceType(ResourceType.fromKey(param.getResourceType()));
 		resource.setDescription(param.getDescription());
-		resource.setActive(param.getActive());
 		resource.setAuth(param.getAuth());
 		resource.setActive(true);
 		resource.setCreateUserId(currentUser.getId());

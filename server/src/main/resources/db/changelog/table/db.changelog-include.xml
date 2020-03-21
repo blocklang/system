@@ -14,5 +14,6 @@
 	<include file="db/changelog/table/202003151718_create_sys_resource.xml" />
 	<include file="db/changelog/table/202003151734_create_sys_user_role.xml" />
 	<include file="db/changelog/table/202003151739_create_sys_auth.xml" />
+	<include file="db/changelog/table/202003211005_create_sys_dept.xml" />
 	
 </databaseChangeLog>
