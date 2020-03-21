@@ -1,10 +1,10 @@
 package com.blocklang.system.service.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.blocklang.system.dao.AppDao;
@@ -21,11 +21,6 @@ public class AppServiceImpl implements AppService {
 	public AppInfo save(AppInfo appInfo) {
 		return appDao.save(appInfo);
 	}
-	
-	@Override
-	public AppInfo update(AppInfo appInfo) {
-		return appDao.save(appInfo);
-	}
 
 	@Override
 	public Optional<AppInfo> findById(String id) {
@@ -33,8 +28,13 @@ public class AppServiceImpl implements AppService {
 	}
 
 	@Override
-	public List<AppInfo> findAll() {
-		return appDao.findAll(Sort.by("createTime").descending());
+	public Page<AppInfo> findAll(Pageable pageable) {
+		return appDao.findAll(pageable);
+	}
+
+	@Override
+	public Optional<AppInfo> find(String createUserId, String appName) {
+		return appDao.findByCreateUserIdAndName(createUserId, appName);
 	}
 
 }

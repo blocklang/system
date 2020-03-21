@@ -137,7 +137,7 @@ public class LoginControllerTest extends TestWithCurrentUser{
 		when(userService.findByUsername(eq(username))).thenReturn(Optional.empty());
 
 		given()
-			.contentType("application/json")
+			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
 			.post("/user/login")
@@ -162,7 +162,7 @@ public class LoginControllerTest extends TestWithCurrentUser{
 		when(encryptService.check(eq(password), eq(user.getPassword()))).thenReturn(false);
 
 		given()
-			.contentType("application/json")
+			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
 			.post("/user/login")
@@ -189,7 +189,7 @@ public class LoginControllerTest extends TestWithCurrentUser{
 		when(jwtService.toToken(any())).thenReturn("token123");
 		
 		given()
-			.contentType("application/json")
+			.contentType(ContentType.JSON)
 			.body(param)
 		.when()
 			.post("/user/login")

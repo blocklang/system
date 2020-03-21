@@ -168,6 +168,9 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	// 不同的 APP 下，同一级下 name 不可以重名
 	@Test
 	public void newResource_app_id_and_parent_id_and_name_is_duplicated() {
+		String resourceId = "res1";
+		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
+		
 		NewResourceParam param = new NewResourceParam();
 		String appId = "appId1";
 		String parentId = "parentId1";
@@ -175,9 +178,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setParentId(parentId);
 		param.setAppId(appId);
 		param.setName(name);
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		

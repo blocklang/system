@@ -1,9 +1,16 @@
 package com.blocklang.system.controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blocklang.system.constant.Auth;
+import com.blocklang.system.constant.WebSite;
+import com.blocklang.system.controller.data.NewAppParam;
+import com.blocklang.system.exception.InvalidRequestException;
 import com.blocklang.system.exception.NoAuthorizationException;
 import com.blocklang.system.exception.ResourceNotFoundException;
 import com.blocklang.system.model.AppInfo;
@@ -38,25 +48,72 @@ public class AppController {
 	public ResponseEntity<AppInfo> newApp(
 			@AuthenticationPrincipal UserInfo user, 
 			@RequestParam("resid") String resourceId,
-			@RequestBody AppInfo appInfo, 
+			@Valid @RequestBody NewAppParam param, 
 			BindingResult bindingResult
 		) {
 		permissionService.canExecute(user, resourceId, Auth.NEW).orElseThrow(NoAuthorizationException::new);
+		if (bindingResult.hasErrors()) {
+			throw new InvalidRequestException(bindingResult);
+		}
+		if(appService.find(user.getId(), param.getName().trim()).isPresent()) {
+			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
+		}
+		if (bindingResult.hasErrors()) {
+			throw new InvalidRequestException(bindingResult);
+		}
 		
-		appInfo.setId(IdGenerator.uuid());
-		appInfo.setCreateTime(LocalDateTime.now());
-		appInfo.setCreateUserId(user.getId());
+		AppInfo app = new AppInfo();
+		app.setId(IdGenerator.uuid());
+		app.setName(param.getName().trim());
+		app.setUrl(param.getUrl());
+		app.setIcon(param.getIcon());
+		app.setDescription(param.getDescription());
+		app.setCreateTime(LocalDateTime.now());
+		app.setCreateUserId(user.getId());
 		
-		appService.save(appInfo);
-		return ResponseEntity.status(HttpStatus.CREATED).body(appInfo);
+		appService.save(app);
+		return ResponseEntity.status(HttpStatus.CREATED).body(app);
+	}
+	
+	@PutMapping("/apps/{appId}")
+	public ResponseEntity<AppInfo> updateApp(
+			@AuthenticationPrincipal UserInfo user, 
+			@RequestParam("resid") String resourceId,
+			@PathVariable String appId,
+			@Valid @RequestBody NewAppParam param, 
+			BindingResult bindingResult) {
+		permissionService.canExecute(user, resourceId, Auth.EDIT).orElseThrow(NoAuthorizationException::new);
+		if (bindingResult.hasErrors()) {
+			throw new InvalidRequestException(bindingResult);
+		}
+		Optional<AppInfo> duplicatedApp = appService.find(user.getId(), param.getName().trim());
+		if(duplicatedApp.isPresent() && !duplicatedApp.get().getId().equals(appId)) {
+			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
+		}
+		if (bindingResult.hasErrors()) {
+			throw new InvalidRequestException(bindingResult);
+		}
+		
+		AppInfo existAppInfo = appService.findById(appId).orElseThrow(ResourceNotFoundException::new);
+		existAppInfo.setName(param.getName().trim());
+		existAppInfo.setIcon(param.getIcon().trim());
+		existAppInfo.setUrl(param.getUrl().trim());
+		existAppInfo.setDescription(param.getDescription());
+		existAppInfo.setLastUpdateTime(LocalDateTime.now());
+		existAppInfo.setLastUpdateUserId(user.getId());
+		
+		appService.save(existAppInfo);
+		return ResponseEntity.ok(existAppInfo);
 	}
 	
 	@GetMapping("/apps")
-	public ResponseEntity<List<AppInfo>> listApp(@AuthenticationPrincipal UserInfo user) {
-		if(user == null) {
-			throw new NoAuthorizationException();
-		}
-		List<AppInfo> apps = appService.findAll();
+	public ResponseEntity<Page<AppInfo>> listApp(
+			@AuthenticationPrincipal UserInfo user,
+			@RequestParam("resid") String resourceId, 
+			@RequestParam(required = false, defaultValue = "0") Integer page) {
+		permissionService.canExecute(user, resourceId, Auth.LIST).orElseThrow(NoAuthorizationException::new);
+		Pageable pageable = PageRequest.of(page, WebSite.PAGE_SIZE, Sort.by(Direction.DESC, "createTime"));
+		Page<AppInfo> apps = appService.findAll(pageable);
 		return ResponseEntity.ok(apps);
 	}
 	
@@ -68,24 +125,5 @@ public class AppController {
 		permissionService.canExecute(user, resourceId, Auth.QUERY).orElseThrow(NoAuthorizationException::new);
 		AppInfo app = appService.findById(appId).orElseThrow(ResourceNotFoundException::new);
 		return ResponseEntity.ok(app);
-	}
-	
-	@PutMapping("/apps")
-	public ResponseEntity<AppInfo> updateApp(@AuthenticationPrincipal UserInfo user, @RequestBody AppInfo appInfo, BindingResult bindingResult) {
-		if(user == null) {
-			throw new NoAuthorizationException();
-		}
-		// TODO: 完善校验逻辑
-		
-		AppInfo existAppInfo = appService.findById(appInfo.getId()).orElseThrow(ResourceNotFoundException::new);
-		existAppInfo.setName(appInfo.getName());
-		existAppInfo.setIcon(appInfo.getIcon());
-		existAppInfo.setUrl(appInfo.getUrl());
-		existAppInfo.setDescription(appInfo.getDescription());
-		existAppInfo.setLastUpdateTime(LocalDateTime.now());
-		existAppInfo.setLastUpdateUserId(user.getId());
-		
-		appService.update(existAppInfo);
-		return ResponseEntity.ok(appInfo);
 	}
 }
