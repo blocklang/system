@@ -28,6 +28,7 @@ import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.model.RoleInfo;
 import com.blocklang.system.service.AppService;
 import com.blocklang.system.service.RoleService;
+import com.blocklang.system.test.TestWithCurrentUser;
 
 import io.restassured.http.ContentType;
 

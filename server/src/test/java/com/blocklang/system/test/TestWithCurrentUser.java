@@ -1,4 +1,4 @@
-package com.blocklang.system.controller;
+package com.blocklang.system.test;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -10,9 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.ResourcePermissionService;
-import com.blocklang.system.test.AbstractControllerTest;
 
-abstract class TestWithCurrentUser extends AbstractControllerTest {
+public abstract class TestWithCurrentUser extends AbstractControllerTest {
 
 	protected UserInfo user;
 	protected String token;

@@ -30,6 +30,7 @@ import com.blocklang.system.controller.data.NewUserParam;
 import com.blocklang.system.controller.data.UpdateUserParam;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
+import com.blocklang.system.test.TestWithCurrentUser;
 
 import io.restassured.http.ContentType;
 

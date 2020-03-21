@@ -26,6 +26,7 @@ import com.blocklang.system.controller.data.LoginParam;
 import com.blocklang.system.controller.data.ResourcePermissionData;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
+import com.blocklang.system.test.TestWithCurrentUser;
 
 import io.restassured.http.ContentType;
 

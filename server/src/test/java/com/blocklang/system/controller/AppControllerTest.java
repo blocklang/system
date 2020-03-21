@@ -21,6 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import com.blocklang.system.constant.Auth;
 import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.service.AppService;
+import com.blocklang.system.test.TestWithCurrentUser;
 
 @WebMvcTest(AppController.class)
 public class AppControllerTest extends TestWithCurrentUser {

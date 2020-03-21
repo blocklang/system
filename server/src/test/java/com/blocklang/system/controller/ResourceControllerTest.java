@@ -28,6 +28,7 @@ import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.model.ResourceInfo;
 import com.blocklang.system.service.AppService;
 import com.blocklang.system.service.ResourceService;
+import com.blocklang.system.test.TestWithCurrentUser;
 
 import io.restassured.http.ContentType;
 
