@@ -46,3 +46,10 @@
 3. [创建一个资源](./resources/create-a-resource.md)
 4. [更新一个资源](./resources/update-a-resource.md)
 5. [获取登录用户对资源的权限列表](./resources/list-user-resource-permissions.md)
+
+## 部门管理
+
+1. [获取某个部门的直属子部门列表](./depts/list-child-depts.md)
+2. [获取一个部门](./depts/get-a-dept.md)
+3. [创建一个部门](./depts/create-a-dept.md)
+4. [更新一个部门](./depts/update-a-dept.md)
