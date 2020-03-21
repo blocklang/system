@@ -15,8 +15,8 @@ GET /apps/{appId}?resid={resId}
 | Name                    | Type     | Description                    |
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
-| `appId`(path)           | `string` | **Required**. app 标识         |
 | `resId`(queryParam)     | `string` | **Required**. 资源标识         |
+| `appId`(path)           | `string` | **Required**. app 标识         |
 
 ## Response
 

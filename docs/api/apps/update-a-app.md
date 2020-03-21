@@ -1,4 +1,4 @@
-# 创建 APP
+# 更新一个 APP 信息
 
 校验规则：
 
@@ -8,7 +8,7 @@
 4. 一个用户创建的 APP 名不能重复
 
 ```text
-POST /apps?resid={resId}
+PUT /apps/{appId}?resid={resId}
 ```
 
 ## Parameters
@@ -53,15 +53,15 @@ Status: 422 Unprocessable Entity
 `filedErrorMessage` 的值为：
 
 1. APP 名称为空时返回 `请输入 APP 名称！`
-2. 一个用户创建的 APP 名被占用时返回 `<strong>{appName}</strong>已被占用！`
+2. 一个用户创建的 APP 名被占用时返回 `<strong>{appName}</strong>已被占用！`（注意当与原 APP 名相同时不提示）
 
-创建成功
+更新成功
 
 ```text
-Status: 201 CREATED
+Status: 200 OK
 ```
 
-返回一个 json 对象，包括以下数据项
+返回一个 JSON 对象，其中包括以下数据项
 
 | 属性名             | 类型      | 描述             |
 | ------------------ | --------- | ---------------- |

@@ -1,14 +1,12 @@
-# 创建 APP
+# 获取 APP 列表
 
 校验规则：
 
 1. 用户已登录
 2. 用户有权访问
-3. APP 名称不能为空
-4. 一个用户创建的 APP 名不能重复
 
 ```text
-POST /apps?resid={resId}
+GET /apps?page={page}&resid={resId}
 ```
 
 ## Parameters
@@ -16,11 +14,8 @@ POST /apps?resid={resId}
 | Name                    | Type     | Description                    |
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
+| `page`(queryParam)      | `int`    | 当前页码，从 0 开始计数        |
 | `resId`(queryParam)     | `string` | **Required**. 资源标识         |
-| `name`(body)            | `string` | **Required**. app 名称         |
-| `url`(body)             | `string` | app 访问地址                   |
-| `icon`(body)            | `string` | app 图标                       |
-| `description`(body)     | `string` | 详细描述                       |
 
 ## Response
 
@@ -36,32 +31,28 @@ Status: 401 UNAUTHORIZED
 Status: 403 FORBIDDEN
 ```
 
-校验未通过
+获取成功
 
 ```text
-Status: 422 Unprocessable Entity
+Status: 200 OK
 ```
+
+返回一个 JSON 对象，其中包含分页信息和 APP 列表
 
 ```json
 {
-    "errors": {
-        "name": ["${filedErrorMessage}"]
-    }
+    "totalPages": 1,
+    "number": 0,
+    "size": 10,
+    "first": true,
+    "last": true,
+    "empty": true,
+    "content": []
 }
 ```
+默认每页显式 15 条记录。
 
-`filedErrorMessage` 的值为：
-
-1. APP 名称为空时返回 `请输入 APP 名称！`
-2. 一个用户创建的 APP 名被占用时返回 `<strong>{appName}</strong>已被占用！`
-
-创建成功
-
-```text
-Status: 201 CREATED
-```
-
-返回一个 json 对象，包括以下数据项
+`content` 数组中的 JSON 对象字段为：
 
 | 属性名             | 类型      | 描述             |
 | ------------------ | --------- | ---------------- |
