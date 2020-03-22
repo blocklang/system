@@ -48,6 +48,7 @@
 3. [创建一个资源](./resources/create-a-resource.md)
 4. [更新一个资源](./resources/update-a-resource.md)
 5. [获取登录用户对资源的权限列表](./resources/list-user-resource-permissions.md)
+6. [获取登录用户有权访问的资源列表](./resources/list-user-resources.md)
 
 ## 部门管理
 
