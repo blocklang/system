@@ -250,6 +250,9 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 			return result;
 		}
 		
+		if(user.isAdmin()) {
+			return resourceDao.findAllByParentId(resourceId).stream().filter(item -> item.getActive()).collect(Collectors.toList());
+		}
 		// TODO: 判断用户是否禁用，如果禁用直接返回
 		// 1. 获取用户的所有角色，过滤掉失效的角色
 		// 2. 获取每个角色能访问的所有程序模块，过滤掉失效的程序模块
@@ -270,6 +273,7 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 			.flatMap(userRole -> authDao.findAllByRoleId(userRole.getRoleId()).stream().map(authInfo -> authInfo.getResourceId()))
 			.distinct()
 			.map(resId -> {
+				// FIXME:最好只查出直属子模块
 				Optional<ResourceInfo> resourceOption = resourceDao.findById(resId);
 				return resourceOption;
 			})

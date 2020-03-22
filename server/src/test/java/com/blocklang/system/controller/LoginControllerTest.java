@@ -25,7 +25,6 @@ import com.blocklang.system.constant.Auth;
 import com.blocklang.system.constant.ResourceType;
 import com.blocklang.system.controller.data.CheckUsernameParam;
 import com.blocklang.system.controller.data.LoginParam;
-import com.blocklang.system.controller.data.ResourceData;
 import com.blocklang.system.controller.data.ResourcePermissionData;
 import com.blocklang.system.model.ResourceInfo;
 import com.blocklang.system.model.UserInfo;

@@ -26,4 +26,6 @@ public interface ResourceDao extends JpaRepository<ResourceInfo, String> {
 
 	List<ResourceInfo> findAllByAppIdAndParentId(String appId, String resourceId, Sort sort);
 
+	List<ResourceInfo> findAllByParentId(String resourceId);
+
 }

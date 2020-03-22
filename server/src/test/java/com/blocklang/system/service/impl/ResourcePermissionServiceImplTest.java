@@ -1905,6 +1905,68 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		assertThat(permissionService.getUserChildResources(user, Tree.ROOT_PARENT_ID)).hasSize(0);
 	}
 	
+	// 不用配置权限，管理员也能访问所有启用的模块
+	@Test
+	public void getUserChildResources_admin_can_access_active_resources() {
+		String userId = "userId1";
+		String resourceId1 = "resourceId1";
+		String resourceId2 = "resourceId2";
+		String resourceId3 = "resourceId3";
+		String appId = "appId1";
+		
+		UserInfo user = new UserInfo();
+		user.setId(userId);
+		user.setAdmin(true);
+		
+		AppInfo app = new AppInfo();
+		app.setId(appId);
+		app.setName("appName");
+		app.setCreateTime(LocalDateTime.now());
+		app.setCreateUserId(userId);
+		appDao.save(app);
+		
+		// 程序模块
+		ResourceInfo resource = new ResourceInfo();
+		resource.setId(resourceId1);
+		resource.setParentId(Tree.ROOT_PARENT_ID);
+		resource.setAppId(appId);
+		resource.setName("resourceName-func1");
+		resource.setResourceType(ResourceType.FUNCTION);
+		resource.setAuth(Auth.INDEX);
+		resource.setCreateTime(LocalDateTime.now());
+		resource.setCreateUserId(userId);
+		resourceDao.save(resource);
+		
+		// 程序模块1
+		resource = new ResourceInfo();
+		resource.setId(resourceId2);
+		resource.setParentId(resourceId1);
+		resource.setAppId(appId);
+		resource.setName("resourceName-program1");
+		resource.setResourceType(ResourceType.PROGRAM);
+		resource.setCreateTime(LocalDateTime.now());
+		resource.setCreateUserId(userId);
+		resourceDao.save(resource);
+		// 程序模块2
+		resource = new ResourceInfo();
+		resource.setId(resourceId3);
+		resource.setParentId(resourceId1);
+		resource.setAppId(appId);
+		resource.setName("resourceName-program2");
+		resource.setResourceType(ResourceType.PROGRAM);
+		resource.setActive(false);
+		resource.setCreateTime(LocalDateTime.now());
+		resource.setCreateUserId(userId);
+		resourceDao.save(resource);
+		
+		// 虽然此处没有配置权限，但管理员依然具有权限
+		
+		assertThat(permissionService.getUserChildResources(user, Tree.ROOT_PARENT_ID)).hasSize(1);
+		// 此功能模块下有两个程序模块，一个启用，一个未启用
+		assertThat(permissionService.getUserChildResources(user, resourceId1)).hasSize(1);
+	}
+	
+	
 	// TODO: 管理员能访问所有操作
 	// 如果是管理员，则返回 *，还是查出所有操作？
 	// 因为不需要为管理员配置任何权限。还是查出为资源配置的所有权限？
