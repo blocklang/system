@@ -21,7 +21,6 @@ GET /user/resources/{resourceId}/children
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `resourceId`(path)      | `string` | **Required**. 资源标识         |
 
-
 注意：
 
 1. `resourceId` 是所管理资源中某个资源的标识
