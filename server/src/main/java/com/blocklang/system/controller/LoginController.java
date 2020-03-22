@@ -3,8 +3,10 @@ package com.blocklang.system.controller;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -19,9 +21,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.blocklang.system.controller.data.ResourcePermissionData;
 import com.blocklang.system.controller.data.CheckUsernameParam;
 import com.blocklang.system.controller.data.LoginParam;
+import com.blocklang.system.controller.data.ResourceData;
+import com.blocklang.system.controller.data.ResourcePermissionData;
 import com.blocklang.system.controller.data.UserWithToken;
 import com.blocklang.system.exception.InvalidRequestException;
 import com.blocklang.system.model.UserInfo;
@@ -117,5 +120,23 @@ public class LoginController {
 			@PathVariable String resourceId) {
 		ResourcePermissionData permission = permissionService.getPermission(currentUser, resourceId);
 		return ResponseEntity.ok(permission);
+	}
+	
+	@GetMapping("/user/resources/{resourceId}/children")
+	public ResponseEntity<List<ResourceData>> getUserResourceChildren(
+			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
+			@PathVariable String resourceId) {
+		List<ResourceData> result = permissionService.getUserChildResources(currentUser, resourceId).stream().map(item -> {
+			ResourceData data = new ResourceData();
+			data.setId(item.getId());
+			data.setAppId(item.getAppId());
+			data.setParentId(item.getParentId());
+			data.setName(item.getName());
+			data.setType(item.getResourceType().getKey());
+			data.setIcon(item.getIcon());
+			data.setUrl(item.getUrl());
+			return data;
+		}).collect(Collectors.toList());
+		return ResponseEntity.ok(result);
 	}
 }

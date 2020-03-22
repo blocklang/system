@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -21,9 +22,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.blocklang.system.constant.Auth;
+import com.blocklang.system.constant.ResourceType;
 import com.blocklang.system.controller.data.CheckUsernameParam;
 import com.blocklang.system.controller.data.LoginParam;
+import com.blocklang.system.controller.data.ResourceData;
 import com.blocklang.system.controller.data.ResourcePermissionData;
+import com.blocklang.system.model.ResourceInfo;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.EncryptService;
 import com.blocklang.system.test.TestWithCurrentUser;
@@ -291,4 +295,37 @@ public class LoginControllerTest extends TestWithCurrentUser{
 			.body("canAccess", is(true))
 			.body("permissions", hasItems(Auth.NEW, Auth.EDIT));
 	}
+
+	@Test
+	public void getUserResourceChildren_anonymous_user_can_not_get() {
+		String resourceId = "1";
+		
+		given()
+			.contentType(ContentType.JSON)
+		.when()
+			.get("/user/resources/{resourceId}/children", resourceId)
+		.then()
+			.statusCode(HttpStatus.SC_UNAUTHORIZED);
+	}
+	
+	@Test
+	public void getUserResourceChildren_success() {
+		String resourceId = "resId1";
+		
+		ResourceInfo resource = new ResourceInfo();
+		resource.setId("1");
+		resource.setParentId(resourceId);
+		resource.setResourceType(ResourceType.PROGRAM);
+		when(permissionService.getUserChildResources(eq(user), eq(resourceId))).thenReturn(Collections.singletonList(resource));
+		
+		given()
+			.contentType(ContentType.JSON)
+			.header("Authorization", "Token " + token)
+		.when()
+			.get("/user/resources/{resourceId}/children", resourceId)
+		.then()
+			.statusCode(HttpStatus.SC_OK)
+			.body("size()", equalTo(1));
+	}
+
 }

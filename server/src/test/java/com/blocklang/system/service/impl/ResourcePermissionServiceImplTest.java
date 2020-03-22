@@ -1645,6 +1645,266 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		assertThat(permissionService.getPermission(user, resourceId1)).usingRecursiveComparison().isEqualTo(expected);
 	}
 	
+	@Test
+	public void getUserChildResources_user_id_or_resource_id_is_blank() {
+		assertThat(permissionService.getUserChildResources(null, null)).isEmpty();
+		assertThat(permissionService.getUserChildResources(new UserInfo(), null)).isEmpty();
+		assertThat(permissionService.getUserChildResources(null, " ")).isEmpty();
+		assertThat(permissionService.getUserChildResources(new UserInfo(), " ")).isEmpty();
+		assertThat(permissionService.getUserChildResources(new UserInfo(), "1")).isEmpty();
+		
+		UserInfo user = new UserInfo();
+		user.setId(" ");
+		assertThat(permissionService.getUserChildResources(user, "1")).isEmpty();
+	}
+	
+	@Test
+	//@Timeout(value = 20, unit = TimeUnit.MILLISECONDS)
+	public void getUserChildResources_success() {
+		String userId = "userId1";
+		String resourceId1 = "resourceId1";
+		String resourceId2 = "resourceId2";
+		String resourceId3 = "resourceId3";
+		String appId = "appId1";
+		String roleId = "roleId1";
+		String userRoleId = "userRoleId1";
+		
+		UserInfo user = new UserInfo();
+		user.setId(userId);
+		
+		AppInfo app = new AppInfo();
+		app.setId(appId);
+		app.setName("appName");
+		app.setCreateTime(LocalDateTime.now());
+		app.setCreateUserId(userId);
+		appDao.save(app);
+		
+		// 功能模块
+		ResourceInfo resource = new ResourceInfo();
+		resource.setId(resourceId1);
+		resource.setParentId(Tree.ROOT_PARENT_ID);
+		resource.setAppId(appId);
+		resource.setName("resourceName");
+		resource.setResourceType(ResourceType.FUNCTION);
+		resource.setCreateTime(LocalDateTime.now());
+		resource.setCreateUserId(userId);
+		resourceDao.save(resource);
+		
+		// 程序模块1
+		resource = new ResourceInfo();
+		resource.setId(resourceId2);
+		resource.setParentId(resourceId1);
+		resource.setAppId(appId);
+		resource.setName("resourceName-program1");
+		resource.setResourceType(ResourceType.PROGRAM);
+		resource.setAuth(Auth.INDEX);
+		resource.setCreateTime(LocalDateTime.now());
+		resource.setCreateUserId(userId);
+		resourceDao.save(resource);
+		
+		// 程序模块2
+		resource = new ResourceInfo();
+		resource.setId(resourceId3);
+		resource.setParentId(resourceId1);
+		resource.setAppId(appId);
+		resource.setName("resourceName-program2");
+		resource.setResourceType(ResourceType.PROGRAM);
+		resource.setCreateTime(LocalDateTime.now());
+		resource.setCreateUserId(userId);
+		resourceDao.save(resource);
+		
+		// 角色
+		RoleInfo role = new RoleInfo();
+		role.setId(roleId);
+		role.setName("roleName");
+		role.setAppId(appId);
+		role.setCreateTime(LocalDateTime.now());
+		role.setCreateUserId(userId);
+		role.setActive(true);
+		roleDao.save(role);
+		
+		// 用户与角色关联
+		UserRoleInfo userRole = new UserRoleInfo();
+		userRole.setId(userRoleId);
+		userRole.setUserId(userId);
+		userRole.setRoleId(roleId);
+		userRole.setCreateTime(LocalDateTime.now());
+		userRole.setCreateUserId(userId);
+		userRoleDao.save(userRole);
+		
+		// 角色与资源关联
+		AuthInfo auth = new AuthInfo();
+		auth.setId("authId1");
+		auth.setRoleId(roleId);
+		auth.setResourceId(resourceId1);
+		auth.setAppId(appId);
+		auth.setCreateTime(LocalDateTime.now());
+		auth.setCreateUserId(userId);
+		authDao.save(auth);
+		
+		auth = new AuthInfo();
+		auth.setId("authId2");
+		auth.setRoleId(roleId);
+		auth.setResourceId(resourceId2);
+		auth.setAppId(appId);
+		auth.setCreateTime(LocalDateTime.now());
+		auth.setCreateUserId(userId);
+		authDao.save(auth);
+		
+		auth = new AuthInfo();
+		auth.setId("authId3");
+		auth.setRoleId(roleId);
+		auth.setResourceId(resourceId3);
+		auth.setAppId(appId);
+		auth.setCreateTime(LocalDateTime.now());
+		auth.setCreateUserId(userId);
+		authDao.save(auth);
+		
+		// 根节点下有一个功能模块
+		assertThat(permissionService.getUserChildResources(user, Tree.ROOT_PARENT_ID)).hasSize(1);
+		// 此功能模块下有两个程序模块
+		assertThat(permissionService.getUserChildResources(user, resourceId1)).hasSize(2);
+	}
+	
+	@Test
+	public void getUserChildResources_role_is_not_active() {
+		String userId = "userId1";
+		String resourceId1 = "resourceId1";
+		String appId = "appId1";
+		String roleId = "roleId1";
+		String userRoleId = "userRoleId1";
+		
+		UserInfo user = new UserInfo();
+		user.setId(userId);
+		
+		AppInfo app = new AppInfo();
+		app.setId(appId);
+		app.setName("appName");
+		app.setCreateTime(LocalDateTime.now());
+		app.setCreateUserId(userId);
+		appDao.save(app);
+		
+		// 功能模块
+		ResourceInfo resource = new ResourceInfo();
+		resource.setId(resourceId1);
+		resource.setParentId(Tree.ROOT_PARENT_ID);
+		resource.setAppId(appId);
+		resource.setName("resourceName");
+		resource.setResourceType(ResourceType.FUNCTION);
+		resource.setCreateTime(LocalDateTime.now());
+		resource.setCreateUserId(userId);
+		resourceDao.save(resource);
+		
+		// 角色
+		RoleInfo role = new RoleInfo();
+		role.setId(roleId);
+		role.setName("roleName");
+		role.setAppId(appId);
+		role.setCreateTime(LocalDateTime.now());
+		role.setCreateUserId(userId);
+		role.setActive(false);
+		roleDao.save(role);
+		
+		// 用户与角色关联
+		UserRoleInfo userRole = new UserRoleInfo();
+		userRole.setId(userRoleId);
+		userRole.setUserId(userId);
+		userRole.setRoleId(roleId);
+		userRole.setCreateTime(LocalDateTime.now());
+		userRole.setCreateUserId(userId);
+		userRoleDao.save(userRole);
+		
+		userRole = new UserRoleInfo();
+		userRole.setId("userRoleId2");
+		userRole.setUserId(userId);
+		userRole.setRoleId("not-exist");// 关联的角色不存在
+		userRole.setCreateTime(LocalDateTime.now());
+		userRole.setCreateUserId(userId);
+		userRoleDao.save(userRole);
+		
+		// 角色与资源关联
+		AuthInfo auth = new AuthInfo();
+		auth.setId("authId1");
+		auth.setRoleId(roleId); // 关联的角色失效
+		auth.setResourceId(resourceId1);
+		auth.setAppId(appId);
+		auth.setCreateTime(LocalDateTime.now());
+		auth.setCreateUserId(userId);
+		authDao.save(auth);
+
+		assertThat(permissionService.getUserChildResources(user, Tree.ROOT_PARENT_ID)).hasSize(0);
+	}
+	
+	@Test
+	public void getUserChildResources_resource_is_not_active() {
+		String userId = "userId1";
+		String resourceId1 = "resourceId1";
+		String appId = "appId1";
+		String roleId = "roleId1";
+		String userRoleId = "userRoleId1";
+		
+		UserInfo user = new UserInfo();
+		user.setId(userId);
+		
+		AppInfo app = new AppInfo();
+		app.setId(appId);
+		app.setName("appName");
+		app.setCreateTime(LocalDateTime.now());
+		app.setCreateUserId(userId);
+		appDao.save(app);
+		
+		// 功能模块
+		ResourceInfo resource = new ResourceInfo();
+		resource.setId(resourceId1);
+		resource.setParentId(Tree.ROOT_PARENT_ID);
+		resource.setAppId(appId);
+		resource.setName("resourceName");
+		resource.setResourceType(ResourceType.FUNCTION);
+		resource.setActive(false);
+		resource.setCreateTime(LocalDateTime.now());
+		resource.setCreateUserId(userId);
+		resourceDao.save(resource);
+		
+		// 角色
+		RoleInfo role = new RoleInfo();
+		role.setId(roleId);
+		role.setName("roleName");
+		role.setAppId(appId);
+		role.setCreateTime(LocalDateTime.now());
+		role.setCreateUserId(userId);
+		roleDao.save(role);
+		
+		// 用户与角色关联
+		UserRoleInfo userRole = new UserRoleInfo();
+		userRole.setId(userRoleId);
+		userRole.setUserId(userId);
+		userRole.setRoleId(roleId);
+		userRole.setCreateTime(LocalDateTime.now());
+		userRole.setCreateUserId(userId);
+		userRoleDao.save(userRole);
+		
+		// 角色与资源关联
+		AuthInfo auth = new AuthInfo();
+		auth.setId("authId1");
+		auth.setRoleId(roleId);
+		auth.setResourceId(resourceId1);
+		auth.setAppId(appId);
+		auth.setCreateTime(LocalDateTime.now());
+		auth.setCreateUserId(userId);
+		authDao.save(auth);
+		
+		auth = new AuthInfo();
+		auth.setId("authId2");
+		auth.setRoleId(roleId);
+		auth.setResourceId("not-exist"); // 该资源在 sys_resource 表中未定义
+		auth.setAppId(appId);
+		auth.setCreateTime(LocalDateTime.now());
+		auth.setCreateUserId(userId);
+		authDao.save(auth);
+
+		assertThat(permissionService.getUserChildResources(user, Tree.ROOT_PARENT_ID)).hasSize(0);
+	}
+	
 	// TODO: 管理员能访问所有操作
 	// 如果是管理员，则返回 *，还是查出所有操作？
 	// 因为不需要为管理员配置任何权限。还是查出为资源配置的所有权限？

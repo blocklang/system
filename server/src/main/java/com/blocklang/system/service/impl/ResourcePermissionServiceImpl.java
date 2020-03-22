@@ -1,5 +1,6 @@
 package com.blocklang.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -231,5 +232,51 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 			}
 		}
 		return false;
+	}
+
+	// 这里假定传入的 resourceId 必然存在且启用的，则父资源也必然是有效且启用的，所以不在此方法中校验父资源
+	@Override
+	public List<ResourceInfo> getUserChildResources(UserInfo user, String resourceId) {
+		List<ResourceInfo> result = new ArrayList<ResourceInfo>();
+		
+		if(user == null) {
+			return result;
+		}
+		if(resourceId == null || resourceId.isBlank()) {
+			return result;
+		}
+		String userId = user.getId();
+		if(userId == null || userId.isBlank()) {
+			return result;
+		}
+		
+		// TODO: 判断用户是否禁用，如果禁用直接返回
+		// 1. 获取用户的所有角色，过滤掉失效的角色
+		// 2. 获取每个角色能访问的所有程序模块，过滤掉失效的程序模块
+		// 3. 过滤掉重复的程序模块
+		
+		result = userRoleDao.findAllByUserId(userId)
+			.stream()
+			.filter(userRole -> {
+				Optional<RoleInfo> roleOption = roleDao.findById(userRole.getRoleId());
+				if(roleOption.isEmpty()) {
+					return false;
+				}
+				if(!roleOption.get().getActive()) {
+					return false;
+				}
+				return true;
+			})
+			.flatMap(userRole -> authDao.findAllByRoleId(userRole.getRoleId()).stream().map(authInfo -> authInfo.getResourceId()))
+			.distinct()
+			.map(resId -> {
+				Optional<ResourceInfo> resourceOption = resourceDao.findById(resId);
+				return resourceOption;
+			})
+			.filter(resourceOption -> !resourceOption.isEmpty() && resourceOption.get().getActive() && resourceOption.get().getParentId().equals(resourceId))
+			.flatMap(resourceOption -> resourceOption.stream())
+			.collect(Collectors.toList());
+		
+		return result;
 	}
 }

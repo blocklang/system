@@ -1,10 +1,12 @@
 package com.blocklang.system.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.blocklang.system.constant.Auth;
 import com.blocklang.system.constant.ResourceType;
 import com.blocklang.system.controller.data.ResourcePermissionData;
+import com.blocklang.system.model.ResourceInfo;
 import com.blocklang.system.model.UserInfo;
 
 /**
@@ -34,5 +36,7 @@ public interface ResourcePermissionService {
 	Optional<Boolean> canExecute(UserInfo user, String resourceId, String auth);
 
 	ResourcePermissionData getPermission(UserInfo user, String resourceId);
+
+	List<ResourceInfo> getUserChildResources(UserInfo user, String resourceId);
 
 }

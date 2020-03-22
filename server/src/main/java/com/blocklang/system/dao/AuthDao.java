@@ -10,4 +10,6 @@ public interface AuthDao extends JpaRepository<AuthInfo, String>{
 
 	List<AuthInfo> findAllByResourceId(String resourceId);
 
+	List<AuthInfo> findAllByRoleId(String roleId);
+
 }
