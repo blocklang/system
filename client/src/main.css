@@ -1,4 +1,11 @@
-/* Put your styles and imports here */
+/* Put your styles and imports here 
+
+TODO: 如果 admin-lte 中的 bootstrap 升级到4.4.1 后，则不再导入 bootstrap
+import "bootstrap/dist/css/bootstrap.css";
+*/
+@import url("../node_modules/admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.css");
+@import url("../node_modules/admin-lte/dist/css/adminlte.css");
+
 body {
-	
+	font-size: 14px;
 }

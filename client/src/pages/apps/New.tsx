@@ -6,14 +6,15 @@ import FontAwesomeIcon from 'dojo-fontawesome/FontAwesomeIcon';
 import * as request from '../../utils/request';
 import store from '../../store';
 import { redirectToProcess } from '../../processes/routeProcesses';
+import { ResourceProperties } from '../../interfaces';
 
-export interface NewProperties {
+export interface NewProperties extends ResourceProperties{
 }
 
 const factory = create({ icache, store }).properties<NewProperties>();
 
 export default factory(function New({ properties, middleware: { icache, store } }){
-    const {  } = properties();
+    const { resId } = properties();
     return (
         <virtual>
             <section classes={["content-header"]}>
@@ -24,7 +25,7 @@ export default factory(function New({ properties, middleware: { icache, store } 
             <section classes={["content"]}>
                 <div classes={[c.container_fluid]}>
                     <div classes={[c.d_flex, c.justify_content_start, c.mb_2]}>
-                        <Link to="apps" classes={[c.btn, c.btn_secondary]}><FontAwesomeIcon icon="angle-left"/> 返回</Link>
+                        <Link to="apps" params={{resid: resId, page: "0"}} classes={[c.btn, c.btn_secondary]}><FontAwesomeIcon icon="angle-left"/> 返回</Link>
                     </div>
                     <div classes={[c.card]}>
                         <div classes={[c.card_header]}>
@@ -34,7 +35,7 @@ export default factory(function New({ properties, middleware: { icache, store } 
                             <div classes={[c.card_body]}>
                                 <div classes={[c.form_group]}>
                                     <label for="iptName">名称<small classes={[c.text_muted, c.ml_1]}>必填</small></label>
-                                    <input type="text" classes={[c.form_control]} id="iptName" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
+                                    <input type="text" classes={[c.form_control]} focus={true} id="iptName" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
                                         icache.set("appName", event.target.value);
                                     }}/>
                                 </div>
@@ -71,9 +72,9 @@ export default factory(function New({ properties, middleware: { icache, store } 
                                     const description = icache.get<string>("description") || "";
 
                                     const post = async () => {
-                                        const response = await request.post("apps", {name, icon, url, description}, token);
+                                        const response = await request.post(`apps?resid=${resId}`, {name, icon, url, description}, token);
                                         if(response.ok) {
-                                            store.executor(redirectToProcess)({outlet: "apps"});
+                                            store.executor(redirectToProcess)({outlet: "apps", params: {resId, page: "0"}});
                                         }
                                     }
 

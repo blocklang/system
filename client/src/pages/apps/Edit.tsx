@@ -5,10 +5,10 @@ import Link from '@dojo/framework/routing/Link';
 import FontAwesomeIcon from 'dojo-fontawesome/FontAwesomeIcon';
 import * as request from '../../utils/request';
 import store from '../../store';
-import { AppInfo } from '../../interfaces';
+import { AppInfo, ResourceProperties } from '../../interfaces';
 import { redirectToProcess } from '../../processes/routeProcesses';
 
-export interface EditProperties {
+export interface EditProperties extends ResourceProperties{
     appId: string
 }
 
@@ -19,17 +19,18 @@ const icache = createICacheMiddleware<FetchResult>();
 const factory = create({ icache, store }).properties<EditProperties>();
 
 export default factory(function Edit({ properties, middleware: { icache, store } }){
-    const { appId } = properties();
+    const { resId, appId } = properties();
     const token = store.get(store.path("session", "token"));
     const app = icache.getOrSet("app", async () => {
-        const response = await request.get(`apps/${appId}`, token);
+        const response = await request.get(`apps/${appId}?resid=${resId}`, token);
         const app = await response.json();
         if(response.ok){
             return app;
         }
     });
     if(!app) {
-        return <div>APP 不存在</div>
+        // 显示加载中
+        return
     }
 
     return (
@@ -83,7 +84,7 @@ export default factory(function Edit({ properties, middleware: { icache, store }
                                     }
 
                                     const post = async () => {
-                                        const response = await request.put("apps", app, token);
+                                        const response = await request.put(`apps/${appId}?resid=${resId}`, app, token);
                                         if(response.ok) {
                                             store.executor(redirectToProcess)({outlet: "apps"});
                                         }

@@ -2,6 +2,7 @@ import { commandFactory } from './utils';
 import { createProcess } from '@dojo/framework/stores/process';
 import { replace, remove } from '@dojo/framework/stores/state/operations';
 import { ChangeRoutePayload } from './interfaces';
+import { Params } from '@dojo/framework/routing/interfaces';
 
 const changeRouteCommand = commandFactory<ChangeRoutePayload>(({ path, payload: { outlet, context } }) => {
 	return [
@@ -18,9 +19,10 @@ const redirectToLoginCommand = commandFactory(({ path }) => {
 	];
 });
 
-const redirectToCommand = commandFactory<{outlet: string;}>(({path, payload: {outlet}}) => {
+const redirectToCommand = commandFactory<{outlet: string; params?: Params}>(({path, payload: {outlet, params}}) => {
 	return [
 		replace(path("routing", "outlet"), outlet),
+		replace(path("routing", "params"), params),
 		remove(path("errors"))
 	];
 });
