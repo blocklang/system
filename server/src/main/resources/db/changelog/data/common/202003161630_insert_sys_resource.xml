@@ -28,7 +28,7 @@
 			<column name="parent_id" value="01" />
 			<column name="seq" valueNumeric="1" />
 			<column name="url" value="apps"/>
-			<column name="icon" value="circle"/>
+			<column name="icon" value="th-large"/>
 			<column name="resource_type" value="02"/>
 			<column name="description" value="APP管理"/>
 			<column name="active" valueBoolean="true" />
@@ -111,15 +111,15 @@
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
-		<!-- 资源管理 -->
+		<!-- 用户管理 -->
 		<insert tableName="sys_resource">
 			<column name="dbid" value="0102" />
 			<column name="app_id" value="1" />
-			<column name="res_name" value="资源管理" />
+			<column name="res_name" value="用户管理" />
 			<column name="parent_id" value="01" />
 			<column name="seq" valueNumeric="2" />
-			<column name="url" value="resources"/>
-			<column name="icon" value="circle"/>
+			<column name="url" value="users"/>
+			<column name="icon" value="user-edit"/>
 			<column name="resource_type" value="02"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
@@ -130,7 +130,7 @@
 		<insert tableName="sys_resource">
 			<column name="dbid" value="010201" />
 			<column name="app_id" value="1" />
-			<column name="res_name" value="查询资源列表" />
+			<column name="res_name" value="查询用户列表" />
 			<column name="parent_id" value="0102" />
 			<column name="seq" valueNumeric="1" />
 			<column name="url"/>
@@ -145,7 +145,7 @@
 		<insert tableName="sys_resource">
 			<column name="dbid" value="010202" />
 			<column name="app_id" value="1" />
-			<column name="res_name" value="查询资源记录" />
+			<column name="res_name" value="查询用户记录" />
 			<column name="parent_id" value="0102" />
 			<column name="seq" valueNumeric="2" />
 			<column name="url" />
@@ -160,7 +160,7 @@
 		<insert tableName="sys_resource">
 			<column name="dbid" value="010203" />
 			<column name="app_id" value="1" />
-			<column name="res_name" value="新增资源" />
+			<column name="res_name" value="新增用户" />
 			<column name="parent_id" value="0102" />
 			<column name="seq" valueNumeric="3" />
 			<column name="url" />
@@ -175,7 +175,7 @@
 		<insert tableName="sys_resource">
 			<column name="dbid" value="010204" />
 			<column name="app_id" value="1" />
-			<column name="res_name" value="修改资源" />
+			<column name="res_name" value="修改用户" />
 			<column name="parent_id" value="0102" />
 			<column name="seq" valueNumeric="4" />
 			<column name="url" />
@@ -190,8 +190,281 @@
 		<insert tableName="sys_resource">
 			<column name="dbid" value="010205" />
 			<column name="app_id" value="1" />
-			<column name="res_name" value="删除资源" />
+			<column name="res_name" value="删除用户" />
 			<column name="parent_id" value="0102" />
+			<column name="seq" valueNumeric="5" />
+			<column name="url" />
+			<column name="icon" value="times"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="remove"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<!-- 角色管理 -->
+		<insert tableName="sys_resource">
+			<column name="dbid" value="0103" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="角色管理" />
+			<column name="parent_id" value="01" />
+			<column name="seq" valueNumeric="3" />
+			<column name="url" value="roles"/>
+			<column name="icon" value="user-friends"/>
+			<column name="resource_type" value="02"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="index"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010301" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="查询角色列表" />
+			<column name="parent_id" value="0103" />
+			<column name="seq" valueNumeric="1" />
+			<column name="url"/>
+			<column name="icon" value="search"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="list"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010302" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="查询角色记录" />
+			<column name="parent_id" value="0103" />
+			<column name="seq" valueNumeric="2" />
+			<column name="url" />
+			<column name="icon" value="search"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="query"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010303" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="新增角色" />
+			<column name="parent_id" value="0103" />
+			<column name="seq" valueNumeric="3" />
+			<column name="url" />
+			<column name="icon" value="save"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="new"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010304" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="修改角色" />
+			<column name="parent_id" value="0103" />
+			<column name="seq" valueNumeric="4" />
+			<column name="url" />
+			<column name="icon" value="save"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="edit"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010305" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="删除角色" />
+			<column name="parent_id" value="0103" />
+			<column name="seq" valueNumeric="5" />
+			<column name="url" />
+			<column name="icon" value="times"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="remove"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<!-- 部门管理 -->
+		<insert tableName="sys_resource">
+			<column name="dbid" value="0104" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="部门管理" />
+			<column name="parent_id" value="01" />
+			<column name="seq" valueNumeric="4" />
+			<column name="url" value="depts"/>
+			<column name="icon" value="sitemap"/>
+			<column name="resource_type" value="02"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="index"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010401" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="查询部门列表" />
+			<column name="parent_id" value="0104" />
+			<column name="seq" valueNumeric="1" />
+			<column name="url"/>
+			<column name="icon" value="search"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="list"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010402" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="查询部门记录" />
+			<column name="parent_id" value="0104" />
+			<column name="seq" valueNumeric="2" />
+			<column name="url" />
+			<column name="icon" value="search"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="query"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010403" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="新增部门" />
+			<column name="parent_id" value="0104" />
+			<column name="seq" valueNumeric="3" />
+			<column name="url" />
+			<column name="icon" value="save"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="new"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010404" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="修改部门" />
+			<column name="parent_id" value="0104" />
+			<column name="seq" valueNumeric="4" />
+			<column name="url" />
+			<column name="icon" value="save"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="edit"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010405" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="删除部门" />
+			<column name="parent_id" value="0104" />
+			<column name="seq" valueNumeric="5" />
+			<column name="url" />
+			<column name="icon" value="times"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="remove"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<!-- 资源管理 -->
+		<insert tableName="sys_resource">
+			<column name="dbid" value="0105" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="资源管理" />
+			<column name="parent_id" value="01" />
+			<column name="seq" valueNumeric="5" />
+			<column name="url" value="resources"/>
+			<column name="icon" value="stream"/>
+			<column name="resource_type" value="02"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="index"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010501" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="查询资源列表" />
+			<column name="parent_id" value="0105" />
+			<column name="seq" valueNumeric="1" />
+			<column name="url"/>
+			<column name="icon" value="search"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="list"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010502" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="查询资源记录" />
+			<column name="parent_id" value="0105" />
+			<column name="seq" valueNumeric="2" />
+			<column name="url" />
+			<column name="icon" value="search"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="query"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010503" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="新增资源" />
+			<column name="parent_id" value="0105" />
+			<column name="seq" valueNumeric="3" />
+			<column name="url" />
+			<column name="icon" value="save"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="new"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010504" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="修改资源" />
+			<column name="parent_id" value="0105" />
+			<column name="seq" valueNumeric="4" />
+			<column name="url" />
+			<column name="icon" value="save"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="edit"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010505" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="删除资源" />
+			<column name="parent_id" value="0105" />
 			<column name="seq" valueNumeric="5" />
 			<column name="url" />
 			<column name="icon" value="times"/>
