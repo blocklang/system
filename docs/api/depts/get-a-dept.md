@@ -7,7 +7,7 @@
 3. 部门存在
 
 ```text
-GET /depts/{deptId}?resid={resId}
+GET /depts/{deptId}
 ```
 
 ## Parameters
@@ -16,7 +16,6 @@ GET /depts/{deptId}?resid={resId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `deptId`(path)          | `string` | **Required**. 部门标识         |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 
 ## Response
 

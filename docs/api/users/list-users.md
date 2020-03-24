@@ -6,7 +6,7 @@
 2. 用户有权访问
 
 ```text
-GET /users?page={page}&resid={resId}
+GET /users?page={page}
 ```
 
 ## Parameters
@@ -15,7 +15,6 @@ GET /users?page={page}&resid={resId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `page`(queryParam)      | `int`    | 当前页码，从 0 开始计数        |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 
 ## Response
 

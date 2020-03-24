@@ -10,7 +10,7 @@
 6. 父部门下不存在同名部门
 
 ```text
-PUT /depts/{deptId}?resid={resId}
+PUT /depts/{deptId}
 ```
 
 ## Parameters
@@ -19,7 +19,6 @@ PUT /depts/{deptId}?resid={resId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `deptId`(path)          | `string` | **Required**. 部门标识         |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 | `parentId`(body)        | `string` | **Required**. 父部门标识       |
 | `name`(body)            | `string` | **Required**. 部门名称         |
 

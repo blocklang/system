@@ -10,7 +10,7 @@
 6. 父部门下不存在同名部门
 
 ```text
-POST /depts?resid={resId}
+POST /depts
 ```
 
 ## Parameters
@@ -18,7 +18,6 @@ POST /depts?resid={resId}
 | Name                    | Type     | Description                    |
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 | `parentId`(body)        | `string` | **Required**. 父部门标识       |
 | `name`(body)            | `string` | **Required**. 部门名称         |
 

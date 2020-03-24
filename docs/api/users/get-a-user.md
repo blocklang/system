@@ -6,7 +6,7 @@
 2. 用户有权访问
 
 ```text
-GET /users/{userId}?resid={resId}
+GET /users/{userId}
 ```
 
 ## Parameters
@@ -15,7 +15,6 @@ GET /users/{userId}?resid={resId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `userId`(path)          | `string` | **Required**. 用户标识         |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 
 ## Response
 

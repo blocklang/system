@@ -8,7 +8,7 @@
 2. 用户有权访问
 
 ```text
-GET /depts/{deptId}/children?resid={resId}
+GET /depts/{deptId}/children
 ```
 
 ## Parameters
@@ -16,7 +16,6 @@ GET /depts/{deptId}/children?resid={resId}
 | Name                    | Type     | Description                    |
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 | `deptId`(path)          | `string` | **Required**. 部门标识         |
 
 查出 `deptId` 部门的所有直属子部门。

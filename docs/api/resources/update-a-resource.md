@@ -11,7 +11,7 @@
 7. 父资源下的直属资源名不能重复
 
 ```text
-PUT /resources/{resourceId}?resid={resId}
+PUT /resources/{resourceId}
 ```
 
 ## Parameters
@@ -20,7 +20,6 @@ PUT /resources/{resourceId}?resid={resId}
 | ----------------------- | --------- | ------------------------------ |
 | `Authorization`(header) | `string`  | **Required**. 登录用户的 token |
 | `resourceId`(path)      | `string`  | **Required**. 资源标识         |
-| `resId`(queryParam)     | `string`  | **Required**. 资源标识         |
 | `appId`(body)           | `string`  | **Required**. APP 标识         |
 | `parentId`(body)        | `string`  | **Required**. 父资源标识       |
 | `name`(body)            | `string`  | **Required**. 资源名           |
@@ -30,11 +29,6 @@ PUT /resources/{resourceId}?resid={resId}
 | `description`(body)     | `string`  | 资源描述                       |
 | `active`(body)          | `boolean` | 是否启用                       |
 | `auth`(body)            | `string`  | 权限标识                       |
-
-注意：
-
-1. `resId` 是资源管理模块的资源标识，在资源管理模块中管理所有资源
-2. `resourceId` 是所管理资源中某个资源的标识，与 `resId` 没有关系
 
 ## Response
 

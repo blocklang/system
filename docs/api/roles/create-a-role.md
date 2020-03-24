@@ -10,7 +10,7 @@
 6. APP 下的角色名不存在
 
 ```text
-POST /roles?resid={resId}
+POST /roles
 ```
 
 ## Parameters
@@ -18,7 +18,6 @@ POST /roles?resid={resId}
 | Name                    | Type     | Description                    |
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 | `appId`(body)           | `string` | **Required**. APP 标识         |
 | `name`(body)            | `string` | **Required**. 角色名           |
 | `description`(body)     | `string` | 角色描述                       |

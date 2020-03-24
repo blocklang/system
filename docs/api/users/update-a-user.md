@@ -5,9 +5,15 @@
 1. 用户已登录
 2. 用户有权访问
 3. 用户名不能被占用
+4. 手机号可空但不能重复(TBD)
+5. 最大长度校验(TBD)
+   1. 用户名最大长度为 60
+   2. 密码最大长度为 60
+   3. 昵称最大长度为 60
+   4. 手机号最大长度为 11
 
 ```text
-PUT /users/{userId}?resid={resId}
+PUT /users/{userId}
 ```
 
 ## Parameters
@@ -16,7 +22,6 @@ PUT /users/{userId}?resid={resId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `userId`(path)          | `string` | **Required**. 用户标识         |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 | `username`(body)        | `string` | **Required**. 用户名           |
 | `nickname`(body)        | `string` | 昵称                           |
 | `sex`(body)             | `string` | 性别                           |

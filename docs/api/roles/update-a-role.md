@@ -10,7 +10,7 @@
 6. APP 下的角色名不存在
 
 ```text
-PUT /roles/{roleId}?resid={resId}
+PUT /roles/{roleId}
 ```
 
 ## Parameters
@@ -19,7 +19,6 @@ PUT /roles/{roleId}?resid={resId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `roleId`(path)          | `string` | **Required**. 角色标识         |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 | `appId`(body)           | `string` | **Required**. APP 标识         |
 | `name`(body)            | `string` | **Required**. 角色名称         |
 | `description`(body)     | `string` | 角色描述                       |

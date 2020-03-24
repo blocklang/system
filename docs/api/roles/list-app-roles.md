@@ -8,7 +8,7 @@
 2. 用户有权访问
 
 ```text
-GET /roles?page={page}&resid={resId}&appid={appId}
+GET /roles?page={page}&appid={appId}
 ```
 
 ## Parameters
@@ -17,7 +17,6 @@ GET /roles?page={page}&resid={resId}&appid={appId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `page`(queryParam)      | `int`    | 当前页码，从 0 开始计数        |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 | `appId`(queryParam)     | `string` | **Required**. APP 标识         |
 
 ## Response

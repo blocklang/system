@@ -7,7 +7,7 @@
 3. 资源存在
 
 ```text
-GET /resources/{resourceId}?resid={resId}
+GET /resources/{resourceId}
 ```
 
 ## Parameters
@@ -16,12 +16,6 @@ GET /resources/{resourceId}?resid={resId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `resourceId`(path)      | `string` | **Required**. 资源标识         |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
-
-注意：
-
-1. `resId` 是资源管理模块的资源标识，在资源管理模块中管理所有资源
-2. `resourceId` 是所管理资源中某个资源的标识，与 `resId` 没有关系
 
 ## Response
 

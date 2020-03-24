@@ -8,7 +8,7 @@
 4. 一个用户创建的 APP 名不能重复
 
 ```text
-PUT /apps/{appId}?resid={resId}
+PUT /apps/{appId}
 ```
 
 ## Parameters
@@ -16,7 +16,6 @@ PUT /apps/{appId}?resid={resId}
 | Name                    | Type     | Description                    |
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 | `name`(body)            | `string` | **Required**. app 名称         |
 | `url`(body)             | `string` | app 访问地址                   |
 | `icon`(body)            | `string` | app 图标                       |

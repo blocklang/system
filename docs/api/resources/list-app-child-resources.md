@@ -8,7 +8,7 @@
 2. 用户有权访问
 
 ```text
-GET /resources/{resourceId}/children?&resid={resId}&appid={appId}
+GET /resources/{resourceId}/children?&appid={appId}
 ```
 
 ## Parameters
@@ -17,14 +17,11 @@ GET /resources/{resourceId}/children?&resid={resId}&appid={appId}
 | ----------------------- | -------- | ------------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token       |
 | `resourceId`(path)      | `string` | **Required**. 资源标识               |
-| `resId`(queryParam)     | `string` | **Required**. 资源管理模块的资源标识 |
 | `appId`(queryParam)     | `string` | **Required**. APP 标识               |
 
 注意：
 
-1. `resId` 是资源管理模块的资源标识，在资源管理模块中管理所有资源
-2. `resourceId` 是所管理资源中某个资源的标识，与 `resId` 没有关系
-3. `resourceId` 的值为 `-1` 时表示查询 APP 下的顶层资源列表
+1. `resourceId` 的值为 `-1` 时表示查询 APP 下的顶层资源列表
 
 ## Response
 

@@ -7,7 +7,7 @@
 3. 角色存在
 
 ```text
-GET /roles/{roleId}?resid={resId}
+GET /roles/{roleId}
 ```
 
 ## Parameters
@@ -16,7 +16,6 @@ GET /roles/{roleId}?resid={resId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `roleId`(path)          | `string` | **Required**. 角色标识         |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 
 ## Response
 

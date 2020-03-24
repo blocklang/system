@@ -7,7 +7,7 @@
 3. APP 信息存在
 
 ```text
-GET /apps/{appId}?resid={resId}
+GET /apps/{appId}
 ```
 
 ## Parameters
@@ -15,7 +15,6 @@ GET /apps/{appId}?resid={resId}
 | Name                    | Type     | Description                    |
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
-| `resId`(queryParam)     | `string` | **Required**. 资源标识         |
 | `appId`(path)           | `string` | **Required**. app 标识         |
 
 ## Response
