@@ -47,17 +47,15 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newDept_user_has_no_permission() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_NEW))).thenReturn(Optional.empty());
+		
 		NewDeptParam param = new NewDeptParam();
 		param.setParentId(Tree.ROOT_PARENT_ID);
 		param.setName("dept1");
 		
-		String resourceId = "res1"; // 资源管理模块的标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.empty());
-		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("depts")
@@ -67,16 +65,14 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newDept_parent_id_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_NEW))).thenReturn(Optional.of(true));
+		
 		NewDeptParam param = new NewDeptParam();
 		param.setName("dept1");
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("depts")
@@ -88,16 +84,14 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newDept_name_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_NEW))).thenReturn(Optional.of(true));
+		
 		NewDeptParam param = new NewDeptParam();
 		param.setParentId(Tree.ROOT_PARENT_ID);
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("depts")
@@ -109,21 +103,19 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newDept_parent_id_is_not_exist() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_NEW))).thenReturn(Optional.of(true));
+		
 		String parentId = "parentId1";
 		
 		NewDeptParam param = new NewDeptParam();
 		param.setParentId(parentId);
 		param.setName("name");
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
-		
 		when(deptService.findById(eq(parentId))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("depts")
@@ -136,15 +128,14 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	// 同一级部门下 name 不可以重名
 	@Test
 	public void newDept_parent_id_and_name_is_duplicated() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_NEW))).thenReturn(Optional.of(true));
+		
 		String parentId = "parentId1";
 		String name = "name1";
 		
 		NewDeptParam param = new NewDeptParam();
 		param.setParentId(parentId);
 		param.setName(name);
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		DeptInfo parentDept = new DeptInfo();
 		when(deptService.findById(eq(parentId))).thenReturn(Optional.of(parentDept));
@@ -155,7 +146,6 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("depts")
@@ -167,15 +157,14 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newDept_success() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_NEW))).thenReturn(Optional.of(true));
+		
 		String parentId = "parentId1";
 		String name = "name1";
 		
 		NewDeptParam param = new NewDeptParam();
 		param.setParentId(parentId);
 		param.setName(name);
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		DeptInfo parentDept = new DeptInfo();
 		when(deptService.findById(eq(parentId))).thenReturn(Optional.of(parentDept));
@@ -185,7 +174,6 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("depts")
@@ -216,18 +204,17 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateDept_user_has_no_permission() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_EDIT))).thenReturn(Optional.empty());
+		
 		NewDeptParam param = new NewDeptParam();
 		param.setParentId(Tree.ROOT_PARENT_ID);
 		param.setName("name1");
 		
 		String updateDeptId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("depts/{deptId}", updateDeptId)
@@ -237,17 +224,16 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateDept_parent_id_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_EDIT))).thenReturn(Optional.of(true));
+		
 		NewDeptParam param = new NewDeptParam();
 		param.setName("name1");
 		
 		String updateDeptId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("depts/{deptId}", updateDeptId)
@@ -259,6 +245,8 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateDept_parent_id_is_not_exist() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_EDIT))).thenReturn(Optional.of(true));
+		
 		String parentId = "parentId1";
 		String name = "resource1";
 		
@@ -267,15 +255,12 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		param.setName(name);
 		
 		String updateDeptId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		when(deptService.findById(eq(parentId))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("depts/{detpId}", updateDeptId)
@@ -287,19 +272,18 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateDept_name_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_EDIT))).thenReturn(Optional.of(true));
+		
 		String parentId = "parentId1";
 		
 		NewDeptParam param = new NewDeptParam();
 		param.setParentId(parentId);
 		
 		String updateDeptId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("depts/{deptId}", updateDeptId)
@@ -312,6 +296,8 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	// 一个部门下不能有同级的同名子部门
 	@Test
 	public void updateDept_parent_id_and_new_name_is_duplicated() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_EDIT))).thenReturn(Optional.of(true));
+		
 		String parentId = "parentId1";
 		String name = "name1";
 		
@@ -320,8 +306,6 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		param.setName(name);
 		
 		String updateDeptId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		DeptInfo parentDept = new DeptInfo();
 		when(deptService.findById(eq(parentId))).thenReturn(Optional.of(parentDept));
@@ -334,7 +318,6 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("depts/{deptId}", updateDeptId)
@@ -346,8 +329,7 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateDept_success() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_EDIT))).thenReturn(Optional.of(true));
 		
 		String parentId = "parentId1";
 		String name = "name1";
@@ -378,7 +360,6 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("depts/{dept}", updateDeptId)
@@ -409,15 +390,13 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listDept_user_has_no_permission() {
-		String resourceId = "res1"; // 资源管理模块的标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_LIST))).thenReturn(Optional.empty());
 		
 		String parentDeptId = "1";
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("depts/{deptId}/children", parentDeptId)
 		.then()
@@ -426,8 +405,7 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listDept_success_no_data() {
-		String resourceId = "res1"; // 资源管理模块的标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_LIST))).thenReturn(Optional.of(true));
 		
 		String parentDeptId = "1";
 		when(deptService.findChildren(eq(parentDeptId), any())).thenReturn(Collections.emptyList());
@@ -435,7 +413,6 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("depts/{deptId}/children", parentDeptId)
 		.then()
@@ -445,8 +422,7 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listDept_success_one_data() {
-		String resourceId = "res1"; // 资源管理模块的标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_LIST))).thenReturn(Optional.of(true));
 		
 		String deptId = "deptId1";
 		String parentDeptId = "1";
@@ -469,7 +445,6 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("depts/{deptId}/children", parentDeptId)
 		.then()
@@ -498,15 +473,13 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getDept_user_has_no_permission() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_QUERY))).thenReturn(Optional.empty());
 		
 		String queryDeptId = "deptId";
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("depts/{deptId}", queryDeptId)
 		.then()
@@ -515,8 +488,7 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getDept_not_found() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_QUERY))).thenReturn(Optional.of(true));
 		
 		String queryDeptId = "deptId";
 		when(deptService.findById(eq(queryDeptId))).thenReturn(Optional.empty());
@@ -524,7 +496,6 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("depts/{deptId}", queryDeptId)
 		.then()
@@ -533,8 +504,7 @@ public class DeptControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getDept_success() {
-		String resourceId = "res1"; // 资源管理模块的标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_DEPT_QUERY))).thenReturn(Optional.of(true));
 		
 		String queryDeptId = "deptId1";
 		String parentId = "1"; // 在资源管理模块中管理的资源标识
@@ -557,7 +527,6 @@ public class DeptControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("depts/{deptId}", queryDeptId)
 		.then()

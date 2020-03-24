@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.blocklang.system.constant.Auth;
 import com.blocklang.system.constant.ResourceType;
 import com.blocklang.system.constant.Tree;
 import com.blocklang.system.controller.data.ResourcePermissionData;
@@ -40,7 +39,7 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 	private RoleDao roleDao;
 	
 	@Override
-	public Optional<Boolean> canExecute(UserInfo user, String resourceId, String auth) {
+	public Optional<Boolean> canExecute(UserInfo user, String auth) {
 		if(user == null) {
 			return Optional.empty();
 		}
@@ -48,29 +47,28 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 		if(userId == null || userId.isBlank()) {
 			return Optional.empty();
 		}
-		if(resourceId == null || resourceId.isBlank()) {
-			return Optional.empty();
-		}
-		// 本方法不适用于页面，而 Auth.INDEX 专用于页面
-		if(auth == null || auth.isBlank() || auth == Auth.INDEX) {
+		if(auth == null || auth.isBlank()) {
 			return Optional.empty();
 		}
 		
+		// 本方法不适用于页面，而 Auth.INDEX 专用于页面
+		
 		// 确保当前资源存在，且没有失效
 		// FIXME: 待确认逻辑，是否实现了程序模块未失效的判断
-		Optional<ResourceInfo> resourceOption = resourceDao.findByParentIdAndAuth(resourceId, auth);
+		Optional<ResourceInfo> resourceOption = resourceDao.findByAuth(auth);
 		if(resourceOption.isEmpty()) {
 			return Optional.empty();
 		}
-		// 管理员可以访问所有存在的资源，包括失效的资源
-		if(user.isAdmin()) {
-			return Optional.of(true);
-		}
-
+		
 		ResourceInfo resource = resourceOption.get();
 		// 本方法只用于校验按钮的操作权限
 		if(resource.getResourceType() != ResourceType.OPERATOR) {
 			return Optional.empty();
+		}
+		
+		// 管理员可以访问所有存在的资源，包括失效的资源
+		if(user.isAdmin()) {
+			return Optional.of(true);
 		}
 		
 		// 确保资源所归属的 APP 存在且没有失效
@@ -83,7 +81,9 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 		String parentResourceId = resource.getParentId();
 		while(parentResourceId != Tree.ROOT_PARENT_ID) {
 			Optional<ResourceInfo> parentResourceOption = resourceDao.findById(parentResourceId);
-			// 无需判断 parentResourceOption 是否为 empty，能执行到此处必然有值
+			if(parentResourceOption.isEmpty()) {
+				return Optional.empty();
+			}
 			ResourceInfo parentResource = parentResourceOption.get();
 			if(!parentResource.getActive()) {
 				return Optional.empty();

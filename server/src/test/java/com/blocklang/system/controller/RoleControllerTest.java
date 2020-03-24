@@ -52,17 +52,15 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newRole_user_has_no_permission() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_NEW))).thenReturn(Optional.empty());
+
 		NewRoleParam param = new NewRoleParam();
 		param.setAppId("1");
 		param.setName("role1");
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.empty());
-		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("roles")
@@ -72,16 +70,14 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newRole_app_id_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_NEW))).thenReturn(Optional.of(true));
+
 		NewRoleParam param = new NewRoleParam();
 		param.setName("role1");
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("roles")
@@ -93,16 +89,14 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newRole_name_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_NEW))).thenReturn(Optional.of(true));
+
 		NewRoleParam param = new NewRoleParam();
 		param.setAppId("appId1");
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("roles")
@@ -114,21 +108,19 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newRole_app_id_is_not_exist() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_NEW))).thenReturn(Optional.of(true));
+
 		NewRoleParam param = new NewRoleParam();
 		String appId = "appId1";
 		String roleName = "role1";
 		param.setAppId(appId);
 		param.setName(roleName);
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
-		
 		when(appService.findById(eq(appId))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("roles")
@@ -141,14 +133,13 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	// 不同的 APP 下，name 不可以重名
 	@Test
 	public void newRole_app_id_and_name_is_duplicated() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_NEW))).thenReturn(Optional.of(true));
+
 		NewRoleParam param = new NewRoleParam();
 		String appId = "appId1";
 		String roleName = "role1";
 		param.setAppId(appId);
 		param.setName(roleName);
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
@@ -158,7 +149,6 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("roles")
@@ -170,6 +160,8 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newRole_success() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_NEW))).thenReturn(Optional.of(true));
+
 		String appId = "appId";
 		String name = "role1";
 		String description = "description";
@@ -179,16 +171,12 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		param.setName(name);
 		param.setDescription(description);
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
-		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		when(roleService.findByAppIdAndName(eq(appId), eq(name))).thenReturn(Optional.empty());
 
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("roles")
@@ -220,18 +208,17 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateRole_user_has_no_permission() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.empty());
+
 		NewRoleParam param = new NewRoleParam();
 		param.setAppId("1");
 		param.setName("role1");
 		
 		String updateRoleId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("roles/{roleId}", updateRoleId)
@@ -241,17 +228,16 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateRole_app_id_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.of(true));
+
 		NewRoleParam param = new NewRoleParam();
 		param.setName("role1");
 		
 		String updateRoleId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("roles/{roleId}", updateRoleId)
@@ -263,6 +249,8 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateRole_app_id_is_not_exist() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.of(true));
+
 		String appId = "appId1";
 		String roleName = "role1";
 		
@@ -270,15 +258,11 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		param.setAppId(appId);
 		param.setName(roleName);
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
-		
 		when(appService.findById(eq(appId))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("roles/{roleId}", appId)
@@ -290,17 +274,16 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateRole_name_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.of(true));
+
 		NewRoleParam param = new NewRoleParam();
 		param.setAppId("appId1");
 		
 		String updateRoleId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("roles/{roleId}", updateRoleId)
@@ -313,6 +296,8 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	// 不同的 APP 下，name 不可以重名
 	@Test
 	public void updateRole_app_id_and_new_name_is_duplicated() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.of(true));
+
 		NewRoleParam param = new NewRoleParam();
 		String appId = "appId1";
 		String roleName = "role1";
@@ -320,8 +305,6 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		param.setName(roleName);
 		
 		String updateRoleId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
@@ -333,7 +316,6 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("roles/{roleId}", updateRoleId)
@@ -345,6 +327,8 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateRole_success() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.of(true));
+
 		NewRoleParam param = new NewRoleParam();
 		String appId = "appId1";
 		String roleName = "role1";
@@ -354,8 +338,6 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		param.setDescription(description);
 		
 		String updateRoleId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
@@ -379,7 +361,6 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("roles/{roleId}", updateRoleId)
@@ -411,14 +392,13 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listRole_user_has_no_permission() {
-		String resourceId = "res1";
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_LIST))).thenReturn(Optional.empty());
+
 		String appId = "appId";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.queryParam("appId", appId)
 		.when()
 			.get("roles")
@@ -428,10 +408,9 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listRole_success_no_data() {
-		String resourceId = "res1";
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_LIST))).thenReturn(Optional.of(true));
+
 		String appId = "appId";
-		
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
 		
 		Page<RoleInfo> result = new PageImpl<RoleInfo>(Collections.emptyList());
 		when(roleService.findAllByAppId(eq(appId), any())).thenReturn(result);
@@ -439,7 +418,6 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.queryParam("appId", appId)
 		.when()
 			.get("roles")
@@ -456,13 +434,12 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listRole_success_one_data() {
-		String resourceId = "res1";
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_LIST))).thenReturn(Optional.of(true));
+
 		String roleId = "roleId";
 		String appId = "appId";
 		String roleName = "role1";
 		String description = "description1";
-		
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
 		
 		RoleInfo actualRole = new RoleInfo();
 		actualRole.setId(roleId);
@@ -482,7 +459,6 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.queryParam("appId", appId)
 		.when()
 			.get("roles")
@@ -519,15 +495,13 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getRole_user_has_no_permission() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_QUERY))).thenReturn(Optional.empty());
 		
 		String roleId = "roleId";
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("roles/{roleId}", roleId)
 		.then()
@@ -536,17 +510,15 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getRole_not_found() {
-		String resourceId = "res1";
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_QUERY))).thenReturn(Optional.of(true));
+
 		String roleId = "roleId";
-		
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
 		
 		when(roleService.findById(eq(roleId))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("roles/{roleId}", roleId)
 		.then()
@@ -555,13 +527,12 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getRole_success() {
-		String resourceId = "res1";
+		when(permissionService.canExecute(any() ,eq(Auth.SYSTEM_ROLE_QUERY))).thenReturn(Optional.of(true));
+
 		String roleId = "roleId";
 		String appId = "appId";
 		String roleName = "role1";
 		String description = "description1";
-		
-		when(permissionService.canExecute(any(), eq(resourceId),eq(Auth.QUERY))).thenReturn(Optional.of(true));
 		
 		RoleInfo actualRole = new RoleInfo();
 		actualRole.setId(roleId);
@@ -580,7 +551,6 @@ public class RoleControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("roles/{roleId}", roleId)
 		.then()

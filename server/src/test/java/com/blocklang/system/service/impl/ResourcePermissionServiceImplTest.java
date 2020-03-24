@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.blocklang.system.constant.Auth;
 import com.blocklang.system.constant.ResourceType;
 import com.blocklang.system.constant.Tree;
 import com.blocklang.system.controller.data.ResourcePermissionData;
@@ -47,21 +46,12 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 	
 	@Test
 	public void canExecute_user_is_null_or_blank() {
-		assertThat(permissionService.canExecute(null, null, null)).isEmpty();
-		assertThat(permissionService.canExecute(new UserInfo(), null, null)).isEmpty();
+		assertThat(permissionService.canExecute(null, null)).isEmpty();
+		assertThat(permissionService.canExecute(new UserInfo(), null)).isEmpty();
 		
 		UserInfo user = new UserInfo();
 		user.setId(" ");
-		assertThat(permissionService.canExecute(user, null, null)).isEmpty();
-	}
-	
-	@Test
-	public void canExecute_resource_id_is_null_or_blank() {
-		UserInfo user = new UserInfo();
-		user.setId("userId");
-		
-		assertThat(permissionService.canExecute(user, null, null)).isEmpty();
-		assertThat(permissionService.canExecute(user, "", null)).isEmpty();
+		assertThat(permissionService.canExecute(user, null)).isEmpty();
 	}
 	
 	@Test
@@ -69,8 +59,8 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		UserInfo user = new UserInfo();
 		user.setId("userId");
 		
-		assertThat(permissionService.canExecute(user, "2", null)).isEmpty();
-		assertThat(permissionService.canExecute(user, "2", "")).isEmpty();
+		assertThat(permissionService.canExecute(user,  null)).isEmpty();
+		assertThat(permissionService.canExecute(user, "")).isEmpty();
 	}
 	
 	/**
@@ -90,7 +80,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 	 * 3. 角色信息
 	 */
 	@Test
-	@Timeout(value = 20, unit = TimeUnit.MILLISECONDS)
+	//@Timeout(value = 20, unit = TimeUnit.MILLISECONDS)
 	public void canExecute_success() {
 		String userId = "userId1";
 		String resourceId1 = "resourceId1";
@@ -116,7 +106,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -128,7 +118,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -156,17 +146,26 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		AuthInfo auth = new AuthInfo();
 		auth.setId("authId1");
 		auth.setRoleId(roleId);
+		auth.setResourceId(resourceId1);
+		auth.setAppId(appId);
+		auth.setCreateTime(LocalDateTime.now());
+		auth.setCreateUserId(userId);
+		authDao.save(auth);
+		
+		auth = new AuthInfo();
+		auth.setId("authId2");
+		auth.setRoleId(roleId);
 		auth.setResourceId(resourceId2);
 		auth.setAppId(appId);
 		auth.setCreateTime(LocalDateTime.now());
 		auth.setCreateUserId(userId);
 		authDao.save(auth);
 		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
+		// 这个是程序模块，不能用 execute 判断
+		assertThat(permissionService.canExecute(user, "auth1")).isEmpty();
 		
 		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isPresent();
+		assertThat(permissionService.canExecute(user, "auth2")).isPresent();
 	}
 	
 	/**
@@ -175,16 +174,11 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 	@Test
 	public void canExecute_operator_resource_is_not_exists() {
 		String userId = "userId1";
-		String resourceId1 = "resourceId1";
 		
 		UserInfo user = new UserInfo();
 		user.setId(userId);
 		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
-		
-		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		assertThat(permissionService.canExecute(user, "not-exist-auth")).isEmpty();
 	}
 	
 	@Test
@@ -214,7 +208,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -227,16 +221,16 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setActive(false);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
 		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
+		// canExecute 不能用于程序模块，专用于操作按钮权限
+		assertThat(permissionService.canExecute(user, "auth1")).isEmpty();
 		
-		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		// 过滤掉失效的操作权限
+		assertThat(permissionService.canExecute(user, "auth2")).isEmpty();
 	}
 	
 	/**
@@ -269,7 +263,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(false);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -281,16 +275,13 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
 		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
-		
-		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		// 程序模块已失效，所以用户无权访问操作按钮
+		assertThat(permissionService.canExecute(user, "auth2")).isEmpty();
 	}
 	
 	/**
@@ -324,6 +315,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.FUNCTION);
 		resource.setActive(false);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -335,7 +327,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -347,16 +339,13 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth3");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
-		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
-		
+
 		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth3")).isEmpty();
 	}
 
 	/**
@@ -380,7 +369,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -392,16 +381,13 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
-		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
-		
+
 		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth2")).isEmpty();
 	}
 	
 	/**
@@ -434,7 +420,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -446,16 +432,13 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
 		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
-		
 		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth2")).isEmpty();
 	}
 	
 	@Test
@@ -484,7 +467,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -496,16 +479,13 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
-		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
-		
+
 		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth2")).isEmpty();
 	}
 	
 	// 注意，准备数据时若出现此测试用例中的数据，则就视为错误数据
@@ -538,7 +518,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -550,7 +530,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName1");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -562,7 +542,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName2");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth("INVALID_AUTH");
+		resource.setAuth("auth3");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -595,8 +575,8 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		auth.setCreateUserId(userId);
 		authDao.save(auth);
 		
-		assertThat(permissionService.canExecute(user, resourceId0, Auth.INDEX)).isEmpty();
-		assertThat(permissionService.canExecute(user, resourceId0, "INVALID_AUTH")).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth2")).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth3")).isEmpty();
 	}
 	
 	@Test
@@ -625,7 +605,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -637,7 +617,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -660,12 +640,9 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		auth.setCreateTime(LocalDateTime.now());
 		auth.setCreateUserId(userId);
 		authDao.save(auth);
-		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
-		
+
 		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth2")).isEmpty();
 	}
 	
 	@Test
@@ -694,7 +671,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -706,7 +683,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -739,12 +716,9 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		auth.setCreateTime(LocalDateTime.now());
 		auth.setCreateUserId(userId);
 		authDao.save(auth);
-		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
-		
+
 		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth2")).isEmpty();
 	}
 	
 	@Test
@@ -774,7 +748,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -786,7 +760,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -826,12 +800,9 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		auth.setCreateTime(LocalDateTime.now());
 		auth.setCreateUserId(userId);
 		authDao.save(auth);
-		
-		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
-		
+
 		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth2")).isEmpty();
 	}
 	
 	// 管理员也有权访问未启用的资源
@@ -861,7 +832,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -873,16 +844,16 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
 		
 		// resourceId1 + Auth.INDEX 的组合 = resourceId1
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.INDEX)).isEmpty();
+		assertThat(permissionService.canExecute(user, "auth1")).isEmpty();
 		
 		// resourceId1 + Auth.QUERY 的组合 = resourceId2
-		assertThat(permissionService.canExecute(user, resourceId1, Auth.QUERY)).isPresent();
+		assertThat(permissionService.canExecute(user, "auth2")).isPresent();
 	}
 
 	@Test
@@ -926,7 +897,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -938,7 +909,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -950,7 +921,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op2");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.NEW);
+		resource.setAuth("auth3");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -995,7 +966,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		
 		ResourcePermissionData expected = new ResourcePermissionData(resourceId1);
 		expected.setCanAccess(true);
-		expected.setPermissions(new HashSet<String>(Arrays.asList(Auth.QUERY)));
+		expected.setPermissions(new HashSet<String>(Arrays.asList("auth2")));
 		assertThat(permissionService.getPermission(user, resourceId1)).usingRecursiveComparison().isEqualTo(expected);
 	}
 	
@@ -1043,7 +1014,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(false);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1071,7 +1042,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1109,7 +1080,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1121,7 +1092,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1170,7 +1141,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1217,7 +1188,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(true);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1250,7 +1221,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1293,7 +1264,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1305,7 +1276,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1358,7 +1329,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1429,7 +1400,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1441,7 +1412,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setActive(false);
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
@@ -1525,7 +1496,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1537,7 +1508,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1620,7 +1591,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1632,7 +1603,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-op");
 		resource.setResourceType(ResourceType.OPERATOR);
-		resource.setAuth(Auth.QUERY);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1641,7 +1612,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		
 		ResourcePermissionData expected = new ResourcePermissionData(resourceId1);
 		expected.setCanAccess(true);
-		expected.setPermissions(new HashSet<String>(Arrays.asList(Auth.QUERY)));
+		expected.setPermissions(new HashSet<String>(Arrays.asList("auth2")));
 		assertThat(permissionService.getPermission(user, resourceId1)).usingRecursiveComparison().isEqualTo(expected);
 	}
 	
@@ -1686,6 +1657,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.FUNCTION);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1697,7 +1669,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-program1");
 		resource.setResourceType(ResourceType.PROGRAM);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1709,6 +1681,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-program2");
 		resource.setResourceType(ResourceType.PROGRAM);
+		resource.setAuth("auth3");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1791,6 +1764,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.FUNCTION);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1861,6 +1835,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName");
 		resource.setResourceType(ResourceType.FUNCTION);
 		resource.setActive(false);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1932,7 +1907,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-func1");
 		resource.setResourceType(ResourceType.FUNCTION);
-		resource.setAuth(Auth.INDEX);
+		resource.setAuth("auth1");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1944,6 +1919,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setAppId(appId);
 		resource.setName("resourceName-program1");
 		resource.setResourceType(ResourceType.PROGRAM);
+		resource.setAuth("auth2");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);
@@ -1955,6 +1931,7 @@ public class ResourcePermissionServiceImplTest extends AbstractServiceTest{
 		resource.setName("resourceName-program2");
 		resource.setResourceType(ResourceType.PROGRAM);
 		resource.setActive(false);
+		resource.setAuth("auth3");
 		resource.setCreateTime(LocalDateTime.now());
 		resource.setCreateUserId(userId);
 		resourceDao.save(resource);

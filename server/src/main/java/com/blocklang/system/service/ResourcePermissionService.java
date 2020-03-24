@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.blocklang.system.constant.Auth;
-import com.blocklang.system.constant.ResourceType;
 import com.blocklang.system.controller.data.ResourcePermissionData;
 import com.blocklang.system.model.ResourceInfo;
 import com.blocklang.system.model.UserInfo;
@@ -29,11 +28,10 @@ public interface ResourcePermissionService {
 	 * </p>
 	 * 
 	 * @param user          登录用户
-	 * @param resourceId    资源标识，<strong>专指程序模块，即 resourceType 的值为 {@link ResourceType#PROGRAM}</strong>
-	 * @param auth          操作按钮的权限标签（不能是程序模块的权限 {@link Auth#INDEX}），用一个自定义的字符串表示一个程序模块中的权限，一些常用操作存在 {@link Auth} 常量类中。
+	 * @param auth          全局唯一的权限标识符，操作按钮的权限标签（不能是程序模块的权限 {@link Auth#INDEX}），用一个自定义的字符串表示一个程序模块中的权限，一些常用操作存在 {@link Auth} 常量类中。
 	 * @return 如果有权访问则返回 <code>true</code>；否则返回 <code>false</code>。
 	 */
-	Optional<Boolean> canExecute(UserInfo user, String resourceId, String auth);
+	Optional<Boolean> canExecute(UserInfo user, String auth);
 
 	ResourcePermissionData getPermission(UserInfo user, String resourceId);
 

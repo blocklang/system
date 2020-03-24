@@ -12,13 +12,12 @@ import com.blocklang.system.model.ResourceInfo;
 public interface ResourceDao extends JpaRepository<ResourceInfo, String> {
 
 	/**
-	 * 根据 resourceId 和 auth 返回的值必然不会是多条记录，因为当资源为程序模块时，此约束唯一。
+	 * 根据  auth 返回的值必然不会是多条记录。
 	 * 
-	 * @param resourceId 资源标识，必须为程序模块
-	 * @param auth 操作权限标识
+	 * @param auth 操作权限标识，全局唯一
 	 * @return 资源信息
 	 */
-	Optional<ResourceInfo> findByParentIdAndAuth(String resourceId, String auth);
+	Optional<ResourceInfo> findByAuth(String auth);
 
 	List<ResourceInfo> findAllByParentIdAndResourceType(String resourceId, ResourceType resourceType);
 

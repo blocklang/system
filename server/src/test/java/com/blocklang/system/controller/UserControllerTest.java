@@ -7,10 +7,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -52,13 +51,11 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listUser_user_has_no_permission() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_LIST))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("users")
 		.then()
@@ -67,9 +64,8 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listUser_success_no_data() {
-		String resourceId = "res1";
 		// 注意：在做权限校验时，此处不能传 eq(user)，否则不能精准匹配
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_LIST))).thenReturn(Optional.of(true));
 		
 		Page<UserInfo> result = new PageImpl<UserInfo>(Collections.emptyList());
 		when(userService.findAll(any())).thenReturn(result);
@@ -77,7 +73,6 @@ public class UserControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("users")
 		.then()
@@ -93,8 +88,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listUser_success_one_data() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), anyString())).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_LIST))).thenReturn(Optional.of(true));
 		
 		String userId = "1";
 		String username = "username";
@@ -127,7 +121,6 @@ public class UserControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("users")
 		.then()
@@ -154,8 +147,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listUser_success_page() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), anyString())).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_LIST))).thenReturn(Optional.of(true));
 		
 		Page<UserInfo> result = new PageImpl<UserInfo>(Collections.emptyList());
 		when(userService.findAll(any())).thenReturn(result);
@@ -163,7 +155,6 @@ public class UserControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.queryParam("page", "1")
 		.when()
 			.get("users")
@@ -190,13 +181,11 @@ public class UserControllerTest extends TestWithCurrentUser{
 
 	@Test
 	public void getUser_user_has_no_permission() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_QUERY))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("users/{userId}", user.getId())
 		.then()
@@ -205,8 +194,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getUser_not_found() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_QUERY))).thenReturn(Optional.of(true));
 		// 注意在 TestWithCurrentUser 中已 mock 一个登录用户
 		// 此处要模拟查不到用户的情况，就要避开此用户
 		
@@ -218,7 +206,6 @@ public class UserControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("users/{userId}", userId)
 		.then()
@@ -227,8 +214,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getUser_success() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId),eq(Auth.QUERY))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_QUERY))).thenReturn(Optional.of(true));
 		
 		String userId = "2";
 		Assert.isTrue(!userId.equals(user.getId()), "");
@@ -262,7 +248,6 @@ public class UserControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("users/{userId}", userId)
 		.then()
@@ -296,13 +281,11 @@ public class UserControllerTest extends TestWithCurrentUser{
 		param.setUsername("username");
 		param.setPassword("password");
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_NEW))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("users")
@@ -312,15 +295,12 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newUser_username_is_blank() {
+		when(permissionService.canExecute(any(),  eq(Auth.SYSTEM_USER_NEW))).thenReturn(Optional.of(true));
 		NewUserParam param = new NewUserParam();
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("users")
@@ -332,16 +312,14 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newUser_password_is_blank() {
+		when(permissionService.canExecute(any(),  eq(Auth.SYSTEM_USER_NEW))).thenReturn(Optional.of(true));
+
 		NewUserParam param = new NewUserParam();
 		param.setUsername("username");
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("users")
@@ -353,13 +331,12 @@ public class UserControllerTest extends TestWithCurrentUser{
 
 	@Test
 	public void newUser_username_is_duplicated() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_NEW))).thenReturn(Optional.of(true));
+
 		NewUserParam param = new NewUserParam();
 		String username = "jack";
 		param.setUsername(username);
 		param.setPassword("password");
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		UserInfo existUser = new UserInfo();
 		when(userService.findByUsername(eq(username))).thenReturn(Optional.of(existUser));
@@ -367,7 +344,6 @@ public class UserControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("users")
@@ -379,6 +355,8 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newUser_success() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_NEW))).thenReturn(Optional.of(true));
+
 		String username = "username";
 		String nickname = "nickname";
 		String sex = Sex.MALE.getKey();
@@ -392,15 +370,12 @@ public class UserControllerTest extends TestWithCurrentUser{
 		param.setSex(sex);
 		param.setPhoneNumber(phoneNumber);
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
 		
 		when(userService.findByUsername(eq(username))).thenReturn(Optional.empty());
 		when(encryptService.encrypt(eq(password))).thenReturn(password);
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("users")
@@ -435,19 +410,17 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateUser_user_has_no_permission() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_EDIT))).thenReturn(Optional.empty());
+
 		UpdateUserParam param = new UpdateUserParam();
 		param.setUsername("username");
 		
 		String updateUserId = "2";
 		Assert.isTrue(!user.getId().equals(updateUserId), "");
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.empty());
-		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("users/{userId}", updateUserId)
@@ -457,15 +430,13 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateUser_username_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_EDIT))).thenReturn(Optional.of(true));
+
 		UpdateUserParam param = new UpdateUserParam();
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("users/{userId}", "2")
@@ -477,14 +448,13 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateUser_new_username_is_duplicated() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_EDIT))).thenReturn(Optional.of(true));
+
 		String updateUserId = "2";
 		
 		UpdateUserParam param = new UpdateUserParam();
 		String username = "new-jack"; // 这是修改后的用户名，但这个用户名在数据库中已存在
 		param.setUsername(username);
-		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		UserInfo existUser = new UserInfo();
 		String existUserId = "3";
@@ -495,7 +465,6 @@ public class UserControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("users/{userId}", updateUserId)
@@ -507,6 +476,8 @@ public class UserControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateUser_success() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_EDIT))).thenReturn(Optional.of(true));
+
 		String updateUserId = "2";
 		String username = "username1";
 		String nickname = "nickname1";
@@ -519,8 +490,6 @@ public class UserControllerTest extends TestWithCurrentUser{
 		param.setSex(sex);
 		param.setPhoneNumber(phoneNumber);
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		// 用于校验用户名是否被占用
 		// 这是没有修改用户名的情况
@@ -542,7 +511,6 @@ public class UserControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("users/{userId}", updateUserId)

@@ -67,6 +67,7 @@ public class ResourceServiceImplTest extends AbstractServiceTest{
 		resource1.setParentId(parentId);
 		resource1.setName(name);
 		resource1.setResourceType(ResourceType.PROGRAM);
+		resource1.setAuth("auth1");
 		resource1.setCreateTime(LocalDateTime.now());
 		resource1.setCreateUserId("1");
 		resourceDao.save(resource1);
@@ -105,6 +106,7 @@ public class ResourceServiceImplTest extends AbstractServiceTest{
 		resource1.setParentId("parentId1");
 		resource1.setName("name1");
 		resource1.setResourceType(ResourceType.PROGRAM);
+		resource1.setAuth("auth1");
 		resource1.setCreateTime(LocalDateTime.now());
 		resource1.setCreateUserId("1");
 		resourceDao.save(resource1);
@@ -115,6 +117,7 @@ public class ResourceServiceImplTest extends AbstractServiceTest{
 		resource2.setParentId("1");
 		resource2.setName("name2");
 		resource2.setResourceType(ResourceType.OPERATOR);
+		resource2.setAuth("auth2");
 		resource2.setCreateTime(LocalDateTime.now());
 		resource2.setCreateUserId("1");
 		resourceDao.save(resource2);
@@ -125,6 +128,7 @@ public class ResourceServiceImplTest extends AbstractServiceTest{
 		resource3.setParentId("1");
 		resource3.setName("name3");
 		resource3.setResourceType(ResourceType.OPERATOR);
+		resource3.setAuth("auth3");
 		resource3.setCreateTime(LocalDateTime.now());
 		resource3.setCreateUserId("1");
 		resourceDao.save(resource3);

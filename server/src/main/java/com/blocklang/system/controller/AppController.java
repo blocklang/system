@@ -47,11 +47,10 @@ public class AppController {
 	@PostMapping("/apps")
 	public ResponseEntity<AppInfo> newApp(
 			@AuthenticationPrincipal UserInfo user, 
-			@RequestParam("resid") String resourceId,
 			@Valid @RequestBody NewAppParam param, 
 			BindingResult bindingResult
 		) {
-		permissionService.canExecute(user, resourceId, Auth.NEW).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user, Auth.SYSTEM_APP_NEW).orElseThrow(NoAuthorizationException::new);
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
@@ -78,11 +77,10 @@ public class AppController {
 	@PutMapping("/apps/{appId}")
 	public ResponseEntity<AppInfo> updateApp(
 			@AuthenticationPrincipal UserInfo user, 
-			@RequestParam("resid") String resourceId,
 			@PathVariable String appId,
 			@Valid @RequestBody NewAppParam param, 
 			BindingResult bindingResult) {
-		permissionService.canExecute(user, resourceId, Auth.EDIT).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user, Auth.SYSTEM_APP_EDIT).orElseThrow(NoAuthorizationException::new);
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
@@ -109,9 +107,8 @@ public class AppController {
 	@GetMapping("/apps")
 	public ResponseEntity<Page<AppInfo>> listApp(
 			@AuthenticationPrincipal UserInfo user,
-			@RequestParam("resid") String resourceId, 
 			@RequestParam(required = false, defaultValue = "0") Integer page) {
-		permissionService.canExecute(user, resourceId, Auth.LIST).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user, Auth.SYSTEM_APP_LIST).orElseThrow(NoAuthorizationException::new);
 		Pageable pageable = PageRequest.of(page, WebSite.PAGE_SIZE, Sort.by(Direction.DESC, "createTime"));
 		Page<AppInfo> apps = appService.findAll(pageable);
 		return ResponseEntity.ok(apps);
@@ -120,9 +117,8 @@ public class AppController {
 	@GetMapping("/apps/{appId}")
 	public ResponseEntity<AppInfo> getApp(
 			@AuthenticationPrincipal UserInfo user, 
-			@PathVariable String appId,
-			@RequestParam("resid") String resourceId) {
-		permissionService.canExecute(user, resourceId, Auth.QUERY).orElseThrow(NoAuthorizationException::new);
+			@PathVariable String appId) {
+		permissionService.canExecute(user, Auth.SYSTEM_APP_QUERY).orElseThrow(NoAuthorizationException::new);
 		AppInfo app = appService.findById(appId).orElseThrow(ResourceNotFoundException::new);
 		return ResponseEntity.ok(app);
 	}

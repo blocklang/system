@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.blocklang.system.constant.Auth;
 import com.blocklang.system.constant.ResourceType;
 import com.blocklang.system.controller.data.CheckUsernameParam;
 import com.blocklang.system.controller.data.LoginParam;
@@ -280,7 +279,7 @@ public class LoginControllerTest extends TestWithCurrentUser{
 		
 		ResourcePermissionData permission = new ResourcePermissionData(resourceId);
 		permission.setCanAccess(true);
-		permission.setPermissions(new HashSet<String>(Arrays.asList(Auth.NEW, Auth.EDIT)));
+		permission.setPermissions(new HashSet<String>(Arrays.asList("auth1", "auth2")));
 		when(permissionService.getPermission(eq(user), eq(resourceId))).thenReturn(permission);
 		
 		given()
@@ -292,7 +291,7 @@ public class LoginControllerTest extends TestWithCurrentUser{
 			.statusCode(HttpStatus.SC_OK)
 			.body("id", equalTo(resourceId))
 			.body("canAccess", is(true))
-			.body("permissions", hasItems(Auth.NEW, Auth.EDIT));
+			.body("permissions", hasItems("auth1", "auth2"));
 	}
 
 	@Test

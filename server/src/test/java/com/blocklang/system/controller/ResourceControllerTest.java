@@ -52,18 +52,16 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newResource_user_has_no_permission() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_NEW))).thenReturn(Optional.empty());
+		
 		NewResourceParam param = new NewResourceParam();
 		param.setParentId(Tree.ROOT_PARENT_ID);
 		param.setAppId("1");
 		param.setName("resource1");
 		
-		String resourceId = "res1"; // 资源管理模块的标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.empty());
-		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("resources")
@@ -73,17 +71,15 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newResource_app_id_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_NEW))).thenReturn(Optional.of(true));
+		
 		NewResourceParam param = new NewResourceParam();
 		param.setParentId(Tree.ROOT_PARENT_ID);
 		param.setName("resource1");
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
-		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("resources")
@@ -95,17 +91,15 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newResource_parent_id_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_NEW))).thenReturn(Optional.of(true));
+		
 		NewResourceParam param = new NewResourceParam();
 		param.setAppId("appId");
 		param.setName("resource1");
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
-		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("resources")
@@ -117,17 +111,15 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newResource_name_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_NEW))).thenReturn(Optional.of(true));
+		
 		NewResourceParam param = new NewResourceParam();
 		param.setAppId("appId");
 		param.setParentId(Tree.ROOT_PARENT_ID);
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
-		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("resources")
@@ -139,6 +131,8 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void newResource_app_id_is_not_exist() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_NEW))).thenReturn(Optional.of(true));
+		
 		NewResourceParam param = new NewResourceParam();
 		String appId = "appId1";
 		String parentId = "parentId1";
@@ -147,15 +141,11 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setAppId(appId);
 		param.setName(name);
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
-		
 		when(appService.findById(eq(appId))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("resources")
@@ -168,8 +158,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	// 不同的 APP 下，同一级下 name 不可以重名
 	@Test
 	public void newResource_app_id_and_parent_id_and_name_is_duplicated() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_NEW))).thenReturn(Optional.of(true));
 		
 		NewResourceParam param = new NewResourceParam();
 		String appId = "appId1";
@@ -186,7 +175,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("resources")
@@ -206,7 +194,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		String icon = "icon";
 		String resourceType = ResourceType.PROGRAM.getKey();
 		String description = "description";
-		String auth = Auth.INDEX;
+		String auth = "auth1";
 		
 		param.setParentId(parentId);
 		param.setAppId(appId);
@@ -217,8 +205,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setDescription(description);
 		param.setAuth(auth);
 		
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_NEW))).thenReturn(Optional.of(true));
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
@@ -227,7 +214,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("resources")
@@ -264,19 +250,18 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateResource_user_has_no_permission() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_EDIT))).thenReturn(Optional.empty());
+		
 		NewResourceParam param = new NewResourceParam();
 		param.setParentId(Tree.ROOT_PARENT_ID);
 		param.setAppId("1");
 		param.setName("resource1");
 		
 		String updateResourceId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("resources/{resourceId}", updateResourceId)
@@ -286,18 +271,17 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateResource_app_id_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_EDIT))).thenReturn(Optional.of(true));
+		
 		NewResourceParam param = new NewResourceParam();
 		param.setParentId(Tree.ROOT_PARENT_ID);
 		param.setName("resource1");
 		
 		String updateResourceId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("resources/{resourceId}", updateResourceId)
@@ -309,18 +293,17 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateResource_parent_id_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_EDIT))).thenReturn(Optional.of(true));
+		
 		NewResourceParam param = new NewResourceParam();
 		param.setAppId("appId");
 		param.setName("resource1");
 		
 		String updateResourceId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("resources/{resourceId}", updateResourceId)
@@ -332,6 +315,8 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateResource_app_id_is_not_exist() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_EDIT))).thenReturn(Optional.of(true));
+		
 		String appId = "appId1";
 		String parentId = "parentId1";
 		String name = "resource1";
@@ -341,16 +326,13 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setParentId(parentId);
 		param.setName(name);
 		
-		String updateResourceId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
-		
 		when(appService.findById(eq(appId))).thenReturn(Optional.empty());
+		
+		String updateResourceId = "1";
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("resources/{resourceId}", updateResourceId)
@@ -362,18 +344,17 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateResource_name_is_blank() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_EDIT))).thenReturn(Optional.of(true));
+
 		NewResourceParam param = new NewResourceParam();
 		param.setAppId("appId");
 		param.setParentId("parentId1");
 		
 		String updateResourceId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("resources/{resourceId}", updateResourceId)
@@ -386,6 +367,8 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	// 不同的 APP 下，同一级下 name 不可以重名
 	@Test
 	public void updateResource_app_id_parent_id_and_new_name_is_duplicated() {
+		when(permissionService.canExecute(any(),  eq(Auth.SYSTEM_RES_EDIT))).thenReturn(Optional.of(true));
+
 		NewResourceParam param = new NewResourceParam();
 		String appId = "appId1";
 		String parentId = "parentId1";
@@ -395,8 +378,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setName(name);
 		
 		String updateResourceId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
@@ -408,7 +389,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("resources/{resourceId}", updateResourceId)
@@ -420,6 +400,8 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void updateResource_success() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_EDIT))).thenReturn(Optional.of(true));
+
 		NewResourceParam param = new NewResourceParam();
 		String appId = "appId1";
 		String parentId = "parentId1";
@@ -428,7 +410,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		String icon = "icon1";
 		String resourceType = ResourceType.PROGRAM.getKey();
 		String description = "description1";
-		String auth = Auth.INDEX;
+		String auth = "auth1";
 		
 		param.setParentId(parentId);
 		param.setAppId(appId);
@@ -440,8 +422,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setAuth(auth);
 		
 		String updateResourceId = "1";
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
@@ -460,7 +440,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		updatedResource.setResourceType(ResourceType.OPERATOR);
 		updatedResource.setDescription("description");
 		updatedResource.setActive(true);
-		updatedResource.setAuth(Auth.NEW);
+		updatedResource.setAuth("auth1");
 		updatedResource.setSeq(1);
 		updatedResource.setCreateUserId(user.getId());
 		updatedResource.setCreateTime(LocalDateTime.now());
@@ -470,7 +450,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("resources/{resourceId}", updateResourceId)
@@ -507,15 +486,14 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listResource_user_has_no_permission() {
-		String resourceId = "res1"; // 资源管理模块的标识
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_LIST))).thenReturn(Optional.empty());
+
 		String appId = "appId";
 		String parentResourceId = "1"; // 在资源管理模块中管理的资源标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.queryParam("appId", appId)
 		.when()
 			.get("resources/{resourceId}/children", parentResourceId)
@@ -525,8 +503,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listResource_success_no_data() {
-		String resourceId = "res1"; // 资源管理模块的标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_LIST))).thenReturn(Optional.of(true));
 		
 		String appId = "appId";
 		String parentResourceId = "1"; // 在资源管理模块中管理的资源标识
@@ -535,7 +512,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.queryParam("appId", appId)
 		.when()
 			.get("resources/{resourceId}/children", parentResourceId)
@@ -546,8 +522,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void listResource_success_one_data() {
-		String resourceId = "res1"; // 资源管理模块的标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_LIST))).thenReturn(Optional.of(true));
 		
 		String existedResourceId = "resourceId1";
 		String appId = "appId";
@@ -558,7 +533,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		ResourceType resourceType = ResourceType.OPERATOR;
 		String description = "description";
 		Boolean active = true;
-		String auth = Auth.NEW;
+		String auth = "auth1";
 		Integer seq = 1;
 		
 		ResourceInfo actualResource = new ResourceInfo();
@@ -582,7 +557,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.queryParam("appId", appId)
 		.when()
 			.get("resources/{resourceId}/children", parentResourceId)
@@ -618,15 +592,13 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getResource_user_has_no_permission() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_QUERY))).thenReturn(Optional.empty());
 		
 		String queryResourceId = "resourceId";
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("resources/{resourceId}", queryResourceId)
 		.then()
@@ -635,8 +607,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getResource_not_found() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_QUERY))).thenReturn(Optional.of(true));
 		
 		String queryResourceId = "resourceId";
 		when(resourceService.findById(eq(queryResourceId))).thenReturn(Optional.empty());
@@ -644,7 +615,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("resources/{resourceId}", queryResourceId)
 		.then()
@@ -653,8 +623,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	
 	@Test
 	public void getResource_success() {
-		String resourceId = "res1"; // 资源管理模块的标识
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_QUERY))).thenReturn(Optional.of(true));
 		
 		String queryResourceId = "resourceId1";
 		String appId = "appId";
@@ -665,7 +634,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		ResourceType resourceType = ResourceType.OPERATOR;
 		String description = "description";
 		Boolean active = true;
-		String auth = Auth.NEW;
+		String auth = "auth1";
 		Integer seq = 1;
 		
 		ResourceInfo actualResource = new ResourceInfo();
@@ -689,7 +658,6 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("resources/{resourceId}", queryResourceId)
 		.then()

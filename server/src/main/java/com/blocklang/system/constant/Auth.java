@@ -1,12 +1,6 @@
 package com.blocklang.system.constant;
 
 public abstract class Auth {
-	
-	/**************************以下是程序模块***************************/
-	/**
-	 * 程序模块，可以设置为 index，但可以不填写，因为凡是程序模块，都为此值
-	 */
-	public static String INDEX = "index";
 
 	/**************************以下是程序模块中的操作***************************/
 	
@@ -14,25 +8,66 @@ public abstract class Auth {
 	/**
 	 * 查询多条记录，常用于分页查询
 	 */
-	public static String LIST = "list";
+	private static final String OP_LIST = "list";
 	
 	/**
 	 * 查询一条记录
 	 */
-	public static String QUERY = "query";
+	private static final String OP_QUERY = "query";
 	
 	/**
 	 * 新增
 	 */
-	public static String NEW = "new";
+	private static final String OP_NEW = "new";
 	
 	/**
 	 * 修改
 	 */
-	public static String EDIT = "edit";
+	private static final String OP_EDIT = "edit";
 	
 	/**
 	 * 删除
 	 */
-	public static String REMOVE = "remove";
+	private static final String OP_REMOVE = "remove";
+	
+	// APP 管理
+	// App 标识/系统管理功能模块标识/程序模块标识
+	public static final String SYSTEM_APP = "sys/sys/app";
+	public static final String SYSTEM_APP_LIST = SYSTEM_APP + "/" + OP_LIST;
+	public static final String SYSTEM_APP_QUERY = SYSTEM_APP + "/" + OP_QUERY;
+	public static final String SYSTEM_APP_NEW = SYSTEM_APP + "/" + OP_NEW;
+	public static final String SYSTEM_APP_EDIT = SYSTEM_APP + "/" + OP_EDIT;
+	public static final String SYSTEM_APP_REMOVE = SYSTEM_APP + "/" + OP_REMOVE;
+	
+	// 用户管理
+	public static final String SYSTEM_USER = "sys/sys/user";
+	public static final String SYSTEM_USER_LIST = SYSTEM_USER + "/" + OP_LIST;
+	public static final String SYSTEM_USER_QUERY = SYSTEM_USER + "/" + OP_QUERY;
+	public static final String SYSTEM_USER_NEW = SYSTEM_USER + "/" + OP_NEW;
+	public static final String SYSTEM_USER_EDIT = SYSTEM_USER + "/" + OP_EDIT;
+	public static final String SYSTEM_USER_REMOVE = SYSTEM_USER + "/" + OP_REMOVE;
+	
+	// 角色管理
+	public static final String SYSTEM_ROLE = "sys/sys/role";
+	public static final String SYSTEM_ROLE_LIST = SYSTEM_ROLE + "/" + OP_LIST;
+	public static final String SYSTEM_ROLE_QUERY = SYSTEM_ROLE + "/" + OP_QUERY;
+	public static final String SYSTEM_ROLE_NEW = SYSTEM_ROLE + "/" + OP_NEW;
+	public static final String SYSTEM_ROLE_EDIT = SYSTEM_ROLE + "/" + OP_EDIT;
+	public static final String SYSTEM_ROLE_REMOVE = SYSTEM_ROLE + "/" + OP_REMOVE;
+	
+	// 部门管理
+	public static final String SYSTEM_DEPT = "sys/sys/dept";
+	public static final String SYSTEM_DEPT_LIST = SYSTEM_DEPT + "/" + OP_LIST;
+	public static final String SYSTEM_DEPT_QUERY = SYSTEM_DEPT + "/" + OP_QUERY;
+	public static final String SYSTEM_DEPT_NEW = SYSTEM_DEPT + "/" + OP_NEW;
+	public static final String SYSTEM_DEPT_EDIT = SYSTEM_DEPT + "/" + OP_EDIT;
+	public static final String SYSTEM_DEPT_REMOVE = SYSTEM_DEPT + "/" + OP_REMOVE;
+	
+	// 资源管理
+	public static final String SYSTEM_RES = "sys/sys/res";
+	public static final String SYSTEM_RES_LIST = SYSTEM_RES + "/" + OP_LIST;
+	public static final String SYSTEM_RES_QUERY = SYSTEM_RES + "/" + OP_QUERY;
+	public static final String SYSTEM_RES_NEW = SYSTEM_RES + "/" + OP_NEW;
+	public static final String SYSTEM_RES_EDIT = SYSTEM_RES + "/" + OP_EDIT;
+	public static final String SYSTEM_RES_REMOVE = SYSTEM_RES + "/" + OP_REMOVE;
 }

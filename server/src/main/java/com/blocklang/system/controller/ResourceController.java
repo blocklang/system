@@ -47,10 +47,9 @@ public class ResourceController {
 	@PostMapping("/resources")
 	public ResponseEntity<ResourceInfo> newResource(
 			@AuthenticationPrincipal UserInfo currentUser,
-			@RequestParam("resid") String resourceId,
 			@Valid @RequestBody NewResourceParam param,
 			BindingResult bindingResult) {
-		permissionService.canExecute(currentUser, resourceId, Auth.NEW).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser, Auth.SYSTEM_RES_NEW).orElseThrow(NoAuthorizationException::new);
 		
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -90,11 +89,10 @@ public class ResourceController {
 	@PutMapping("/resources/{resourceId}")
 	public ResponseEntity<ResourceInfo> updateResource(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@RequestParam("resid") String resourceId, // 资源管理模块自身的标识
 			@PathVariable("resourceId") String updatedResourceId, // 当前正在修改的标识
 			@Valid @RequestBody NewResourceParam param,
 			BindingResult bindingResult) {
-		permissionService.canExecute(currentUser, resourceId, Auth.EDIT).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser, Auth.SYSTEM_RES_EDIT).orElseThrow(NoAuthorizationException::new);
 		
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -131,11 +129,10 @@ public class ResourceController {
 	@GetMapping("/resources/{resourceId}/children")
 	public ResponseEntity<List<ResourceInfo>> listResource(
 			@AuthenticationPrincipal UserInfo user, 
-			@RequestParam("resid") String resourceId, // 资源管理模块自身的标识
 			@RequestParam String appId,
 			@PathVariable("resourceId") String parentResourceId // 要获取此资源下的所有直属资源
 		) {
-		permissionService.canExecute(user, resourceId, Auth.LIST).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user, Auth.SYSTEM_RES_LIST).orElseThrow(NoAuthorizationException::new);
 		
 		Sort sort = Sort.by(Direction.ASC, "seq", "name");
 		List<ResourceInfo> resources = resourceService.findChildren(appId, parentResourceId, sort);
@@ -146,10 +143,9 @@ public class ResourceController {
 	@GetMapping("/resources/{resourceId}")
 	public ResponseEntity<ResourceInfo> getResource(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@PathVariable("resourceId") String queryResourceId, // 要查询的资源模块标识
-			@RequestParam("resid") String resourceId // 资源管理模块的标识
+			@PathVariable("resourceId") String queryResourceId // 要查询的资源模块标识
 		) {
-		permissionService.canExecute(currentUser, resourceId, Auth.QUERY).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser, Auth.SYSTEM_RES_QUERY).orElseThrow(NoAuthorizationException::new);
 		ResourceInfo resource = resourceService.findById(queryResourceId).orElseThrow(ResourceNotFoundException::new);
 		return ResponseEntity.ok(resource);
 	}

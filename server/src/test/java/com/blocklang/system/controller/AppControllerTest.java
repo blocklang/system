@@ -49,15 +49,13 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void newApp_user_has_no_permission() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_NEW))).thenReturn(Optional.empty());
 		
 		NewAppParam param = new NewAppParam();
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("/apps")
@@ -67,15 +65,13 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void newApp_name_is_blank() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_NEW))).thenReturn(Optional.of(true));
 		
 		NewAppParam param = new NewAppParam();
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("apps")
@@ -87,8 +83,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void newApp_user_id_and_name_is_duplicated() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_NEW))).thenReturn(Optional.of(true));
 		
 		String name = "appName1";
 		NewAppParam param = new NewAppParam();
@@ -99,7 +94,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.post("apps")
@@ -111,8 +105,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void newApp_success() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.NEW))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_NEW))).thenReturn(Optional.of(true));
 		
 		String name = "appName1";
 		String url = "url1";
@@ -131,7 +124,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
 			.body(param)
-			.queryParam("resid", resourceId)
 		.when()
 			.post("/apps")
 		.then()
@@ -161,8 +153,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void updateApp_user_has_no_permission() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_EDIT))).thenReturn(Optional.empty());
 		
 		NewAppParam param = new NewAppParam();
 		param.setName("app1");
@@ -172,7 +163,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("apps/{appId}", updateAppId)
@@ -182,8 +172,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void updateApp_name_is_blank() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_EDIT))).thenReturn(Optional.of(true));
 		
 		NewAppParam param = new NewAppParam();
 		
@@ -192,7 +181,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("apps/{appId}", updateAppId)
@@ -204,8 +192,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void updateApp_user_id_and_new_name_is_duplicated() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_EDIT))).thenReturn(Optional.of(true));
 		
 		String name = "appName";
 		NewAppParam param = new NewAppParam();
@@ -221,7 +208,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("apps/{appId}", updateAppId)
@@ -233,8 +219,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void updateApp_success() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.EDIT))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_EDIT))).thenReturn(Optional.of(true));
 		
 		String name = "resource1";
 		String url = "url1";
@@ -269,7 +254,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.body(param)
 		.when()
 			.put("apps/{appId}", updateAppId)
@@ -301,13 +285,11 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void listApp_user_has_no_permission() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(),  eq(Auth.SYSTEM_APP_LIST))).thenReturn(Optional.empty());
 		
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("apps")
 		.then()
@@ -316,8 +298,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void listApp_success_no_data() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_LIST))).thenReturn(Optional.of(true));
 		
 		Page<AppInfo> result = new PageImpl<AppInfo>(Collections.emptyList());
 		when(appService.findAll(any())).thenReturn(result);
@@ -325,7 +306,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("apps")
 		.then()
@@ -341,8 +321,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void listApp_success_one_data() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.LIST))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_LIST))).thenReturn(Optional.of(true));
 		
 		String appId = "appId";
 		String name = "appName";
@@ -368,7 +347,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 			.queryParam("appId", appId)
 		.when()
 			.get("apps")
@@ -405,11 +383,9 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void getApp_invalid_token() {
-		String resourceId = "res1";
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", /*"Token " + */token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("/apps/{appId}", "app1")
 		.then()
@@ -418,13 +394,11 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void getApp_user_has_no_permission() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.empty());
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_QUERY))).thenReturn(Optional.empty());
 
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("/apps/{appId}", "app1")
 		.then()
@@ -433,8 +407,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void getApp_not_found() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_QUERY))).thenReturn(Optional.of(true));
 		
 		String queryAppId = "appId";
 		when(appService.findById(eq(queryAppId))).thenReturn(Optional.empty());
@@ -442,7 +415,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("apps/{appId}", queryAppId)
 		.then()
@@ -451,8 +423,7 @@ public class AppControllerTest extends TestWithCurrentUser {
 	
 	@Test
 	public void getApp_success() {
-		String resourceId = "res1";
-		when(permissionService.canExecute(any(), eq(resourceId), eq(Auth.QUERY))).thenReturn(Optional.of(true));
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_APP_QUERY))).thenReturn(Optional.of(true));
 		
 		String appId = "app1";
 		String name = "appName1";
@@ -477,7 +448,6 @@ public class AppControllerTest extends TestWithCurrentUser {
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("resid", resourceId)
 		.when()
 			.get("/apps/{appId}", appId)
 		.then()

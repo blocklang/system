@@ -49,10 +49,9 @@ public class RoleController {
 	@PostMapping("/roles")
 	public ResponseEntity<RoleInfo> newRole(
 			@AuthenticationPrincipal UserInfo currentUser,
-			@RequestParam("resid") String resourceId,
 			@Valid @RequestBody NewRoleParam param,
 			BindingResult bindingResult) {
-		permissionService.canExecute(currentUser, resourceId, Auth.NEW).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser, Auth.SYSTEM_ROLE_NEW).orElseThrow(NoAuthorizationException::new);
 		
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -86,11 +85,10 @@ public class RoleController {
 	@PutMapping("/roles/{roleId}")
 	public ResponseEntity<RoleInfo> updateRole(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@RequestParam("resid") String resourceId,
 			@PathVariable String roleId,
 			@Valid @RequestBody NewRoleParam param,
 			BindingResult bindingResult) {
-		permissionService.canExecute(currentUser, resourceId, Auth.EDIT).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser, Auth.SYSTEM_ROLE_EDIT).orElseThrow(NoAuthorizationException::new);
 		
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -123,10 +121,9 @@ public class RoleController {
 	@GetMapping("/roles")
 	public ResponseEntity<Page<RoleInfo>> listRole(
 			@AuthenticationPrincipal UserInfo user, 
-			@RequestParam("resid") String resourceId, 
 			@RequestParam String appId,
 			@RequestParam(required = false, defaultValue = "0") Integer page) {
-		permissionService.canExecute(user, resourceId, Auth.LIST).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user, Auth.SYSTEM_ROLE_LIST).orElseThrow(NoAuthorizationException::new);
 
 		Sort sort = Sort.by(Direction.ASC, "seq", "name");
 		Pageable pageable = PageRequest.of(page, WebSite.PAGE_SIZE, sort);
@@ -137,9 +134,8 @@ public class RoleController {
 	@GetMapping("/roles/{roleId}")
 	public ResponseEntity<RoleInfo> getRole(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@PathVariable String roleId,
-			@RequestParam("resid") String resourceId) {
-		permissionService.canExecute(currentUser, resourceId, Auth.QUERY).orElseThrow(NoAuthorizationException::new);
+			@PathVariable String roleId) {
+		permissionService.canExecute(currentUser, Auth.SYSTEM_ROLE_QUERY).orElseThrow(NoAuthorizationException::new);
 		RoleInfo role = roleService.findById(roleId).orElseThrow(ResourceNotFoundException::new);
 		return ResponseEntity.ok(role);
 	}

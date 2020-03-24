@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blocklang.system.constant.Auth;
@@ -43,10 +42,9 @@ public class DeptController {
 	@PostMapping("/depts")
 	public ResponseEntity<DeptInfo> newDept(
 			@AuthenticationPrincipal UserInfo currentUser,
-			@RequestParam("resid") String resourceId,
 			@Valid @RequestBody NewDeptParam param,
 			BindingResult bindingResult) {
-		permissionService.canExecute(currentUser, resourceId, Auth.NEW).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser,  Auth.SYSTEM_DEPT_NEW).orElseThrow(NoAuthorizationException::new);
 		
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -80,11 +78,10 @@ public class DeptController {
 	@PutMapping("/depts/{deptId}")
 	public ResponseEntity<DeptInfo> updateDept(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@RequestParam("resid") String resourceId, // 资源管理模块自身的标识
 			@PathVariable String deptId,
 			@Valid @RequestBody NewDeptParam param,
 			BindingResult bindingResult) {
-		permissionService.canExecute(currentUser, resourceId, Auth.EDIT).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser, Auth.SYSTEM_DEPT_EDIT).orElseThrow(NoAuthorizationException::new);
 		
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -117,10 +114,9 @@ public class DeptController {
 	@GetMapping("/depts/{deptId}/children")
 	public ResponseEntity<List<DeptInfo>> listDept(
 			@AuthenticationPrincipal UserInfo user, 
-			@RequestParam("resid") String resourceId, // 资源管理模块自身的标识
 			@PathVariable String deptId // 要获取此部门下的所有直属部门
 		) {
-		permissionService.canExecute(user, resourceId, Auth.LIST).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user, Auth.SYSTEM_DEPT_LIST).orElseThrow(NoAuthorizationException::new);
 		
 		Sort sort = Sort.by(Direction.ASC, "seq", "name");
 		List<DeptInfo> depts = deptService.findChildren(deptId, sort);
@@ -130,10 +126,9 @@ public class DeptController {
 	@GetMapping("/depts/{deptId}")
 	public ResponseEntity<DeptInfo> getDept(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@PathVariable String deptId, 
-			@RequestParam("resid") String resourceId // 资源管理模块的标识
+			@PathVariable String deptId
 		) {
-		permissionService.canExecute(currentUser, resourceId, Auth.QUERY).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser, Auth.SYSTEM_DEPT_QUERY).orElseThrow(NoAuthorizationException::new);
 		DeptInfo dept = deptService.findById(deptId).orElseThrow(ResourceNotFoundException::new);
 		return ResponseEntity.ok(dept);
 	}

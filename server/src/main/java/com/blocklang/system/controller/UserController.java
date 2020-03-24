@@ -50,10 +50,9 @@ public class UserController {
 	@PostMapping("/users")
 	public ResponseEntity<UserInfo> newUser(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@RequestParam("resid") String resourceId,
 			@Valid @RequestBody NewUserParam param, // 新增用户信息
 			BindingResult bindingResult) {
-		permissionService.canExecute(currentUser, resourceId, Auth.NEW).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser,  Auth.SYSTEM_USER_NEW).orElseThrow(NoAuthorizationException::new);
 		
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -85,11 +84,10 @@ public class UserController {
 	@PutMapping("/users/{userId}")
 	public ResponseEntity<UserInfo> updateUser(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@RequestParam("resid") String resourceId,
 			@PathVariable String userId, // 要修改的用户标识
 			@Valid @RequestBody UpdateUserParam param, // 修改用户信息
 			BindingResult bindingResult) {
-		permissionService.canExecute(currentUser, resourceId, Auth.EDIT).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(currentUser, Auth.SYSTEM_USER_EDIT).orElseThrow(NoAuthorizationException::new);
 		
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -119,9 +117,8 @@ public class UserController {
 	@GetMapping("/users")
 	public ResponseEntity<Page<UserInfo>> listUser(
 			@AuthenticationPrincipal UserInfo user, 
-			@RequestParam("resid") String resourceId, 
 			@RequestParam(required = false, defaultValue = "0") Integer page) {
-		permissionService.canExecute(user, resourceId, Auth.LIST).orElseThrow(NoAuthorizationException::new);
+		permissionService.canExecute(user, Auth.SYSTEM_USER_LIST).orElseThrow(NoAuthorizationException::new);
 
 		Pageable pageable = PageRequest.of(page, WebSite.PAGE_SIZE, Sort.by(Direction.ASC, "username"));
 		Page<UserInfo> users = userService.findAll(pageable).map(item -> {
@@ -134,9 +131,9 @@ public class UserController {
 	@GetMapping("/users/{userId}")
 	public ResponseEntity<UserInfo> getUser(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
-			@PathVariable String userId, // 要查询用户的标识
-			@RequestParam("resid") String resourceId) {
-		permissionService.canExecute(currentUser, resourceId, Auth.QUERY).orElseThrow(NoAuthorizationException::new);
+			@PathVariable String userId // 要查询用户的标识
+		) {
+		permissionService.canExecute(currentUser, Auth.SYSTEM_USER_QUERY).orElseThrow(NoAuthorizationException::new);
 		UserInfo user = userService.findById(userId).orElseThrow(ResourceNotFoundException::new);
 		user.setPassword(null); // 不能返回用户密码
 		return ResponseEntity.ok(user);

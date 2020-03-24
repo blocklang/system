@@ -16,7 +16,7 @@
 			<column name="resource_type" value="01"/>
 			<column name="description" value="系统管理"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth"/>
+			<column name="auth" value="sys/sys"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -32,7 +32,7 @@
 			<column name="resource_type" value="02"/>
 			<column name="description" value="APP管理"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="index"/>
+			<column name="auth" value="sys/sys/app"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -47,7 +47,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="list"/>
+			<column name="auth" value="sys/sys/app/list"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -62,7 +62,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="query"/>
+			<column name="auth" value="sys/sys/app/query"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -77,7 +77,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="new"/>
+			<column name="auth" value="sys/sys/app/new"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -92,7 +92,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="edit"/>
+			<column name="auth" value="sys/sys/app/edit"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -107,7 +107,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="remove"/>
+			<column name="auth" value="sys/sys/app/remove"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -123,7 +123,7 @@
 			<column name="resource_type" value="02"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="index"/>
+			<column name="auth" value="sys/sys/user"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -138,7 +138,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="list"/>
+			<column name="auth" value="sys/sys/user/list"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -153,7 +153,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="query"/>
+			<column name="auth" value="sys/sys/user/query"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -168,7 +168,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="new"/>
+			<column name="auth" value="sys/sys/user/new"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -183,7 +183,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="edit"/>
+			<column name="auth" value="sys/sys/user/edit"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -198,7 +198,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="remove"/>
+			<column name="auth" value="sys/sys/user/remove"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -214,7 +214,7 @@
 			<column name="resource_type" value="02"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="index"/>
+			<column name="auth" value="sys/sys/role"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -229,7 +229,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="list"/>
+			<column name="auth" value="sys/sys/role/list"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -244,7 +244,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="query"/>
+			<column name="auth" value="sys/sys/role/query"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -259,7 +259,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="new"/>
+			<column name="auth" value="sys/sys/role/new"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -274,7 +274,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="edit"/>
+			<column name="auth" value="sys/sys/role/edit"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -289,7 +289,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="remove"/>
+			<column name="auth" value="sys/sys/role/remove"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -305,7 +305,7 @@
 			<column name="resource_type" value="02"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="index"/>
+			<column name="auth" value="sys/sys/dept"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -320,7 +320,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="list"/>
+			<column name="auth" value="sys/sys/dept/list"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -335,7 +335,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="query"/>
+			<column name="auth" value="sys/sys/dept/query"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -350,7 +350,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="new"/>
+			<column name="auth" value="sys/sys/dept/new"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -365,7 +365,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="edit"/>
+			<column name="auth" value="sys/sys/dept/edit"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -380,7 +380,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="remove"/>
+			<column name="auth" value="sys/sys/dept/remove"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -396,7 +396,7 @@
 			<column name="resource_type" value="02"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="index"/>
+			<column name="auth" value="sys/sys/res"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -411,7 +411,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="list"/>
+			<column name="auth" value="sys/sys/res/list"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -426,7 +426,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="query"/>
+			<column name="auth" value="sys/sys/res/query"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -441,7 +441,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="new"/>
+			<column name="auth" value="sys/sys/res/new"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -456,7 +456,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="edit"/>
+			<column name="auth" value="sys/sys/res/edit"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
@@ -471,7 +471,7 @@
 			<column name="resource_type" value="03"/>
 			<column name="description"/>
 			<column name="active" valueBoolean="true" />
-			<column name="auth" value="remove"/>
+			<column name="auth" value="sys/sys/res/remove"/>
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
