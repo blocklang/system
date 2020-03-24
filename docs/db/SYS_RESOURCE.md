@@ -30,7 +30,7 @@
 | resource_type       | 资源类型       | char     | 2    |        |      | 否   |
 | description         | 资源描述       | text     |      |        |      | 是   |
 | active              | 是否启用       | boolean  |      | true   |      | 否   |
-| auth                | 权限标识       | varchar  | 64   |        |      | 是   |
+| auth                | 权限标识       | varchar  | 64   |        |      | 否   |
 | create_user_id      | 创建人标识     | varchar  | 32   |        |      | 否   |
 | create_time         | 创建时间       | datetime |      |        |      | 否   |
 | last_update_user_id | 最近修改人标识 | varchar  | 32   |        |      | 是   |
@@ -40,7 +40,7 @@
 
 * 主键：`PK_SYS_RESOURCE`
 * 外键：无
-* 索引：`UK_RES_ON_NAME_APP_PARENT`(唯一索引)，对应字段 `app_id`、`res_name` 和 `parent_id`
+* 索引：`UK_RES_ON_NAME_APP_PARENT`(唯一索引)，对应字段 `app_id`、`res_name` 和 `parent_id`；`UK_RES_ON_AUTH`(唯一索引)，对应字段为 `auth`
 
 ## 说明
 
@@ -49,7 +49,9 @@
 3. `seq` 是相对于父资源的显示顺序，都是从 1 开始
 4. `url` 的值可以是外部连接，也可以是路由
 5. `resource_type` 的值为：`01` 表示 `功能模块`，`02` 表示 `程序模块`，`03` 表示 `操作按钮`
-6. `auth` 的值要遵循一套约定，如 `list` 表示 `查多条记录`，`query` 表示 `查询单条记录`，`new` 表示 `新增`，`edit` 表示 `修改`，`remove` 表示 `删除` 等等
+6. `auth` 的值按包包含 APP、功能模块、程序模块和操作按钮标识，使用 `/` 隔开，不能为空且要确保全表唯一
+   1. 以 APP 标识开头，如一个功能模块的权限标识为 `app1/func1`
+   2. 操作按钮的标识约定为：`list` 表示 `查多条记录`，`query` 表示 `查询单条记录`，`new` 表示 `新增`，`edit` 表示 `修改`，`remove` 表示 `删除` 等等
 7. `resource_type` 的值为 `03`(操作按钮)时，所有记录的 `auth` 值必须不同，即为不同的操作设置不同的 `auth`。这就是方法级别的操作权限。
 8. 没有在 `app_id`、`auth` 和 `parent_id` 上添加唯一索引，是因为当 `resource_type` 的值不为 `03` 时不存在此唯一性约束
-9. `active` 只能用于功能模块和程序模块，对程序模块中的操作按钮无效
+9.  `active` 只能用于功能模块和程序模块，对程序模块中的操作按钮无效

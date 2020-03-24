@@ -32,7 +32,9 @@
 			<column name="active" remarks="是否启用" type="boolean" defaultValueBoolean="true">
 				<constraints nullable="false" />
 			</column>
-			<column name="auth" remarks="权限标识" type="varchar(64)" />
+			<column name="auth" remarks="权限标识" type="varchar(64)" >
+				<constraints nullable="false" />
+			</column>
 			<column name="create_user_id" remarks="创建人标识" type="varchar(32)">
 				<constraints nullable="false" />
 			</column>
@@ -44,6 +46,8 @@
 		</createTable>
 		<addUniqueConstraint columnNames="app_id,res_name,parent_id"
 			constraintName="UK_RES_ON_NAME_APP_PARENT" tableName="sys_resource" />
+		<addUniqueConstraint columnNames="auth"
+			constraintName="UK_RES_ON_AUTH" tableName="sys_resource" />
 	</changeSet>
 
 </databaseChangeLog>
