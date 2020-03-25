@@ -65,7 +65,12 @@ const checkUsernameCommand = commandFactory<{username: string}>(async ({path, pa
 
 const logoutCommand = commandFactory(({ path }) => {
 	global.sessionStorage.removeItem("blocklang-session");
-	return [remove(path("session")), replace(path("routing", "outlet"), "home")];
+	return [
+		remove(path("session")), 
+		replace(path("routing", "outlet"), "home"),
+		// 用户注销时，要清除为用户加载的菜单列表
+		remove(path("menus"))
+	];
 });
 
 const loadUserMenusCommand = commandFactory<{resourceId: string}>(async ({at,get,path, payload: {resourceId = "-1"}}) => {
