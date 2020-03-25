@@ -7,7 +7,7 @@ import * as request from '../../utils/request';
 import { UserInfo, ResourceProperties, Pagination } from '../../interfaces';
 import store from "../../store";
 import * as moment from "moment";
-import { defaultPagination } from '../apps';
+import { defaultPagination } from '../../config';
 
 export interface UsersProperties extends ResourceProperties{
 }
@@ -19,11 +19,11 @@ const icache = createICacheMiddleware<FetchResult>();
 const factory = create({ icache, store }).properties<UsersProperties>();
 
 export default factory(function Users({ properties, middleware: { icache, store } }){
-    const { resId, page=0 } = properties();
+    const { resId } = properties();
     const token = store.get(store.path("session", "token"));
 
     const pagedUsers = icache.getOrSet("pagedUsers", async () => {
-        const response = await request.get(`users?resid=${resId}&page=${page}`, token);
+        const response = await request.get(`users?resid=${resId}`, token);
         const apps = await response.json();
         if(response.ok) {
             return apps;

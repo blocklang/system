@@ -22,3 +22,11 @@ https://github.com/gitlabhq/gitlabhq/blob/master/db/schema.rb#L4303
 4. 但是可以为一个用户配置多个 APP 下的角色
 
 详见 [PPT](./system.pptx)
+
+## 使用 `resid` 用于权限定位的弊端
+
+目前的设计是使用 `resid` 和操作级的 `auth` 组合来校验权限的，但是当在 `resid=2` 的页面访问 `resid=1` 的资源时，就需要在页面中包含这些 `resid`，而 `resid` 是发布到生产环境后才生成的，无法在开发阶段获得，所以这样的设计是无法满足需求的。
+
+而使用一个全局唯一的 `auth`，就不需要在页面存储。
+
+`auth` 的值为 `{app_flag}/{function_flag}/{program_flag}/{operator_flag}`

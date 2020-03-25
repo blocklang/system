@@ -32,7 +32,7 @@ export default factory(function New({ properties, middleware: { icache, store } 
                         <div classes={[c.card_header]}>
                             <h3 classes={[c.card_title]}>新建用户</h3>
                         </div>
-                        <form role="form">
+                        <form role="form" classes={[c.needs_validation]} novalidate={true}>
                             <div classes={[c.card_body]}>
                                 <div classes={[c.form_group]}>
                                     <label for="iptUsername">登录名<small classes={[c.text_muted, c.ml_1]}>必填</small></label>

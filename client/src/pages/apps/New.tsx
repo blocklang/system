@@ -1,90 +1,94 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
 import icache from '@dojo/framework/core/middleware/icache';
 import * as c from 'bootstrap-classes';
-import Link from '@dojo/framework/routing/Link';
-import FontAwesomeIcon from 'dojo-fontawesome/FontAwesomeIcon';
-import * as request from '../../utils/request';
 import store from '../../store';
-import { redirectToProcess } from '../../processes/routeProcesses';
-import { ResourceProperties } from '../../interfaces';
+import { saveAppProcess, setAppFieldProcess, getPagedAppProcess } from '../../processes/appProcesses';
+import Swal from 'sweetalert2';
+import { clearGlobalTipProcess, changeViewProcess } from '../../processes/pageProcesses';
+import { ValidateStatus } from '../../constant';
 
-export interface NewProperties extends ResourceProperties{
+export interface NewProperties{
+
 }
+
 
 const factory = create({ icache, store }).properties<NewProperties>();
 
 export default factory(function New({ properties, middleware: { icache, store } }){
-    const { resId } = properties();
+    const {} = properties();
+    const {get, path, executor} = store;
+    const app = get(path("app")) || {};
+    const {name, icon, url, description} = app;
+
+    const gloablTip = get(path("globalTip"));
+    if(gloablTip) {
+        Swal.fire({toast: true, title: gloablTip, showCloseButton: false, timer: 2000, position: "top"});
+        executor(clearGlobalTipProcess)({});
+    }
+
+    const formValidation = get(path("formValidation")) || {};
+    console.log("formvalidation", formValidation)
+
+    const showInvalidMessage = (field: string) => {
+        const {status=ValidateStatus.UNVALIDATED, message=""} = formValidation[field] || {};
+        if(status === ValidateStatus.INVALID) {
+            return <div classes={[c.invalid_tooltip]} innerHTML={message}></div>
+        }
+    }
+
+    const isInvalid = (field: string) => {
+        const {status = ValidateStatus.UNVALIDATED} = formValidation[field] || {};
+        return status === ValidateStatus.INVALID;
+    }
+
     return (
-        <virtual>
-            <section classes={["content-header"]}>
-                <div classes={[c.container_fluid]}>
-                    <h1>APP管理</h1>
+        <div classes={[c.container_fluid]}>
+
+            <div classes={[c.card]}>
+                <div classes={[c.card_header]}>
+                    <h3 classes={[c.card_title]}>新建APP</h3>
                 </div>
-            </section>
-            <section classes={["content"]}>
-                <div classes={[c.container_fluid]}>
-                    <div classes={[c.d_flex, c.justify_content_start, c.mb_2]}>
-                        <Link to="apps" params={{resid: resId, page: "0"}} classes={[c.btn, c.btn_secondary]}><FontAwesomeIcon icon="angle-left"/> 返回</Link>
-                    </div>
-                    <div classes={[c.card]}>
-                        <div classes={[c.card_header]}>
-                            <h3 classes={[c.card_title]}>新建APP</h3>
+                <form role="form">
+                    <div classes={[c.card_body]}>
+                        <div classes={[c.form_group, c.position_relative]}>
+                            <label for="iptName">名称<small classes={[c.text_muted, c.ml_1]}>必填</small></label>
+                            <input type="text" value={name} classes={[c.form_control, isInvalid("name")?c.is_invalid:undefined]} focus={true} id="iptName" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
+                                executor(setAppFieldProcess)({field: "name", value: event.target.value});
+                            }}/>
+                            {showInvalidMessage("name")}
                         </div>
-                        <form role="form">
-                            <div classes={[c.card_body]}>
-                                <div classes={[c.form_group]}>
-                                    <label for="iptName">名称<small classes={[c.text_muted, c.ml_1]}>必填</small></label>
-                                    <input type="text" classes={[c.form_control]} focus={true} id="iptName" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
-                                        icache.set("appName", event.target.value);
-                                    }}/>
-                                </div>
-                                <div classes={[c.form_group]}>
-                                    <label for="iptIcon">Icon</label>
-                                    <input type="text" classes={[c.form_control]} id="iptIcon" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
-                                        icache.set("icon", event.target.value);
-                                    }}/>
-                                </div>
-                                <div classes={[c.form_group]}>
-                                    <label for="iptUrl">url</label>
-                                    <input type="text" classes={[c.form_control]} id="iptUrl" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
-                                        icache.set("url", event.target.value);
-                                    }}/>
-                                </div>
-                                <div classes={[c.form_group]}>
-                                    <label for="iptDescription">描述</label>
-                                    <textarea classes={[c.form_control]} id="iptDescription" oninput={(event: KeyboardEvent<HTMLTextAreaElement>)=>{
-                                        icache.set("description", event.target.value);
-                                    }}/>
-                                </div>
-                            </div>
-                            <div classes={[c.card_footer]}>
-                                <button type="button" classes={[c.btn, c.btn_primary]} onclick={() => {
-                                    const token = store.get(store.path("session", "token"));
-
-                                    const name = icache.get<string>("appName") || "";
-                                    if(name.trim() === "") {
-                                        alert("名称不能为空");
-                                        return;
-                                    }
-                                    const icon = icache.get<string>("icon") || "";
-                                    const url = icache.get<string>("url") || "";
-                                    const description = icache.get<string>("description") || "";
-
-                                    const post = async () => {
-                                        const response = await request.post(`apps?resid=${resId}`, {name, icon, url, description}, token);
-                                        if(response.ok) {
-                                            store.executor(redirectToProcess)({outlet: "apps", params: {resId, page: "0"}});
-                                        }
-                                    }
-
-                                    post();
-                                }}>保存</button>
-                            </div>
-                        </form>
+                        <div classes={[c.form_group]}>
+                            <label for="iptIcon">Icon</label>
+                            <input type="text" value={icon} classes={[c.form_control]} id="iptIcon" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
+                                executor(setAppFieldProcess)({field: "icon", value: event.target.value});
+                            }}/>
+                        </div>
+                        <div classes={[c.form_group]}>
+                            <label for="iptUrl">url</label>
+                            <input type="text" value={url} classes={[c.form_control]} id="iptUrl" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
+                                executor(setAppFieldProcess)({field: "url", value: event.target.value});
+                            }}/>
+                        </div>
+                        <div classes={[c.form_group]}>
+                            <label for="iptDescription">描述</label>
+                            <textarea classes={[c.form_control]} id="iptDescription" oninput={(event: KeyboardEvent<HTMLTextAreaElement>)=>{
+                                executor(setAppFieldProcess)({field: "description", value: event.target.value});
+                            }}>{description}</textarea>
+                        </div>
                     </div>
-                </div>
-            </section>
-        </virtual>
+                    <div classes={[c.card_footer]}>
+                        <button type="button" classes={[c.btn, c.btn_secondary, c.mr_2]} onclick={()=>{
+                            // 切换到列表页面后要刷新
+                            executor(changeViewProcess)({view: "list"});
+                            executor(getPagedAppProcess)({page: 0});
+                        }}>取消</button>
+                        <button type="button" classes={[c.btn, c.btn_primary]} onclick={() => {
+                            executor(saveAppProcess)({});
+                            // 保存成功后，不跳转，只给出成功提示
+                        }}>保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 });

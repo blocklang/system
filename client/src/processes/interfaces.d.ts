@@ -9,3 +9,10 @@ export interface ChangeRoutePayload {
 export interface SetSessionPayload {
 	session: Session;
 }
+
+export interface AppPayload {
+	name: string;
+	icon?: string;
+	url?: string;
+	description?: string;
+}

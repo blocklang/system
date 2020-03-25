@@ -13,16 +13,8 @@ export default [
 		outlet: 'register'
 	}, 
 	{
-		path: "apps?{resid}&{page}",
+		path: "apps?{resid}",
 		outlet: "apps"
-	},
-	{
-		path: "apps/new?{resid}",
-		outlet: "new-app"
-	},
-	{
-		path: "apps/{appId}/edit?{resid}&{page}",
-		outlet: "edit-app"
 	},
 	{
 		path: "users?{resid}&{page}",
@@ -41,7 +33,7 @@ export default [
 		outlet: "roles"
 	}, 
 	{
-		path: "roles/new?{appid}",
+		path: "roles/new?{resid}&{appid}",
 		outlet: "new-role"
 	},
 	{

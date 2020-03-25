@@ -3,7 +3,6 @@ import theme from '@dojo/framework/core/middleware/theme';
 import Outlet from '@dojo/framework/routing/Outlet';
 import dojo from '@dojo/themes/dojo';
 
-
 import * as icons from "./icons";
 import * as css from './App.m.css';
 
@@ -13,7 +12,7 @@ import Login from './pages/login';
 import Register from './pages/register';
 
 import Menus from './pages/menus';
-import Departments from './pages/departments';
+import Depts from './pages/depts';
 
 import Users from './pages/users';
 import NewUser from './pages/users/New';
@@ -24,8 +23,6 @@ import NewRole from './pages/roles/New';
 import EditRole from './pages/roles/Edit';
 
 import Apps from './pages/apps';
-import NewApp from './pages/apps/New';
-import EditApp from './pages/apps/Edit';
 import NotFoundPage from './pages/error/404';
 
 icons.init();
@@ -39,31 +36,28 @@ export default factory(function App({ middleware: { theme } }) {
 	return (
 		<div classes={[css.root]}>
 			<LayoutManager>
-				<Outlet id="login" renderer={() => <Login />} />
-				<Outlet id="register" renderer={() => <Register />} />
-				<Outlet id="home" renderer={() => <Home />} />
+				<Outlet id="login" key="login" renderer={() => <Login />} />
+				<Outlet id="register" key="register" renderer={() => <Register />} />
+				<Outlet id="home" key="home" renderer={() => <Home />} />
 
-				<Outlet id="apps" renderer={(details) => <Apps resId={details.queryParams.resid} page={Number(details.queryParams.page)}/>} />
-				<Outlet id="new-app" renderer={(details) => <NewApp resId={details.queryParams.resid}/>} />
-				<Outlet id="edit-app" renderer={(details) => <EditApp resId={details.queryParams.resid} appId={details.params.appId}/>} />
+				<Outlet id="apps" key="apps" renderer={(details) => <Apps resId={details.queryParams.resid}/>} />
 
-				<Outlet id="users" renderer={(details) => <Users resId={details.queryParams.resid} page={Number(details.queryParams.page)}/>} />
-				<Outlet id="new-user" renderer={(details) => <NewUser resId={details.queryParams.resid}/>} />
-				<Outlet id="edit-user" renderer={(details) => <EditUser resId={details.queryParams.resid} userId={details.params.userId} page={Number(details.queryParams.page)}/>} />
+				<Outlet id="users" key="users" renderer={(details) => <Users resId={details.queryParams.resid}/>} />
+				<Outlet id="new-user" key="new-user" renderer={(details) => <NewUser resId={details.queryParams.resid}/>} />
+				<Outlet id="edit-user" key="edit-user" renderer={(details) => <EditUser resId={details.queryParams.resid} userId={details.params.userId} />} />
 
-				<Outlet id="roles" renderer={() => <Roles />} />
-				<Outlet id="new-role" renderer={(details) => {
-					debugger;
-					return <NewRole appId={details.queryParams.appid}/>
+				<Outlet id="roles" key="roles" renderer={(details) => <Roles resId={details.queryParams.resid}/>} />
+				<Outlet id="new-role" key="new-role" renderer={(details) => {
+					return <NewRole appId={details.queryParams.appid} resId={details.queryParams.resid}/>
 				}} />
-				<Outlet id="edit-role" renderer={(details) => <EditRole roleId={details.params.roleId}/>} />
+				<Outlet id="edit-role" key="edit-role" renderer={(details) => <EditRole roleId={details.params.roleId}/>} />
 				
-				<Outlet id="menus" renderer={() => <Menus />} />
-				<Outlet id="departments" renderer={() => <Departments />} />
+				<Outlet id="menus" key="menus" renderer={() => <Menus />} />
+				<Outlet id="depts" key="depts" renderer={() => <Depts />} />
 
 				
 
-				<Outlet id="errorOutlet" renderer={() => <NotFoundPage />}/>
+				<Outlet id="errorOutlet" key="errorOutlet" renderer={() => <NotFoundPage />}/>
 			</LayoutManager>
 		</div>
 	);

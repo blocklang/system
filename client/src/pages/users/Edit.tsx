@@ -19,7 +19,7 @@ const icache = createICacheMiddleware<FetchResult>();
 const factory = create({ icache, store }).properties<EditProperties>();
 
 export default factory(function Edit({ properties, middleware: { icache, store } }){
-    const { userId, resId, page } = properties();
+    const { userId, resId} = properties();
     const token = store.get(store.path("session", "token"));
     const user = icache.getOrSet("user", async () => {
         const response = await request.get(`users/${userId}?resid=${resId}`, token);
@@ -94,7 +94,7 @@ export default factory(function Edit({ properties, middleware: { icache, store }
                                     const post = async () => {
                                         const response = await request.put(`users/${userId}?resid=${resId}`, user, token);
                                         if(response.ok) {
-                                            store.executor(redirectToProcess)({outlet: "users", params: {resid: resId, page: page+""}});
+                                            store.executor(redirectToProcess)({outlet: "users", params: {resid: resId}});
                                         }
                                     }
 

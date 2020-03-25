@@ -1,3 +1,5 @@
+import { ValidateStatus } from "./constant";
+
 export interface Session {
     username: string;
     token: string;
@@ -26,7 +28,6 @@ export interface Pagination<T> {
 
 export interface ResourceProperties {
     resId: string;
-    page?: number;
 }
 
 export interface RoleInfo {
@@ -83,11 +84,27 @@ export interface Errors {
     [index: string]: string[];
 }
 
+export interface ResourcePermission {
+    id: string;
+    canAccess: boolean;
+    permission: string[];
+}
+
+export interface InputValidation {
+    status: ValidateStatus;
+    message: string;
+}
+
 export interface State {
     routing: Routing;
     session: Session;
-    errors: Errors;
+    errors: Errors; // TODO: 被 validation 对象代替，可删除
     menus: Menu[];
+    permission: ResourcePermission;
+    pageView: string;
+    globalTip: string; // 全局信息，通常显示在页面的中上方，用于显示保存成功等无阻碍提示信息
     // FIXME: 为每个页面定义一个接口？
-    app: AppInfo
+    formValidation: {[key: string]: InputValidation}
+    app: AppInfo;
+    pagedApp: Pagination<AppInfo>;
 }

@@ -1,102 +1,64 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
-import {createICacheMiddleware} from '@dojo/framework/core/middleware/icache';
 import * as c from 'bootstrap-classes';
-import Link from '@dojo/framework/routing/Link';
-import FontAwesomeIcon from 'dojo-fontawesome/FontAwesomeIcon';
-import * as request from '../../utils/request';
 import store from '../../store';
-import { AppInfo, ResourceProperties } from '../../interfaces';
-import { redirectToProcess } from '../../processes/routeProcesses';
+import { updateAppProcess, setAppFieldProcess } from '../../processes/appProcesses';
+import { changeViewProcess } from '../../processes/pageProcesses';
 
-export interface EditProperties extends ResourceProperties{
-    appId: string
+export interface EditProperties{
+
 }
 
-interface FetchResult {
-    app: AppInfo;
-}
-const icache = createICacheMiddleware<FetchResult>();
-const factory = create({ icache, store }).properties<EditProperties>();
+const factory = create({ store }).properties<EditProperties>();
 
-export default factory(function Edit({ properties, middleware: { icache, store } }){
-    const { resId, appId } = properties();
-    const token = store.get(store.path("session", "token"));
-    const app = icache.getOrSet("app", async () => {
-        const response = await request.get(`apps/${appId}?resid=${resId}`, token);
-        const app = await response.json();
-        if(response.ok){
-            return app;
-        }
-    });
-    if(!app) {
-        // 显示加载中
-        return
-    }
+export default factory(function Edit({ properties, middleware: {  store } }){
+    const {get, path, executor} = store;
+    const app = get(path("app")) || {};
 
     return (
-        <virtual>
-            <section classes={["content-header"]}>
-                <div classes={[c.container_fluid]}>
-                    <h1>APP管理</h1>
+        <div classes={[c.container_fluid]}>
+            <div classes={[c.card]}>
+                <div classes={[c.card_header]}>
+                    <h3 classes={[c.card_title]}>编辑APP</h3>
                 </div>
-            </section>
-            <section classes={["content"]}>
-                <div classes={[c.container_fluid]}>
-                    <div classes={[c.d_flex, c.justify_content_start, c.mb_2]}>
-                        <Link to="apps" classes={[c.btn, c.btn_secondary]}><FontAwesomeIcon icon="angle-left"/> 返回</Link>
-                    </div>
-                    <div classes={[c.card]}>
-                        <div classes={[c.card_header]}>
-                            <h3 classes={[c.card_title]}>编辑APP</h3>
+                <form role="form">
+                    <div classes={[c.card_body]}>
+                        <div classes={[c.form_group]}>
+                            <label for="iptName">名称<small classes={[c.text_muted, c.ml_1]}>必填</small></label>
+                            <input type="text" classes={[c.form_control]} id="iptName" value={app.name} oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
+                                executor(setAppFieldProcess)({field: "name", value: event.target.value})
+                            }}/>
                         </div>
-                        <form role="form">
-                            <div classes={[c.card_body]}>
-                                <div classes={[c.form_group]}>
-                                    <label for="iptName">名称<small classes={[c.text_muted, c.ml_1]}>必填</small></label>
-                                    <input type="text" classes={[c.form_control]} id="iptName" value={app.name} oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
-                                        icache.set("app", {...app, name:event.target.value});
-                                    }}/>
-                                </div>
-                                <div classes={[c.form_group]}>
-                                    <label for="iptIcon">Icon</label>
-                                    <input type="text" classes={[c.form_control]} id="iptIcon" value={app.icon} oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
-                                        icache.set("app", {...app, icon:event.target.value});
-                                    }}/>
-                                </div>
-                                <div classes={[c.form_group]}>
-                                    <label for="iptUrl">url</label>
-                                    <input type="text" classes={[c.form_control]} id="iptUrl" value={app.url} oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
-                                        icache.set("app", {...app, url:event.target.value});
-                                    }}/>
-                                </div>
-                                <div classes={[c.form_group]}>
-                                    <label for="iptDescription">描述</label>
-                                    <textarea classes={[c.form_control]} id="iptDescription" value={app.description} oninput={(event: KeyboardEvent<HTMLTextAreaElement>)=>{
-                                        icache.set("app", {...app, description:event.target.value});
-                                    }}/>
-                                </div>
-                            </div>
-                            <div classes={[c.card_footer]}>
-                                <button type="button" classes={[c.btn, c.btn_primary]} onclick={() => {
-                                    if(app.name.trim() === "") {
-                                        alert("名称不能为空");
-                                        return;
-                                    }
-
-                                    const post = async () => {
-                                        const response = await request.put(`apps/${appId}?resid=${resId}`, app, token);
-                                        if(response.ok) {
-                                            store.executor(redirectToProcess)({outlet: "apps"});
-                                        }
-                                    }
-
-                                    post();
-                                }}>保存</button>
-                            </div>
-                        </form>
+                        <div classes={[c.form_group]}>
+                            <label for="iptIcon">Icon</label>
+                            <input type="text" classes={[c.form_control]} id="iptIcon" value={app.icon} oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
+                                executor(setAppFieldProcess)({field: "icon", value: event.target.value})
+                            }}/>
+                        </div>
+                        <div classes={[c.form_group]}>
+                            <label for="iptUrl">url</label>
+                            <input type="text" classes={[c.form_control]} id="iptUrl" value={app.url} oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
+                                executor(setAppFieldProcess)({field: "url", value: event.target.value})
+                            }}/>
+                        </div>
+                        <div classes={[c.form_group]}>
+                            <label for="iptDescription">描述</label>
+                            <textarea classes={[c.form_control]} id="iptDescription" value={app.description} oninput={(event: KeyboardEvent<HTMLTextAreaElement>)=>{
+                                executor(setAppFieldProcess)({field: "description", value: event.target.value})
+                            }}/>
+                        </div>
                     </div>
-                </div>
-            </section>
-        </virtual>
+                    <div classes={[c.card_footer]}>
+                        <button type="button" classes={[c.btn, c.btn_secondary, c.mr_2]} onclick={()=>{
+                            // 要保留在原页面
+                            executor(changeViewProcess)({view: "list"});
+                        }}>取消</button>
+                        <button type="button" classes={[c.btn, c.btn_primary]} onclick={() => {
+                            // 更新成功之后要跳转，并在刷新列表
+                            executor(updateAppProcess)({});
+                        }}>保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 });
