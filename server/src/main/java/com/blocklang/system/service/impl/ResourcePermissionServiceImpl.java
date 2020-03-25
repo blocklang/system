@@ -79,7 +79,7 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 		
 		// 确保所有父资源都没有失效，如果有一个失效则无权访问该资源
 		String parentResourceId = resource.getParentId();
-		while(parentResourceId != Tree.ROOT_PARENT_ID) {
+		while(!Tree.ROOT_PARENT_ID.equals(parentResourceId)) {
 			Optional<ResourceInfo> parentResourceOption = resourceDao.findById(parentResourceId);
 			if(parentResourceOption.isEmpty()) {
 				return Optional.empty();
@@ -161,8 +161,9 @@ public class ResourcePermissionServiceImpl implements ResourcePermissionService 
 				
 		// 确保所有父资源都没有失效，如果有一个失效则无权访问该资源
 		String parentResourceId = resource.getParentId();
-		while(parentResourceId != Tree.ROOT_PARENT_ID) {
+		while(!Tree.ROOT_PARENT_ID.equals(parentResourceId)) {
 			Optional<ResourceInfo> parentResourceOption = resourceDao.findById(parentResourceId);
+
 			// 无需判断 parentResourceOption 是否为 empty，能执行到此处必然有值
 			ResourceInfo parentResource = parentResourceOption.get();
 			if(!parentResource.getActive()) {
