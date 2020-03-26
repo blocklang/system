@@ -23,6 +23,7 @@
 			<column name="admin" remarks="是否管理员" type="boolean" defaultValueBoolean="false">
 				<constraints nullable="false" />
 			</column>
+			<column name="dept_id" remarks="部门标识" type="varchar(32)" />
 			<column name="last_sign_in_time" remarks="最近登录时间" type="${datetime}" />
 			<column name="sign_in_count" remarks="登录次数" type="int" defaultValueNumeric="0">
 				<constraints nullable="false" />

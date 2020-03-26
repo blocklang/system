@@ -34,6 +34,9 @@ public class UserInfo extends PartialOperateFields {
 	
 	@Column(name = "admin", nullable = false)
 	private Boolean admin = false;
+	
+	@Column(name = "dept_id", length = 3211)
+	private String deptId;
 
 	@Column(name = "last_sign_in_time", insertable = true, updatable = true, nullable = false)
 	private LocalDateTime lastSignInTime;
@@ -103,6 +106,14 @@ public class UserInfo extends PartialOperateFields {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public String getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
 	}
 
 }
