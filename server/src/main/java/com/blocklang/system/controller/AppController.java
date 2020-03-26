@@ -54,8 +54,8 @@ public class AppController {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		if(appService.find(user.getId(), param.getName().trim()).isPresent()) {
-			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
+		if(appService.find(user.getId(), param.getName()).isPresent()) {
+			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -63,7 +63,7 @@ public class AppController {
 		
 		AppInfo app = new AppInfo();
 		app.setId(IdGenerator.uuid());
-		app.setName(param.getName().trim());
+		app.setName(param.getName());
 		app.setUrl(param.getUrl());
 		app.setIcon(param.getIcon());
 		app.setDescription(param.getDescription());
@@ -84,18 +84,18 @@ public class AppController {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		Optional<AppInfo> duplicatedApp = appService.find(user.getId(), param.getName().trim());
+		Optional<AppInfo> duplicatedApp = appService.find(user.getId(), param.getName());
 		if(duplicatedApp.isPresent() && !duplicatedApp.get().getId().equals(appId)) {
-			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
+			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
 		
 		AppInfo existAppInfo = appService.findById(appId).orElseThrow(ResourceNotFoundException::new);
-		existAppInfo.setName(param.getName().trim());
-		existAppInfo.setIcon(param.getIcon().trim());
-		existAppInfo.setUrl(param.getUrl().trim());
+		existAppInfo.setName(param.getName());
+		existAppInfo.setIcon(param.getIcon());
+		existAppInfo.setUrl(param.getUrl());
 		existAppInfo.setDescription(param.getDescription());
 		existAppInfo.setLastUpdateTime(LocalDateTime.now());
 		existAppInfo.setLastUpdateUserId(user.getId());

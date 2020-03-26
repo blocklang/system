@@ -10,7 +10,8 @@ public class CheckUsernameParam {
 	private String username;
 
 	public String getUsername() {
-		return username;
+		// 因为是必填项，所以不做 null 判断
+		return username.trim();
 	}
 
 	public void setUsername(String username) {

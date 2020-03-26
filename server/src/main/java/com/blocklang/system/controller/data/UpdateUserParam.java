@@ -1,12 +1,14 @@
 package com.blocklang.system.controller.data;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class UpdateUserParam extends CheckUsernameParam {
 	private String nickname;
 	private String sex;
 	private String phoneNumber;
 
 	public String getNickname() {
-		return nickname;
+		return StringUtils.trimToNull(nickname);
 	}
 
 	public void setNickname(String nickname) {
@@ -22,7 +24,7 @@ public class UpdateUserParam extends CheckUsernameParam {
 	}
 
 	public String getPhoneNumber() {
-		return phoneNumber;
+		return StringUtils.trimToNull(phoneNumber);
 	}
 
 	public void setPhoneNumber(String phoneNumber) {

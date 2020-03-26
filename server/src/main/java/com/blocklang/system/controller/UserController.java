@@ -68,9 +68,9 @@ public class UserController {
 		user.setId(IdGenerator.uuid());
 		user.setUsername(param.getUsername().trim());
 		user.setPassword(encryptService.encrypt(param.getPassword()));
-		user.setNickname(param.getNickname().trim());
+		user.setNickname(param.getNickname());
 		user.setSex(Sex.fromKey(param.getSex()));
-		user.setPhoneNumber(param.getPhoneNumber().trim());
+		user.setPhoneNumber(param.getPhoneNumber());
 		user.setAdmin(false);
 		user.setCreateUserId(currentUser.getId());
 		user.setCreateTime(LocalDateTime.now());
@@ -92,19 +92,19 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		Optional<UserInfo> duplicatedUser = userService.findByUsername(param.getUsername().trim());
+		Optional<UserInfo> duplicatedUser = userService.findByUsername(param.getUsername());
 		if(duplicatedUser.isPresent() && !duplicatedUser.get().getId().equals(userId)) {
-			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+param.getUsername().trim()+"</strong>已被占用！");
+			bindingResult.rejectValue("username", "DUPLICATED", "<strong>"+param.getUsername()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
 		
 		UserInfo updatedUser = userService.findById(userId).orElseThrow(ResourceNotFoundException::new);
-		updatedUser.setUsername(param.getUsername().trim());
-		updatedUser.setNickname(param.getNickname().trim());
+		updatedUser.setUsername(param.getUsername());
+		updatedUser.setNickname(param.getNickname());
 		updatedUser.setSex(Sex.fromKey(param.getSex()));
-		updatedUser.setPhoneNumber(param.getPhoneNumber().trim());
+		updatedUser.setPhoneNumber(param.getPhoneNumber());
 		updatedUser.setLastUpdateUserId(currentUser.getId());
 		updatedUser.setLastUpdateTime(LocalDateTime.now());
 		

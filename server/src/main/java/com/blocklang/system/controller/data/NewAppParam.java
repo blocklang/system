@@ -2,16 +2,23 @@ package com.blocklang.system.controller.data;
 
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.StringUtils;
+
+
+
 public class NewAppParam {
 
 	@NotBlank(message = "请输入APP名称！")
 	private String name;
+	
 	private String icon;
+	
 	private String url;
-	private String description;
+	
+	private String description; // 不需要 trim()
 
 	public String getName() {
-		return name;
+		return name.trim();
 	}
 
 	public void setName(String name) {
@@ -19,7 +26,7 @@ public class NewAppParam {
 	}
 
 	public String getIcon() {
-		return icon;
+		return StringUtils.trimToNull(icon);
 	}
 
 	public void setIcon(String icon) {
@@ -27,7 +34,7 @@ public class NewAppParam {
 	}
 
 	public String getUrl() {
-		return url;
+		return StringUtils.trimToNull(url);
 	}
 
 	public void setUrl(String url) {

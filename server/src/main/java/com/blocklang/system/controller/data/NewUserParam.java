@@ -1,5 +1,7 @@
 package com.blocklang.system.controller.data;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class NewUserParam extends LoginParam {
 
 	private String nickname;
@@ -7,7 +9,8 @@ public class NewUserParam extends LoginParam {
 	private String phoneNumber;
 
 	public String getNickname() {
-		return nickname;
+		// 如果值为空，则确保插入数据库的值为 null，不能是空字符串
+		return StringUtils.trimToNull(nickname);
 	}
 
 	public void setNickname(String nickname) {
@@ -23,7 +26,7 @@ public class NewUserParam extends LoginParam {
 	}
 
 	public String getPhoneNumber() {
-		return phoneNumber;
+		return StringUtils.trimToNull(phoneNumber);
 	}
 
 	public void setPhoneNumber(String phoneNumber) {
