@@ -12,14 +12,16 @@
 				<constraints primaryKey="true" nullable="false" primaryKeyName="PK_SYS_USER" />
 			</column>
 			<column name="username" remarks="用户名" type="varchar(64)">
-				<constraints nullable="false" unique="true" uniqueConstraintName="UK_USERNAME"/>
+				<constraints nullable="false" unique="true" uniqueConstraintName="UK_USER_ON_USERNAME"/>
 			</column>
 			<column name="nickname" remarks="昵称" type="varchar(64)" />
 			<column name="password" remarks="密码" type="varchar(128)">
-				<constraints nullable="false" />
+				<constraints nullable="false"/>
 			</column>
 			<column name="sex" remarks="性别" type="char(1)" />
-			<column name="phone_number" remarks="手机号码" type="varchar(11)" />
+			<column name="phone_number" remarks="手机号码" type="varchar(11)" >
+				<constraints unique="true" uniqueConstraintName="UK_USER_ON_PHONE_NUMBER"/>
+			</column>
 			<column name="admin" remarks="是否管理员" type="boolean" defaultValueBoolean="false">
 				<constraints nullable="false" />
 			</column>
@@ -37,11 +39,6 @@
 			<column name="last_update_user_id" remarks="最近修改人标识" type="varchar(32)" />
 			<column name="last_update_time" remarks="最近修改时间" type="${datetime}" />
 		</createTable>
-		<addUniqueConstraint columnNames="username"
-			constraintName="UK_USER_ON_USERNAME" tableName="sys_user" />
-		<addUniqueConstraint columnNames="phone_number"
-			constraintName="UK_USER_ON_PHONE_NUMBER" tableName="sys_user" />	
-			
 	</changeSet>
 
 </databaseChangeLog>
