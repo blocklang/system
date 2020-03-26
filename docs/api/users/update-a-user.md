@@ -26,6 +26,9 @@ PUT /users/{userId}
 | `nickname`(body)        | `string` | 昵称                           |
 | `sex`(body)             | `string` | 性别                           |
 | `phoneNumber`(body)     | `string` | 手机号码                       |
+| `deptId`(body)          | `string` | 部门标识                       |
+
+注意：更新用户信息时不能修改 `password`。
 
 ## Response
 

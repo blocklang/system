@@ -29,6 +29,7 @@ POST /users
 | `nickname`(body)        | `string` | 昵称                           |
 | `sex`(body)             | `string` | 性别                           |
 | `phoneNumber`(body)     | `string` | 手机号码                       |
+| `deptId`(body)          | `string` | 部门标识                       |
 
 ## Response
 
