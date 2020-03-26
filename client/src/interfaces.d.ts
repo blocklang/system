@@ -49,6 +49,9 @@ export interface UserInfo{
     id: string;
     username: string;
     nickname: string;
+    deptId: string;
+    deptName: string;
+    password?:string;
     sex: Sex;
     phoneNumber: string;
     admin: string;
@@ -105,6 +108,10 @@ export interface State {
     globalTip: string; // 全局信息，通常显示在页面的中上方，用于显示保存成功等无阻碍提示信息
     // FIXME: 为每个页面定义一个接口？
     formValidation: {[key: string]: InputValidation}
+    // APP 管理
     app: AppInfo;
     pagedApp: Pagination<AppInfo>;
+    // 用户管理
+    user: UserInfo;
+    pagedUser: Pagination<UserInfo>;
 }

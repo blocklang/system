@@ -2,11 +2,9 @@ import { create, tsx } from '@dojo/framework/core/vdom';
 import * as c from 'bootstrap-classes';
 import store from '../../store';
 import { updateAppProcess, setAppFieldProcess } from '../../processes/appProcesses';
-import { changeViewProcess } from '../../processes/pageProcesses';
+import { changeViewProcess} from '../../processes/pageProcesses';
 
-export interface EditProperties{
-
-}
+export interface EditProperties{}
 
 const factory = create({ store }).properties<EditProperties>();
 

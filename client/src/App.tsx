@@ -15,8 +15,6 @@ import Menus from './pages/menus';
 import Depts from './pages/depts';
 
 import Users from './pages/users';
-import NewUser from './pages/users/New';
-import EditUser from './pages/users/Edit';
 
 import Roles from './pages/roles';
 import NewRole from './pages/roles/New';
@@ -41,10 +39,7 @@ export default factory(function App({ middleware: { theme } }) {
 				<Outlet id="home" key="home" renderer={() => <Home />} />
 
 				<Outlet id="apps" key="apps" renderer={(details) => <Apps resId={details.queryParams.resid}/>} />
-
 				<Outlet id="users" key="users" renderer={(details) => <Users resId={details.queryParams.resid}/>} />
-				<Outlet id="new-user" key="new-user" renderer={(details) => <NewUser resId={details.queryParams.resid}/>} />
-				<Outlet id="edit-user" key="edit-user" renderer={(details) => <EditUser resId={details.queryParams.resid} userId={details.params.userId} />} />
 
 				<Outlet id="roles" key="roles" renderer={(details) => <Roles resId={details.queryParams.resid}/>} />
 				<Outlet id="new-role" key="new-role" renderer={(details) => {
@@ -54,8 +49,6 @@ export default factory(function App({ middleware: { theme } }) {
 				
 				<Outlet id="menus" key="menus" renderer={() => <Menus />} />
 				<Outlet id="depts" key="depts" renderer={() => <Depts />} />
-
-				
 
 				<Outlet id="errorOutlet" key="errorOutlet" renderer={() => <NotFoundPage />}/>
 			</LayoutManager>

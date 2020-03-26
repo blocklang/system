@@ -17,17 +17,9 @@ export default [
 		outlet: "apps"
 	},
 	{
-		path: "users?{resid}&{page}",
+		path: "users?{resid}",
 		outlet: "users"
 	},
-	{
-		path: "users/new?{resid}",
-		outlet: "new-user"
-	},
-	{
-		path: "users/{userId}/edit?{resid}&{page}",
-		outlet: "edit-user"
-	}, 
 	{
 		path: "roles?{resid}",
 		outlet: "roles"

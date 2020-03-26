@@ -3,14 +3,11 @@ import icache from '@dojo/framework/core/middleware/icache';
 import * as c from 'bootstrap-classes';
 import store from '../../store';
 import { saveAppProcess, setAppFieldProcess, getPagedAppProcess } from '../../processes/appProcesses';
-import Swal from 'sweetalert2';
+import {Toast} from "../../utils/sweetalert2";
 import { clearGlobalTipProcess, changeViewProcess } from '../../processes/pageProcesses';
 import { ValidateStatus } from '../../constant';
 
-export interface NewProperties{
-
-}
-
+export interface NewProperties{ }
 
 const factory = create({ icache, store }).properties<NewProperties>();
 
@@ -20,39 +17,37 @@ export default factory(function New({ properties, middleware: { icache, store } 
     const app = get(path("app")) || {};
     const {name, icon, url, description} = app;
 
-    const gloablTip = get(path("globalTip"));
-    if(gloablTip) {
-        Swal.fire({toast: true, title: gloablTip, showCloseButton: false, timer: 2000, position: "top"});
+    const globalTip = get(path("globalTip"));
+    if(globalTip) {
+        Toast.fire(globalTip);
         executor(clearGlobalTipProcess)({});
     }
 
     const formValidation = get(path("formValidation")) || {};
-    console.log("formvalidation", formValidation)
-
     const showInvalidMessage = (field: string) => {
         const {status=ValidateStatus.UNVALIDATED, message=""} = formValidation[field] || {};
         if(status === ValidateStatus.INVALID) {
             return <div classes={[c.invalid_tooltip]} innerHTML={message}></div>
         }
     }
-
-    const isInvalid = (field: string) => {
+    const showValidationClass = (field: string) => {
         const {status = ValidateStatus.UNVALIDATED} = formValidation[field] || {};
-        return status === ValidateStatus.INVALID;
+        if (status === ValidateStatus.INVALID) {
+            return c.is_invalid;
+        }
     }
 
     return (
         <div classes={[c.container_fluid]}>
-
             <div classes={[c.card]}>
                 <div classes={[c.card_header]}>
                     <h3 classes={[c.card_title]}>新建APP</h3>
                 </div>
-                <form role="form">
+                <form role="form" classes={[c.needs_validation]} novalidate={true}>
                     <div classes={[c.card_body]}>
                         <div classes={[c.form_group, c.position_relative]}>
                             <label for="iptName">名称<small classes={[c.text_muted, c.ml_1]}>必填</small></label>
-                            <input type="text" value={name} classes={[c.form_control, isInvalid("name")?c.is_invalid:undefined]} focus={true} id="iptName" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
+                            <input type="text" value={name} classes={[c.form_control, showValidationClass("name")]} focus={true} id="iptName" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
                                 executor(setAppFieldProcess)({field: "name", value: event.target.value});
                             }}/>
                             {showInvalidMessage("name")}

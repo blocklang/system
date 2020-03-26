@@ -1,60 +1,62 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
-import store from '../../store';
-import * as c from 'bootstrap-classes';
-import FontAwesomeIcon from 'dojo-fontawesome/FontAwesomeIcon';
-import { getPagedAppProcess, getAppProcess } from '../../processes/appProcesses';
-import { defaultPagination } from '../../config';
 import * as moment from "moment";
-import { changeViewProcess, resetAppProcess } from '../../processes/pageProcesses';
+import FontAwesomeIcon from "dojo-fontawesome/FontAwesomeIcon";
+import * as c from "bootstrap-classes";
+import store from '../../store';
+import { getPagedUserProcess, getUserProcess, resetUserProcess } from '../../processes/userProcesses';
+import { changeViewProcess } from '../../processes/pageProcesses';
+import { defaultPagination } from '../../config';
 import Pagination from '../../widgets/Pagination';
 
-export interface ListProperties{
+export interface ListProperties {
 }
 
 const factory = create({store}).properties<ListProperties>();
 
 export default factory(function List({ properties, middleware: {store} }){
     const {get, path, executor} = store;
-    const pagedApp = get(path("pagedApp"));
-    if(!pagedApp) {
-        // 页面初始化时加载指定页数的列表, 默认加载第一页
-        executor(getPagedAppProcess)({page: 0});
+    const pagedUser = get(path("pagedUser"));
+    if(!pagedUser) {
+        executor(getPagedUserProcess)({page: 0});
     }
 
-    const {content: apps, empty, first, last, number, size, numberOfElements, totalElements} = pagedApp || defaultPagination;
-
+    const {content: users=[], first, last, empty,  totalElements, number, size, numberOfElements} = pagedUser|| defaultPagination;
     return (
         <div classes={[c.container_fluid]}>
             <div classes={[c.d_flex, c.justify_content_end, c.mb_2]}>
                 <button type="button" classes={[c.btn, c.btn_primary]} onclick={()=>{
                     executor(changeViewProcess)({view: "new"});
-                    executor(resetAppProcess)({});
+                    // 在此处设置初始化时的默认值。
+                    executor(resetUserProcess)({password: "123456"});
                 }}><FontAwesomeIcon icon="plus"/> 新增</button>
             </div>
             <table classes={[c.table, c.table_bordered, c.table_hover]}>
                 <thead>
                     <tr>
-                        <th>名称</th>
-                        <th>图标</th>
-                        <th>url</th>
-                        <th>描述</th>
+                        <th>登录名</th>
+                        <th>用户名</th>
+                        <th>部门</th>
+                        <th>性别</th>
+                        <th>手机</th>
                         <th>创建时间</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        empty ? <tr key="empty"><td colspan="6" classes={[c.text_center, c.text_muted]}>没有记录！</td></tr> : apps.map(app => {
-                            return (<tr key={app.id}>
-                                <td key="name">{app.name}</td>
-                                <td key="icon">{app.icon}</td>
-                                <td key="url">{app.url}</td>
-                                <td key="description">{app.description}</td>
-                                <td key="createTime">{moment(app.createTime).format("YYYY-MM-DD h:mm")}</td>
+                        empty ? <tr key="empty"><td colspan="7" classes={[c.text_center, c.text_muted]}>没有记录！</td></tr> :
+                            users.map(user => {
+                            return (<tr key={user.id}>
+                                <td key="username">{user.username}</td>
+                                <td key="nickname">{user.nickname}</td>
+                                <td key="dept">{user.deptId}</td>
+                                <td key="sex">{user.sex === "1"? "男": "女"}</td>
+                                <td key="phoneNumber">{user.phoneNumber}</td>
+                                <td key="createTime">{moment(user.createTime).format("YYYY-MM-DD h:mm")}</td>
                                 <td key="operators">
                                     <button type="button" classes={[c.btn, c.btn_secondary, c.btn_sm]} onclick={()=>{
                                          executor(changeViewProcess)({view: "edit"});
-                                         executor(getAppProcess)({id: app.id});
+                                         executor(getUserProcess)({id: user.id});
                                     }}>编辑</button>
                                 </td>
                             </tr>)
@@ -70,7 +72,7 @@ export default factory(function List({ properties, middleware: {store} }){
                 numberOfElements={numberOfElements} 
                 totalElements={totalElements}
                 onPageChanged={(page)=> {
-                    executor(getPagedAppProcess)({page});
+                    executor(getPagedUserProcess)({page});
                 }}
             />
         </div>

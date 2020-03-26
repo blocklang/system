@@ -39,7 +39,7 @@ export default factory(function Apps({ properties, middleware: { store } }) {
                     view === "list" && <List />
                 }
                 {
-                    view === "new" && <New/>
+                    view === "new" && <New />
                 }
                 {
                     view === "edit" && <Edit />
