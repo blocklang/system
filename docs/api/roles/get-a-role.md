@@ -49,6 +49,7 @@ Status: 200 OK
 | ------------------ | --------- | ---------------- |
 | `id`               | `string`  | 角色标识         |
 | `appId`            | `string`  | APP 标识         |
+| `appName`          | `string`  | APP 名称         |
 | `name`             | `string`  | 角色名称         |
 | `description`      | `string`  | 角色描述         |
 | `seq`              | `int`     | 显示顺序         |

@@ -19,9 +19,12 @@ PUT /roles/{roleId}
 | ----------------------- | -------- | ------------------------------ |
 | `Authorization`(header) | `string` | **Required**. 登录用户的 token |
 | `roleId`(path)          | `string` | **Required**. 角色标识         |
-| `appId`(body)           | `string` | **Required**. APP 标识         |
 | `name`(body)            | `string` | **Required**. 角色名称         |
 | `description`(body)     | `string` | 角色描述                       |
+
+注意：
+
+1. 因为不会将角色从 A 应用调整到 B 应用，所以不需要传入 `appId`
 
 ## Response
 
