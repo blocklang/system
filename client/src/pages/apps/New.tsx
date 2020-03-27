@@ -14,14 +14,14 @@ const factory = create({ icache, store }).properties<NewProperties>();
 export default factory(function New({ properties, middleware: { icache, store } }){
     const {} = properties();
     const {get, path, executor} = store;
-    const app = get(path("app")) || {};
-    const {name, icon, url, description} = app;
-
     const globalTip = get(path("globalTip"));
     if(globalTip) {
         Toast.fire(globalTip);
         executor(clearGlobalTipProcess)({});
     }
+
+    const app = get(path("app")) || {};
+    const {name, icon, url, description} = app;
 
     const formValidation = get(path("formValidation")) || {};
     const showInvalidMessage = (field: string) => {

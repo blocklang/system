@@ -25,14 +25,6 @@ export default [
 		outlet: "roles"
 	}, 
 	{
-		path: "roles/new?{resid}&{appid}",
-		outlet: "new-role"
-	},
-	{
-		path: "roles/{roleId}/edit",
-		outlet: "edit-role"
-	},
-	{
 		path: "menus?{resid}",
 		outlet: "resources"
 	}, 

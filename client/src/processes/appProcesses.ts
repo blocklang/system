@@ -107,8 +107,14 @@ const updateAppCommand = commandFactory(async ({at, get, path}) => {
     ];
 });
 
+// 将 app 中的字段值清空，然后设置默认值
+const resetAppCommand = commandFactory<Partial<AppInfo>>(({path, payload}) => {
+    return [replace(path("app"), payload)];
+});
+
 export const getPagedAppProcess = createProcess('get-paged-apps', [getPagedAppCommand]);
 export const getAppProcess = createProcess("get-app", [getAppCommand]);
 export const setAppFieldProcess = createProcess('set-app-field', [setAppFieldCommand]);
 export const saveAppProcess = createProcess('save-app', [saveAppCommand]);
 export const updateAppProcess = createProcess('update-app', [updateAppCommand]);
+export const resetAppProcess = createProcess('reset-app', [resetAppCommand]);

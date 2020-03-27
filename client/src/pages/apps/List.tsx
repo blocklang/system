@@ -2,10 +2,10 @@ import { create, tsx } from '@dojo/framework/core/vdom';
 import store from '../../store';
 import * as c from 'bootstrap-classes';
 import FontAwesomeIcon from 'dojo-fontawesome/FontAwesomeIcon';
-import { getPagedAppProcess, getAppProcess } from '../../processes/appProcesses';
+import { getPagedAppProcess, getAppProcess, resetAppProcess } from '../../processes/appProcesses';
 import { defaultPagination } from '../../config';
 import * as moment from "moment";
-import { changeViewProcess, resetAppProcess } from '../../processes/pageProcesses';
+import { changeViewProcess} from '../../processes/pageProcesses';
 import Pagination from '../../widgets/Pagination';
 
 export interface ListProperties{

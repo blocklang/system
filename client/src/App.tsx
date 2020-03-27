@@ -17,8 +17,6 @@ import Depts from './pages/depts';
 import Users from './pages/users';
 
 import Roles from './pages/roles';
-import NewRole from './pages/roles/New';
-import EditRole from './pages/roles/Edit';
 
 import Apps from './pages/apps';
 import NotFoundPage from './pages/error/404';
@@ -40,13 +38,8 @@ export default factory(function App({ middleware: { theme } }) {
 
 				<Outlet id="apps" key="apps" renderer={(details) => <Apps resId={details.queryParams.resid}/>} />
 				<Outlet id="users" key="users" renderer={(details) => <Users resId={details.queryParams.resid}/>} />
-
 				<Outlet id="roles" key="roles" renderer={(details) => <Roles resId={details.queryParams.resid}/>} />
-				<Outlet id="new-role" key="new-role" renderer={(details) => {
-					return <NewRole appId={details.queryParams.appid} resId={details.queryParams.resid}/>
-				}} />
-				<Outlet id="edit-role" key="edit-role" renderer={(details) => <EditRole roleId={details.params.roleId}/>} />
-				
+	
 				<Outlet id="menus" key="menus" renderer={() => <Menus />} />
 				<Outlet id="depts" key="depts" renderer={() => <Depts />} />
 

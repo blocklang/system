@@ -33,6 +33,7 @@ export interface ResourceProperties {
 export interface RoleInfo {
     id: string;
     appId: string;
+    appName: string;
     name: string;
     description: string;
     seq: number;
@@ -114,4 +115,7 @@ export interface State {
     // 用户管理
     user: UserInfo;
     pagedUser: Pagination<UserInfo>;
+    // 角色管理
+    role: RoleInfo;
+    pagedRole: Pagination<RoleInfo>;
 }
