@@ -2,6 +2,8 @@ package com.blocklang.system.controller.data;
 
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 @JsonRootName("user")
@@ -10,8 +12,7 @@ public class CheckUsernameParam {
 	private String username;
 
 	public String getUsername() {
-		// 因为是必填项，所以不做 null 判断
-		return username.trim();
+		return StringUtils.trimToNull(username);
 	}
 
 	public void setUsername(String username) {

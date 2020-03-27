@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.blocklang.system.dao.AppDao;
 import com.blocklang.system.dao.RoleDao;
 import com.blocklang.system.model.RoleInfo;
 import com.blocklang.system.service.RoleService;
@@ -16,6 +17,8 @@ public class RoleServiceImpl implements RoleService {
 
 	@Autowired
 	private RoleDao roleDao;
+	@Autowired
+	private AppDao appDao;
 	
 	@Override
 	public Optional<RoleInfo> findByAppIdAndName(String appId, String roleName) {
@@ -29,7 +32,10 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public Optional<RoleInfo> findById(String roleId) {
-		return roleDao.findById(roleId);
+		return roleDao.findById(roleId).map(role -> {
+			appDao.findById(role.getAppId()).ifPresent(app -> role.setAppName(app.getName()));
+			return role;
+		});
 	}
 
 	@Override

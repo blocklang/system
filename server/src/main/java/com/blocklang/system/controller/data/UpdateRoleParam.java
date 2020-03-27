@@ -4,13 +4,11 @@ import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class NewRoleParam {
+// 因为不会修改数据的 APPId,所以不需要传入
+public class UpdateRoleParam {
 
 	@NotBlank(message = "请输入角色名！")
 	private String name;
-	
-	@NotBlank(message = "请选择一个APP！")
-	private String appId;
 	
 	private String description;
 
@@ -20,14 +18,6 @@ public class NewRoleParam {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getAppId() {
-		return StringUtils.trimToNull(appId);
-	}
-
-	public void setAppId(String appId) {
-		this.appId = appId;
 	}
 
 	public String getDescription() {

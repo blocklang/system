@@ -18,7 +18,7 @@ public class NewAppParam {
 	private String description; // 不需要 trim()
 
 	public String getName() {
-		return name.trim();
+		return StringUtils.trimToNull(name);
 	}
 
 	public void setName(String name) {

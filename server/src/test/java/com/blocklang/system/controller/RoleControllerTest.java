@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageImpl;
 
 import com.blocklang.system.constant.Auth;
 import com.blocklang.system.controller.data.NewRoleParam;
+import com.blocklang.system.controller.data.UpdateRoleParam;
 import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.model.RoleInfo;
 import com.blocklang.system.service.AppService;
@@ -210,8 +211,7 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	public void updateRole_user_has_no_permission() {
 		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.empty());
 
-		NewRoleParam param = new NewRoleParam();
-		param.setAppId("1");
+		UpdateRoleParam param = new UpdateRoleParam();
 		param.setName("role1");
 		
 		String updateRoleId = "1";
@@ -227,57 +227,10 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	}
 	
 	@Test
-	public void updateRole_app_id_is_blank() {
-		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.of(true));
-
-		NewRoleParam param = new NewRoleParam();
-		param.setName("role1");
-		
-		String updateRoleId = "1";
-		
-		given()
-			.contentType(ContentType.JSON)
-			.header("Authorization", "Token " + token)
-			.body(param)
-		.when()
-			.put("roles/{roleId}", updateRoleId)
-		.then()
-			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
-			.body("errors.appId.size()", is(1))
-			.body("errors.appId", hasItem("请选择一个APP！"));
-	}
-	
-	@Test
-	public void updateRole_app_id_is_not_exist() {
-		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.of(true));
-
-		String appId = "appId1";
-		String roleName = "role1";
-		
-		NewRoleParam param = new NewRoleParam();
-		param.setAppId(appId);
-		param.setName(roleName);
-		
-		when(appService.findById(eq(appId))).thenReturn(Optional.empty());
-		
-		given()
-			.contentType(ContentType.JSON)
-			.header("Authorization", "Token " + token)
-			.body(param)
-		.when()
-			.put("roles/{roleId}", appId)
-		.then()
-			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
-			.body("errors.appId.size()", is(1))
-			.body("errors.appId", hasItem("<strong>appId1</strong>不存在！"));
-	}
-	
-	@Test
 	public void updateRole_name_is_blank() {
 		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.of(true));
 
-		NewRoleParam param = new NewRoleParam();
-		param.setAppId("appId1");
+		UpdateRoleParam param = new UpdateRoleParam();
 		
 		String updateRoleId = "1";
 		
@@ -298,15 +251,18 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	public void updateRole_app_id_and_new_name_is_duplicated() {
 		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_ROLE_EDIT))).thenReturn(Optional.of(true));
 
-		NewRoleParam param = new NewRoleParam();
-		String appId = "appId1";
+		UpdateRoleParam param = new UpdateRoleParam();
 		String roleName = "role1";
-		param.setAppId(appId);
 		param.setName(roleName);
 		
-		String updateRoleId = "1";
+		String appId = "appId1";
 		
-		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
+		String updateRoleId = "1";
+		RoleInfo updatedRole = new RoleInfo();
+		updatedRole.setId(updateRoleId);
+		updatedRole.setAppId(appId);
+		
+		when(roleService.findById(updateRoleId)).thenReturn(Optional.of(updatedRole));
 		
 		RoleInfo existRole = new RoleInfo();
 		String existedRoleId = "2";

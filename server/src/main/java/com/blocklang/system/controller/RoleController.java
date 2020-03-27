@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.blocklang.system.constant.Auth;
 import com.blocklang.system.constant.WebSite;
 import com.blocklang.system.controller.data.NewRoleParam;
+import com.blocklang.system.controller.data.UpdateRoleParam;
 import com.blocklang.system.exception.InvalidRequestException;
 import com.blocklang.system.exception.NoAuthorizationException;
 import com.blocklang.system.exception.ResourceNotFoundException;
@@ -57,13 +58,13 @@ public class RoleController {
 			throw new InvalidRequestException(bindingResult);
 		}
 		if(appService.findById(param.getAppId()).isEmpty()) {
-			bindingResult.rejectValue("appId", "NOT-EXIST", "<strong>"+param.getAppId().trim()+"</strong>不存在！");
+			bindingResult.rejectValue("appId", "NOT-EXIST", "<strong>"+param.getAppId()+"</strong>不存在！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		if(roleService.findByAppIdAndName(param.getAppId(), param.getName().trim()).isPresent()) {
-			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
+		if(roleService.findByAppIdAndName(param.getAppId(), param.getName()).isPresent()) {
+			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -72,8 +73,8 @@ public class RoleController {
 		RoleInfo role = new RoleInfo();
 		role.setId(IdGenerator.uuid());
 		role.setAppId(param.getAppId());
-		role.setName(param.getName().trim());
-		role.setDescription(param.getDescription().trim());
+		role.setName(param.getName());
+		role.setDescription(param.getDescription());
 		role.setCreateUserId(currentUser.getId());
 		role.setCreateTime(LocalDateTime.now());
 		
@@ -86,30 +87,24 @@ public class RoleController {
 	public ResponseEntity<RoleInfo> updateRole(
 			@AuthenticationPrincipal UserInfo currentUser, // 登录用户信息
 			@PathVariable String roleId,
-			@Valid @RequestBody NewRoleParam param,
+			@Valid @RequestBody UpdateRoleParam param,
 			BindingResult bindingResult) {
 		permissionService.canExecute(currentUser, Auth.SYSTEM_ROLE_EDIT).orElseThrow(NoAuthorizationException::new);
 		
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		if(appService.findById(param.getAppId()).isEmpty()) {
-			bindingResult.rejectValue("appId", "NOT-EXIST", "<strong>"+param.getAppId().trim()+"</strong>不存在！");
-		}
-		if (bindingResult.hasErrors()) {
-			throw new InvalidRequestException(bindingResult);
-		}
-		Optional<RoleInfo> duplicatedRole = roleService.findByAppIdAndName(param.getAppId(), param.getName().trim());
+		RoleInfo updatedRole = roleService.findById(roleId).orElseThrow(ResourceNotFoundException::new);
+		Optional<RoleInfo> duplicatedRole = roleService.findByAppIdAndName(updatedRole.getAppId(), param.getName());
 		if(duplicatedRole.isPresent() && !duplicatedRole.get().getId().equals(roleId)) {
-			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
+			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
 		
-		RoleInfo updatedRole = roleService.findById(roleId).orElseThrow(ResourceNotFoundException::new);
 		// 在此处不需要修改 appId，因为约定这个值不能改变
-		updatedRole.setName(param.getName().trim());
+		updatedRole.setName(param.getName());
 		updatedRole.setDescription(param.getDescription());
 		updatedRole.setLastUpdateUserId(currentUser.getId());
 		updatedRole.setLastUpdateTime(LocalDateTime.now());

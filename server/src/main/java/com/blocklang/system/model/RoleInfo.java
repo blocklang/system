@@ -3,6 +3,7 @@ package com.blocklang.system.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "sys_role")
@@ -24,6 +25,9 @@ public class RoleInfo extends PartialOperateFields{
 
 	@Column(name = "active")
 	private Boolean active = true;
+	
+	@Transient
+	private String appName;
 
 	public String getAppId() {
 		return appId;
@@ -63,6 +67,14 @@ public class RoleInfo extends PartialOperateFields{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
 	}
 	
 }
