@@ -25,11 +25,11 @@ export default [
 		outlet: "roles"
 	}, 
 	{
-		path: "menus?{resid}",
-		outlet: "resources"
-	}, 
-	{
 		path: "depts?{resid}",
 		outlet: "depts"
+	}, 
+	{
+		path: "menus?{resid}",
+		outlet: "resources"
 	}
 ];

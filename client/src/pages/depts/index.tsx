@@ -1,6 +1,7 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
+import { ResourceProperties } from '../../interfaces';
 
-export interface DepartmentsProperties {
+export interface DepartmentsProperties extends ResourceProperties{
 }
 
 const factory = create().properties<DepartmentsProperties>();

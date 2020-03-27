@@ -40,8 +40,10 @@ export default factory(function App({ middleware: { theme } }) {
 				<Outlet id="users" key="users" renderer={(details) => <Users resId={details.queryParams.resid}/>} />
 				<Outlet id="roles" key="roles" renderer={(details) => <Roles resId={details.queryParams.resid}/>} />
 	
+				<Outlet id="depts" key="depts" renderer={(details) => <Depts resId={details.queryParams.resid}/>} />
+
 				<Outlet id="menus" key="menus" renderer={() => <Menus />} />
-				<Outlet id="depts" key="depts" renderer={() => <Depts />} />
+				
 
 				<Outlet id="errorOutlet" key="errorOutlet" renderer={() => <NotFoundPage />}/>
 			</LayoutManager>
