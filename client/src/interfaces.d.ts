@@ -41,6 +41,17 @@ export interface RoleInfo {
     createTime: string
 }
 
+export interface DeptInfo {
+    id: string;
+    name: string;
+    parentId: string;
+    active: boolean;
+    createTime: string;
+
+    childrenLoaded: boolean;
+    hasChildren: boolean; // 从后台查数据
+}
+
 /**
  * * 1 = 男
  * * 2 = 女
@@ -118,4 +129,7 @@ export interface State {
     // 角色管理
     role: RoleInfo;
     pagedRole: Pagination<RoleInfo>;
+    // 机构管理
+    dept: DeptInfo;
+    depts: DeptInfo[];
 }

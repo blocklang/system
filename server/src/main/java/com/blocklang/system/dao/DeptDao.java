@@ -14,4 +14,5 @@ public interface DeptDao extends JpaRepository<DeptInfo, String>{
 
 	List<DeptInfo> findAllByParentId(String parentDeptId, Sort sort);
 
+	Integer countByParentId(String parentDeptId);
 }

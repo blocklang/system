@@ -4,6 +4,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
 import { faCog } from "@fortawesome/free-solid-svg-icons/faCog";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons/faAngleRight";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons/faAngleLeft";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons/faAngleDown";
 import { faUserEdit } from "@fortawesome/free-solid-svg-icons/faUserEdit";
@@ -23,6 +24,7 @@ export function init() {
 		faLock, 
 		faBars, 
 		faCog, 
+		faAngleRight,
 		faAngleLeft, 
 		faAngleDown, 
 		faUserEdit,

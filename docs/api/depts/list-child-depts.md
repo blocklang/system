@@ -49,6 +49,7 @@ Status: 200 OK
 | `name`             | `string`  | 部门名称         |
 | `seq`              | `int`     | 显示顺序         |
 | `active`           | `boolean` | 是否启用         |
+| `hasChildren`      | `boolean` | 是否含有子部门   |
 | `createUserId`     | `string`  | 创建用户标识     |
 | `createTime`       | `string`  | 创建时间         |
 | `lastUpdateUserId` | `string`  | 最近修改用户标识 |

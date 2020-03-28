@@ -10,7 +10,15 @@ const changeRouteCommand = commandFactory<ChangeRoutePayload>(({ path, payload: 
 		replace(path("routing", "params"), context.params),
 		remove(path("errors")), // FIXME: 删除 errors
 		remove(path("permission")),
-		remove(path("pageView"))
+		remove(path("pageView")),
+		remove(path("app")),
+		remove(path("pagedApp")),
+		remove(path("user")),
+		remove(path("pagedUser")),
+		remove(path("role")),
+		remove(path("pagedRole")),
+		remove(path("dept")),
+		remove(path("depts"))
 	];
 });
 

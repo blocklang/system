@@ -2,6 +2,7 @@ package com.blocklang.system.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -34,7 +35,11 @@ public class DeptServiceImpl implements DeptService {
 
 	@Override
 	public List<DeptInfo> findChildren(String parentDeptId, Sort sort) {
-		return deptDao.findAllByParentId(parentDeptId, sort);
+		return deptDao.findAllByParentId(parentDeptId, sort).stream().map(item -> {
+			Integer count = deptDao.countByParentId(item.getId());
+			item.setHasChildren(count > 0);
+			return item;
+		}).collect(Collectors.toList());
 	}
 
 }

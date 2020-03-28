@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blocklang.system.constant.Auth;
+import com.blocklang.system.constant.Tree;
 import com.blocklang.system.controller.data.NewDeptParam;
 import com.blocklang.system.exception.InvalidRequestException;
 import com.blocklang.system.exception.NoAuthorizationException;
@@ -49,15 +50,16 @@ public class DeptController {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		// 校验父部门是否存在
-		if(deptService.findById(param.getParentId().trim()).isEmpty()) {
-			bindingResult.rejectValue("parentId", "NOT-EXIST", "<strong>"+param.getParentId().trim()+"</strong>不存在！");
+		// 校验父部门是否存在，要排除掉 -1
+		String parentId = param.getParentId();
+		if(!Tree.ROOT_PARENT_ID.equals(parentId) && deptService.findById(param.getParentId()).isEmpty()) {
+			bindingResult.rejectValue("parentId", "NOT-EXIST", "<strong>"+param.getParentId()+"</strong>不存在！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		if(deptService.find(param.getParentId(), param.getName().trim()).isPresent()) {
-			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
+		if(deptService.find(param.getParentId(), param.getName()).isPresent()) {
+			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -86,8 +88,9 @@ public class DeptController {
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
 		}
-		// 校验父部门是否存在
-		if(deptService.findById(param.getParentId().trim()).isEmpty()) {
+		// 校验父部门是否存在，要排除掉 -1
+		String parentId = param.getParentId();
+		if(!Tree.ROOT_PARENT_ID.equals(parentId) && deptService.findById(param.getParentId().trim()).isEmpty()) {
 			bindingResult.rejectValue("parentId", "NOT-EXIST", "<strong>"+param.getParentId().trim()+"</strong>不存在！");
 		}
 		if (bindingResult.hasErrors()) {

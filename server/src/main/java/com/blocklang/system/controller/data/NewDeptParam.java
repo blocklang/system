@@ -2,6 +2,8 @@ package com.blocklang.system.controller.data;
 
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class NewDeptParam {
 
 	@NotBlank(message = "请选择一个父部门！")
@@ -11,7 +13,7 @@ public class NewDeptParam {
 	private String name;
 
 	public String getParentId() {
-		return parentId;
+		return StringUtils.trimToNull(parentId);
 	}
 
 	public void setParentId(String parentId) {
@@ -19,7 +21,7 @@ public class NewDeptParam {
 	}
 
 	public String getName() {
-		return name;
+		return StringUtils.trimToNull(name);
 	}
 
 	public void setName(String name) {

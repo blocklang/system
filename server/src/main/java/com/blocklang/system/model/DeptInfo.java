@@ -3,6 +3,7 @@ package com.blocklang.system.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.blocklang.system.constant.Tree;
 
@@ -23,6 +24,9 @@ public class DeptInfo extends PartialOperateFields{
 
 	@Column(name = "active")
 	private Boolean active = true;
+	
+	@Transient
+	private Boolean hasChildren = false;
 
 	public String getName() {
 		return name;
@@ -54,6 +58,14 @@ public class DeptInfo extends PartialOperateFields{
 
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	public Boolean getHasChildren() {
+		return hasChildren;
+	}
+
+	public void setHasChildren(Boolean hasChildren) {
+		this.hasChildren = hasChildren;
 	}
 	
 }

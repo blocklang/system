@@ -1,5 +1,4 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
-import icache from '@dojo/framework/core/middleware/icache';
 import * as c from 'bootstrap-classes';
 import {Toast} from "../../utils/sweetalert2";
 import store from '../../store';
@@ -9,9 +8,9 @@ import { setUserFieldProcess, getPagedUserProcess, saveUserProcess } from '../..
 
 export interface NewProperties{ }
 
-const factory = create({ icache, store }).properties<NewProperties>();
+const factory = create({ store }).properties<NewProperties>();
 
-export default factory(function New({ properties, middleware: { icache, store } }){
+export default factory(function New({ properties, middleware: { store } }){
     const { } = properties();
     const {get, path, executor} = store;
 
