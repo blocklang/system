@@ -6,6 +6,7 @@ public class UpdateUserParam extends CheckUsernameParam {
 	private String nickname;
 	private String sex;
 	private String phoneNumber;
+	private String deptId;
 
 	public String getNickname() {
 		return StringUtils.trimToNull(nickname);
@@ -30,4 +31,13 @@ public class UpdateUserParam extends CheckUsernameParam {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+
+	public String getDeptId() {
+		return StringUtils.trimToNull(deptId);
+	}
+
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
+	}
+	
 }

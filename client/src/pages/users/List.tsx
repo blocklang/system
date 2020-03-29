@@ -49,7 +49,7 @@ export default factory(function List({ properties, middleware: {store} }){
                             return (<tr key={user.id}>
                                 <td key="username">{user.username}</td>
                                 <td key="nickname">{user.nickname}</td>
-                                <td key="dept">{user.deptId}</td>
+                                <td key="dept">{user.deptName}</td>
                                 <td key="sex">{user.sex === "1"? "男": "女"}</td>
                                 <td key="phoneNumber">{user.phoneNumber}</td>
                                 <td key="createTime">{moment(user.createTime).format("YYYY-MM-DD h:mm")}</td>

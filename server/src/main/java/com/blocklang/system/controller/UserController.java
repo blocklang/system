@@ -71,6 +71,7 @@ public class UserController {
 		user.setNickname(param.getNickname());
 		user.setSex(Sex.fromKey(param.getSex()));
 		user.setPhoneNumber(param.getPhoneNumber());
+		user.setDeptId(param.getDeptId());
 		user.setAdmin(false);
 		user.setCreateUserId(currentUser.getId());
 		user.setCreateTime(LocalDateTime.now());
@@ -103,6 +104,7 @@ public class UserController {
 		UserInfo updatedUser = userService.findById(userId).orElseThrow(ResourceNotFoundException::new);
 		updatedUser.setUsername(param.getUsername());
 		updatedUser.setNickname(param.getNickname());
+		updatedUser.setDeptId(param.getDeptId());
 		updatedUser.setSex(Sex.fromKey(param.getSex()));
 		updatedUser.setPhoneNumber(param.getPhoneNumber());
 		updatedUser.setLastUpdateUserId(currentUser.getId());
@@ -110,6 +112,8 @@ public class UserController {
 		
 		userService.save(updatedUser);
 		
+		// 这样重新调用一次，就能正确获取部门名称
+		updatedUser = userService.findById(userId).orElseThrow(ResourceNotFoundException::new);
 		updatedUser.setPassword(null); // 不能返回用户密码
 		return ResponseEntity.ok(updatedUser);
 	}

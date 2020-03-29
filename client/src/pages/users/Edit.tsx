@@ -3,6 +3,7 @@ import * as c from 'bootstrap-classes';
 import store from '../../store';
 import { setUserFieldProcess, updateUserProcess } from '../../processes/userProcesses';
 import { changeViewProcess, } from '../../processes/pageProcesses';
+import Tree from '../depts/Tree';
 
 export interface EditProperties{}
 
@@ -11,7 +12,7 @@ const factory = create({ store }).properties<EditProperties>();
 export default factory(function Edit({ properties, middleware: { store } }){
     const {get, path, executor} = store;
     const user = get(path("user")) || {};
-    const {username="", nickname="", sex, phoneNumber=""} = user;
+    const {username="", nickname="", sex, phoneNumber="", deptName=""} = user;
 
     return (
         <div classes={[c.container_fluid]}>
@@ -30,6 +31,25 @@ export default factory(function Edit({ properties, middleware: { store } }){
                             <input type="text" classes={[c.form_control]} id="iptNickname" value={nickname} oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
                                 executor(setUserFieldProcess)({field: "nickname", value: event.target.value});
                             }}/>
+                        </div>
+                        <div classes={[c.form_group]}>
+                            <label for="iptDept">部门</label>
+                            <div class="dropdown">
+                                <button 
+                                    classes={["btn", "btn-secondary","dropdown-toggle"]}
+                                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    onclick = {(event: MouseEvent) => {
+                                        ($(event.srcElement!) as any).dropdown();
+                                    }}>
+                                    {deptName===""?"请选择":deptName}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <Tree onSelectNode={(id, label="")=>{
+                                        executor(setUserFieldProcess)({field: "deptId", value: id});
+                                        executor(setUserFieldProcess)({field: "deptName", value: label});
+                                    }}/>
+                                </div>
+                            </div>
                         </div>
                         <div classes={[c.form_group]}>
                             <label>性别</label>

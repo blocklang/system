@@ -7,6 +7,7 @@ public class NewUserParam extends LoginParam {
 	private String nickname;
 	private String sex;
 	private String phoneNumber;
+	private String deptId;
 
 	public String getNickname() {
 		// 如果值为空，则确保插入数据库的值为 null，不能是空字符串
@@ -31,6 +32,14 @@ public class NewUserParam extends LoginParam {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public String getDeptId() {
+		return StringUtils.trimToNull(deptId);
+	}
+
+	public void setDeptId(String deptId) {
+		this.deptId = deptId;
 	}
 
 }

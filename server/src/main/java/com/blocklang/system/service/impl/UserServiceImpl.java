@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.blocklang.system.dao.DeptDao;
 import com.blocklang.system.dao.UserDao;
 import com.blocklang.system.model.UserInfo;
 import com.blocklang.system.service.UserService;
@@ -17,10 +18,19 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private DeptDao deptDao;
 	
 	@Override
 	public Optional<UserInfo> findById(String userId) {
-		return userDao.findById(userId);
+		return userDao.findById(userId).map(item -> {
+			if(item.getDeptId() != null) {
+				deptDao.findById(item.getDeptId()).ifPresent(dept -> {
+					item.setDeptName(dept.getName());
+				});
+			}
+			return item;
+		});
 	}
 
 	@Override
@@ -48,7 +58,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Page<UserInfo> findAll(Pageable pageable) {
-		return userDao.findAll(pageable);
+		Page<UserInfo> result = userDao.findAll(pageable);
+		result.getContent().forEach(item -> {
+			if(item.getDeptId() != null) {
+				deptDao.findById(item.getDeptId()).ifPresent(dept -> {
+					item.setDeptName(dept.getName());
+				});
+			}
+		});
+		
+		return result;
 	}
 
 }

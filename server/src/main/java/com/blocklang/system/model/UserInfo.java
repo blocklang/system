@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.blocklang.system.constant.Sex;
 import com.blocklang.system.constant.converter.SexConverter;
@@ -43,6 +44,9 @@ public class UserInfo extends PartialOperateFields {
 	
 	@Column(name="sign_in_count", nullable = false)
 	private Integer signInCount = 0;
+	
+	@Transient
+	private String deptName;
 	
 	public String getUsername() {
 		return username;
@@ -114,6 +118,14 @@ public class UserInfo extends PartialOperateFields {
 
 	public void setDeptId(String deptId) {
 		this.deptId = deptId;
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 
 }

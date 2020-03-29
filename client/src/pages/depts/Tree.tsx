@@ -8,7 +8,7 @@ import FontAwesomeIcon from 'dojo-fontawesome/FontAwesomeIcon';
 import * as css from './Tree.m.css';
 
 export interface TreeProperties {
-    onSelectNode: (id: string) => void;
+    onSelectNode: (id: string, label?: string) => void;
 }
 
 const factory = create({store, icache}).properties<TreeProperties>();
@@ -60,7 +60,7 @@ export default factory(function Tree({ properties, middleware: {store, icache} }
                     icache.set<string>("activeNodeId", id);
                     executor(loadChildDeptsProcess)({deptId: id});
 
-                    onSelectNode && onSelectNode(id);
+                    onSelectNode && onSelectNode(id, name);
                 }}>
                     {timesIndent(level)}
                     <span classes={[css.icon, c.mx_1, isActive?c.text_white:c.text_muted]}
@@ -83,7 +83,7 @@ export default factory(function Tree({ properties, middleware: {store, icache} }
         const result = (<div key={id} classes={[]}>
             <div classes={[c.d_flex, css.node, c.align_items_start, isActive ? c.bg_primary :undefined]} onclick={()=>{
                 icache.set<string>("activeNodeId", id);
-                onSelectNode && onSelectNode(id);
+                onSelectNode && onSelectNode(id, name);
                 executor(loadChildDeptsProcess)({deptId: id});
             }}>
                 {timesIndent(level)}

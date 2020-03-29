@@ -5,6 +5,9 @@ import store from '../../store';
 import { clearGlobalTipProcess, changeViewProcess } from '../../processes/pageProcesses';
 import { ValidateStatus } from '../../constant';
 import { setUserFieldProcess, getPagedUserProcess, saveUserProcess } from '../../processes/userProcesses';
+import "bootstrap";
+import * as $ from "jquery";
+import Tree from '../depts/Tree';
 
 export interface NewProperties{ }
 
@@ -21,7 +24,7 @@ export default factory(function New({ properties, middleware: { store } }){
     }
 
     const userInfo = get(path("user")) || {};
-    const {username="", password = "", nickname="", sex, phoneNumber=""} = userInfo;
+    const {username="", password = "", nickname="", sex, phoneNumber="", deptName=""} = userInfo;
 
     const formValidation = get(path("formValidation")) || {};
     const showInvalidMessage = (field: string) => {
@@ -65,6 +68,25 @@ export default factory(function New({ properties, middleware: { store } }){
                             <input type="text" value={nickname} classes={[c.form_control]} id="iptNickname" oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
                                 executor(setUserFieldProcess)({field: "nickname", value: event.target.value});
                             }}/>
+                        </div>
+                        <div classes={[c.form_group]}>
+                            <label for="iptDept">部门</label>
+                            <div class="dropdown">
+                                <button 
+                                    classes={["btn", "btn-secondary","dropdown-toggle"]}
+                                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    onclick = {(event: MouseEvent) => {
+                                        ($(event.srcElement!) as any).dropdown();
+                                    }}>
+                                    {deptName===""?"请选择":deptName}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <Tree onSelectNode={(id, label="")=>{
+                                        executor(setUserFieldProcess)({field: "deptId", value: id});
+                                        executor(setUserFieldProcess)({field: "deptName", value: label});
+                                    }}/>
+                                </div>
+                            </div>
                         </div>
                         <div classes={[c.form_group]}>
                             <label>性别</label>
