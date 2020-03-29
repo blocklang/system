@@ -48,8 +48,8 @@ export default factory(function New({ properties, middleware:{store} }){
                 <form role="form" classes={[c.needs_validation]} novalidate={true}>
                     <div classes={[c.card_body]}>
                         <div classes={[c.form_group, c.position_relative]}>
-                            <label for="iptname">名称<small classes={[c.text_muted, c.ml_1]}>必填</small></label>
-                            <input type="text" value={name} classes={[c.form_control, showValidationClass("name")]} id="iptUsername" focus={true} oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
+                            <label for="iptName">名称<small classes={[c.text_muted, c.ml_1]}>必填</small></label>
+                            <input type="text" value={name} classes={[c.form_control, showValidationClass("name")]} id="iptName" focus={true} oninput={(event: KeyboardEvent<HTMLInputElement>)=>{
                                 executor(setDeptFieldProcess)({field: "name", value: event.target.value});
                             }}/>
                             {showInvalidMessage("name")}

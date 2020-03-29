@@ -18,12 +18,8 @@ export default factory(function List({ properties, middleware: {store} }){
     const {get, path, executor} = store;
     const depts = get(path("depts")) || [];
 
-    console.log("depts", depts);
-
     const children = depts.filter(item => item.parentId === selectedNodeId);
     const selectedNode = find(depts, dept => dept.id === selectedNodeId);
-
-    console.log(children);
     
     return (
         <div classes={[c.container_fluid]}>
@@ -44,7 +40,7 @@ export default factory(function List({ properties, middleware: {store} }){
                 </thead>
                 <tbody>
                     {
-                        children.length === 0 ? <tr key="empty"><td colspan="3" classes={[c.text_center, c.text_muted]}>{`${selectedNode?.name}下没有子部门！`}</td></tr> :
+                        children.length === 0 ? <tr key="empty"><td colspan="3" classes={[c.text_center, c.text_muted]}>{`${selectedNode?.name}下没有配置部门！`}</td></tr> :
                         children.map(item => {
                             return (<tr key={item.id}>
                                 <td key="name">{item.name}</td>

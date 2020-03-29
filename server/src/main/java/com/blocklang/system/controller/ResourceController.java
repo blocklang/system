@@ -55,13 +55,13 @@ public class ResourceController {
 			throw new InvalidRequestException(bindingResult);
 		}
 		if(appService.findById(param.getAppId()).isEmpty()) {
-			bindingResult.rejectValue("appId", "NOT-EXIST", "<strong>"+param.getAppId().trim()+"</strong>不存在！");
+			bindingResult.rejectValue("appId", "NOT-EXIST", "<strong>"+param.getAppId()+"</strong>不存在！");
 		}
-		if (bindingResult.hasErrors()) {
-			throw new InvalidRequestException(bindingResult);
+		if(resourceService.find(param.getAppId(), param.getParentId(), param.getName()).isPresent()) {
+			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName()+"</strong>已被占用！");
 		}
-		if(resourceService.find(param.getAppId(), param.getParentId(), param.getName().trim()).isPresent()) {
-			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
+		if(resourceService.findByAuth(param.getAuth()).isPresent()) {
+			bindingResult.rejectValue("auth", "DUPLICATED", "<strong>"+param.getAuth()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -100,12 +100,13 @@ public class ResourceController {
 		if(appService.findById(param.getAppId()).isEmpty()) {
 			bindingResult.rejectValue("appId", "NOT-EXIST", "<strong>"+param.getAppId().trim()+"</strong>不存在！");
 		}
-		if (bindingResult.hasErrors()) {
-			throw new InvalidRequestException(bindingResult);
-		}
 		Optional<ResourceInfo> duplicatedResource = resourceService.find(param.getAppId(), param.getParentId(), param.getName().trim());
 		if(duplicatedResource.isPresent() && !duplicatedResource.get().getId().equals(updatedResourceId)) {
 			bindingResult.rejectValue("name", "DUPLICATED", "<strong>"+param.getName().trim()+"</strong>已被占用！");
+		}
+		duplicatedResource = resourceService.findByAuth(param.getAuth());
+		if(duplicatedResource.isPresent() && !duplicatedResource.get().getId().equals(updatedResourceId)) {
+			bindingResult.rejectValue("auth", "DUPLICATED", "<strong>"+param.getAuth()+"</strong>已被占用！");
 		}
 		if (bindingResult.hasErrors()) {
 			throw new InvalidRequestException(bindingResult);
@@ -129,7 +130,7 @@ public class ResourceController {
 	@GetMapping("/resources/{resourceId}/children")
 	public ResponseEntity<List<ResourceInfo>> listResource(
 			@AuthenticationPrincipal UserInfo user, 
-			@RequestParam String appId,
+			@RequestParam("appid") String appId,
 			@PathVariable("resourceId") String parentResourceId // 要获取此资源下的所有直属资源
 		) {
 		permissionService.canExecute(user, Auth.SYSTEM_RES_LIST).orElseThrow(NoAuthorizationException::new);

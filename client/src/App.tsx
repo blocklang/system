@@ -11,7 +11,7 @@ import Home from './pages/home';
 import Login from './pages/login';
 import Register from './pages/register';
 
-import Menus from './pages/menus';
+import Resources from './pages/resources';
 import Depts from './pages/depts';
 
 import Users from './pages/users';
@@ -39,11 +39,8 @@ export default factory(function App({ middleware: { theme } }) {
 				<Outlet id="apps" key="apps" renderer={(details) => <Apps resId={details.queryParams.resid}/>} />
 				<Outlet id="users" key="users" renderer={(details) => <Users resId={details.queryParams.resid}/>} />
 				<Outlet id="roles" key="roles" renderer={(details) => <Roles resId={details.queryParams.resid}/>} />
-	
 				<Outlet id="depts" key="depts" renderer={(details) => <Depts resId={details.queryParams.resid}/>} />
-
-				<Outlet id="menus" key="menus" renderer={() => <Menus />} />
-				
+				<Outlet id="resources" key="resources" renderer={(details) => <Resources resId={details.queryParams.resid}/>} />
 
 				<Outlet id="errorOutlet" key="errorOutlet" renderer={() => <NotFoundPage />}/>
 			</LayoutManager>

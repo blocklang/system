@@ -9,16 +9,15 @@ import { getAllChildCount } from '../utils/treeUtil';
 
 const loadChildDeptsCommand = commandFactory<{deptId?: string}>(async ({at,get,path, payload: {deptId = "-1"}}) => {
     // 要显示虚拟根节点，并默认加载父节点为 -1 的所有子节点
-    debugger;
     const depts = get(path("depts")) || [];
     
     const result = [];
 
+    const token = get(path("session", "token"));
     if(depts.length === 0) {
         // 根节点
         const rootNode = {id:"-1", parentId: "-2", name:"部门", active: true, childrenLoaded: true, hasChildren: true};
         result.push(add(at(path("depts"), 0), rootNode));
-        const token = get(path("session", "token"));
         const response = await request.get(`depts/${deptId}/children`, token);
         const json = await response.json();
         if(response.ok) {
@@ -36,21 +35,17 @@ const loadChildDeptsCommand = commandFactory<{deptId?: string}>(async ({at,get,p
         return;
     }
 
-    const token = get(path("session", "token"));
-        const response = await request.get(`depts/${deptId}/children`, token);
-        const json = await response.json();
-        if(response.ok) {
-            
-            let insertedIndex = selectedIndex + 1;
-			for(let i = 0; i < json.length; i++) {
-				result.push(add(at(path("depts"), insertedIndex), json[i]));
-				insertedIndex++;
-            }
-            result.push(replace(path(at(path("depts"), selectedIndex), "childrenLoaded"), true));
+    const response = await request.get(`depts/${deptId}/children`, token);
+    const json = await response.json();
+    if(response.ok) {
+        let insertedIndex = selectedIndex + 1;
+        for(let i = 0; i < json.length; i++) {
+            result.push(add(at(path("depts"), insertedIndex), json[i]));
+            insertedIndex++;
         }
-        return result;
-
-	
+        result.push(replace(path(at(path("depts"), selectedIndex), "childrenLoaded"), true));
+    }
+    return result;
 });
 
 const getDeptCommand = commandFactory<{id: string}>(async ({get, path, payload: {id}}) => {
@@ -88,7 +83,7 @@ const saveDeptCommand = commandFactory(async({at, get, path})=>{
             return replace(path("formValidation", key), {status: ValidateStatus.INVALID, message: value[0]});
         });
     }
-debugger;
+
     // 添加到父节点的最后：
     // 1. 获取父节点所在的索引
     // 2. 然后获取父节点的子节点个数

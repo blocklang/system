@@ -29,7 +29,7 @@ export default [
 		outlet: "depts"
 	}, 
 	{
-		path: "menus?{resid}",
+		path: "resources?{resid}",
 		outlet: "resources"
 	}
 ];

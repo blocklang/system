@@ -2,6 +2,8 @@ package com.blocklang.system.controller.data;
 
 import javax.validation.constraints.NotBlank;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class NewResourceParam {
 	
 	@NotBlank(message = "请选择一个APP！")
@@ -23,10 +25,11 @@ public class NewResourceParam {
 	
 	private Boolean active;
 	
+	@NotBlank(message = "请输入资源标识！")
 	private String auth;
 
 	public String getAppId() {
-		return appId;
+		return StringUtils.trimToNull(appId);
 	}
 
 	public void setAppId(String appId) {
@@ -34,7 +37,7 @@ public class NewResourceParam {
 	}
 
 	public String getParentId() {
-		return parentId;
+		return StringUtils.trimToNull(parentId);
 	}
 
 	public void setParentId(String parentId) {
@@ -42,7 +45,7 @@ public class NewResourceParam {
 	}
 
 	public String getName() {
-		return name;
+		return StringUtils.trimToNull(name);
 	}
 
 	public void setName(String name) {
@@ -50,7 +53,7 @@ public class NewResourceParam {
 	}
 
 	public String getUrl() {
-		return url;
+		return StringUtils.trimToNull(url);
 	}
 
 	public void setUrl(String url) {
@@ -58,7 +61,7 @@ public class NewResourceParam {
 	}
 
 	public String getIcon() {
-		return icon;
+		return StringUtils.trimToNull(icon);
 	}
 
 	public void setIcon(String icon) {
@@ -90,7 +93,7 @@ public class NewResourceParam {
 	}
 
 	public String getAuth() {
-		return auth;
+		return StringUtils.trimToNull(auth);
 	}
 
 	public void setAuth(String auth) {

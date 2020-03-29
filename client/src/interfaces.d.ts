@@ -52,6 +52,22 @@ export interface DeptInfo {
     hasChildren: boolean; // 从后台查数据
 }
 
+export interface ResourceInfo {
+    id: string;
+    parentId: string;
+    appId: string;
+    name: string;
+    url: string;
+    icon: string;
+    resourceType: ResourceType;
+    description: string;
+    active: boolean;
+    auth: string;
+    createTime: string;
+    childrenLoaded: boolean;
+    level: number;
+}
+
 /**
  * * 1 = 男
  * * 2 = 女
@@ -132,4 +148,7 @@ export interface State {
     // 机构管理
     dept: DeptInfo;
     depts: DeptInfo[];
+    // 资源管理
+    resource: ResourceInfo;
+    resources: ResourceInfo[];
 }

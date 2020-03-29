@@ -41,4 +41,9 @@ public class ResourceServiceImpl implements ResourceService {
 		return resourceDao.findAllByAppIdAndParentId(appId, resourceId, sort);
 	}
 
+	@Override
+	public Optional<ResourceInfo> findByAuth(String auth) {
+		return resourceDao.findByAuth(auth);
+	}
+
 }

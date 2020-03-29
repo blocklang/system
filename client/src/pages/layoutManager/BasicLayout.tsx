@@ -68,7 +68,7 @@ export default factory(function BasicLayout({ properties, children, middleware: 
     const renderMenuItem = (menuItem: Menu) => {
         const menuId = menuItem.id;
         
-        const icon = menuItem.icon;
+        const icon = menuItem.icon || "";
         const isFolder = menuItem.type === "01";
 
         let iconName: IconProp;

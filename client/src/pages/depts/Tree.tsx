@@ -26,7 +26,6 @@ export default factory(function Tree({ properties, middleware: {store, icache} }
     let level = -1;
 
     const getChildren = (id: string) => {
-        debugger;
         level++;
         return depts.filter(item => item.parentId === id);
     }
@@ -42,7 +41,6 @@ export default factory(function Tree({ properties, middleware: {store, icache} }
     }
 
     const renderTreeNode = (item: DeptInfo) => {
-        debugger;
         const {id, name, hasChildren, parentId} = item;
 
         if(parentId === "-1") {
@@ -56,7 +54,7 @@ export default factory(function Tree({ properties, middleware: {store, icache} }
             const openState = icache.getOrSet<boolean>(`folderOpenState-${id}`, id === "-1"?true:false);
             
             return (<div key={id} classes={[]}>
-                <div key="item" classes={[ c.d_flex, css.node, c.align_items_start, isActive ?c.bg_primary : undefined]} onclick={(event: MouseEvent<EventTarget>)=>{
+                <div key="item" classes={[ c.d_flex, css.node, c.align_items_start, isActive ?c.bg_secondary : undefined]} onclick={(event: MouseEvent<EventTarget>)=>{
                     event.preventDefault();
                     
                     icache.set<string>("activeNodeId", id);
@@ -72,7 +70,7 @@ export default factory(function Tree({ properties, middleware: {store, icache} }
                             executor(loadChildDeptsProcess)({deptId: id});
                             icache.set<boolean>(`folderOpenState-${id}`, !openState);
                         }}
-                    ><FontAwesomeIcon icon={openState?"angle-down":"angle-right"}/></span>
+                    ><FontAwesomeIcon icon={openState?"angle-down":"angle-right"} title={openState?"收缩":"展开"}/></span>
                     {name}
                         
                 </div>

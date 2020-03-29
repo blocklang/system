@@ -78,7 +78,7 @@ const saveRoleCommand = commandFactory(async({get, path})=>{
 });
 
 // 注意：所有更新方法，只传界面上允许用户修改的数据项
-const updateRoleCommand = commandFactory(async ({at, get, path}) => {debugger;
+const updateRoleCommand = commandFactory(async ({at, get, path}) => {
     const roleInfo = get(path("role"));
     const {name = ""} = roleInfo;
     if(name.trim() === "") {

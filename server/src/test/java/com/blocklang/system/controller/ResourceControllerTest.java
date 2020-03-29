@@ -185,6 +185,37 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 	}
 	
 	@Test
+	public void newResource_auth_is_duplicated() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_NEW))).thenReturn(Optional.of(true));
+		
+		NewResourceParam param = new NewResourceParam();
+		String appId = "appId1";
+		String parentId = "parentId1";
+		String name = "resource1";
+		String auth = "auth1";
+		param.setParentId(parentId);
+		param.setAppId(appId);
+		param.setName(name);
+		param.setAuth(auth);
+		
+		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
+		
+		when(resourceService.find(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.empty());
+		when(resourceService.findByAuth(eq(auth))).thenReturn(Optional.of(new ResourceInfo()));
+		
+		given()
+			.contentType(ContentType.JSON)
+			.header("Authorization", "Token " + token)
+			.body(param)
+		.when()
+			.post("resources")
+		.then()
+			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+			.body("errors.auth.size()", is(1))
+			.body("errors.auth", hasItem("<strong>auth1</strong>已被占用！"));
+	}
+	
+	@Test
 	public void newResource_success() {
 		NewResourceParam param = new NewResourceParam();
 		String appId = "appId1";
@@ -396,6 +427,43 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
 			.body("errors.name.size()", is(1))
 			.body("errors.name", hasItem("<strong>resource1</strong>已被占用！"));
+	}
+	
+	@Test
+	public void updateResource_auth_is_duplicated() {
+		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_RES_EDIT))).thenReturn(Optional.of(true));
+		
+		NewResourceParam param = new NewResourceParam();
+		String appId = "appId1";
+		String parentId = "parentId1";
+		String name = "resource1";
+		String auth = "auth1";
+		param.setParentId(parentId);
+		param.setAppId(appId);
+		param.setName(name);
+		param.setAuth(auth);
+		
+		String updateResourceId = "1";
+		
+		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
+		
+		when(resourceService.find(eq(appId), eq(parentId), eq(name))).thenReturn(Optional.empty());
+		
+		ResourceInfo existResource = new ResourceInfo();
+		String existResourceId = "2";
+		existResource.setId(existResourceId);
+		when(resourceService.findByAuth(eq(auth))).thenReturn(Optional.of(existResource));
+		
+		given()
+			.contentType(ContentType.JSON)
+			.header("Authorization", "Token " + token)
+			.body(param)
+		.when()
+			.put("resources/{resourceId}", updateResourceId)
+		.then()
+			.statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
+			.body("errors.auth.size()", is(1))
+			.body("errors.auth", hasItem("<strong>auth1</strong>已被占用！"));
 	}
 	
 	@Test

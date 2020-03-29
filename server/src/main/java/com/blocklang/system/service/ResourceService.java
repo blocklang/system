@@ -26,4 +26,6 @@ public interface ResourceService {
 	 */
 	List<ResourceInfo> findChildren(String appId, String resourceId, Sort sort);
 
+	Optional<ResourceInfo> findByAuth(String auth);
+
 }

@@ -8,7 +8,7 @@
 2. 用户有权访问
 
 ```text
-GET /resources/{resourceId}/children?&appid={appId}
+GET /resources/{resourceId}/children?appid={appId}
 ```
 
 ## Parameters

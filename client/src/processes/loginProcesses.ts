@@ -76,7 +76,7 @@ const logoutCommand = commandFactory(({ path }) => {
 const loadUserMenusCommand = commandFactory<{resourceId: string}>(async ({at,get,path, payload: {resourceId = "-1"}}) => {
 	// 判断该节点的子节点是否已加载，如果是根节点，则判断 menus 是否存在，如果是其他节点，则判断 childrenLoaded 是否为 true
 	const menus = get(path("menus"));
-	debugger;
+
 	let childrenLoaded = false;
 	let currentMenuIndex = -1;
 	if(resourceId === "-1") {
@@ -99,7 +99,6 @@ const loadUserMenusCommand = commandFactory<{resourceId: string}>(async ({at,get
 	if(response.ok){
 		// 将这些菜单追加到父菜单的后面
 		if(currentMenuIndex === -1) {
-			debugger;
 			return [replace(path("menus"), json)];
 		} else {
 			const result = [];
@@ -109,7 +108,6 @@ const loadUserMenusCommand = commandFactory<{resourceId: string}>(async ({at,get
 				result.push(add(at(path("menus"), insertedIndex), json[i]));
 				insertedIndex++;
 			}
-			debugger;
 			return result;
 		}
 	}

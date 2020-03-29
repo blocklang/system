@@ -14,7 +14,7 @@ const notUseLayoutRoutes = ["login", "register"];
 export default factory(function Layout({ properties, children, middleware: { store } }){
     const {  } = properties();
     const {get, path} = store;
-debugger;
+
     const isAuthenticated = !!get(path("session", "token"));
     if(!isAuthenticated) {
         return <BlankLayout>{children()}</BlankLayout>;

@@ -9,6 +9,7 @@
 5. 资源名不能为空
 6. APP 标识指定的 APP 不存在
 7. 父资源下的直属资源名不能重复
+8. 权限标记要全局唯一
 
 ```text
 PUT /resources/{resourceId}
@@ -67,6 +68,7 @@ Status: 422 Unprocessable Entity
 3. 资源名为空时返回 `请输入资源名！`
 4. APP 标识指定的 APP 不存在时返回 `<strong>{appId}</strong>不存在！`
 5. APP 下的某资源下的资源名已被占用时返回 `{parentResourceName}下已存在<strong>{resourceName}</strong>！`（注意当与原资源名相同时不提示）
+6. 权限标记被占用时返回 `<strong>{auth}</strong>已被占用！`（注意当与原资源标识相同时不提示）
 
 更新成功
 
