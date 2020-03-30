@@ -6,15 +6,22 @@
 2. 用户有权访问
 
 ```text
-GET /users?page={page}
+GET /users?page={page}&exclude_admin={excludeAdmin}
 ```
 
 ## Parameters
 
-| Name                    | Type     | Description                    |
-| ----------------------- | -------- | ------------------------------ |
-| `Authorization`(header) | `string` | **Required**. 登录用户的 token |
-| `page`(queryParam)      | `int`    | 当前页码，从 0 开始计数        |
+| Name                       | Type      | Description                    |
+| -------------------------- | --------- | ------------------------------ |
+| `Authorization`(header)    | `string`  | **Required**. 登录用户的 token |
+| `page`(queryParam)         | `int`     | 当前页码，从 0 开始计数        |
+| `excludeAdmin`(queryParam) | `boolean` | 排除系统管理员                 |
+
+注意：
+
+1. 此 API 设计有待优化(TBD)
+2. 如果不传入 `excludeAdmin`，则根据登录用户的权限来决定，如果登录用户是系统管理员，则要查询系统管理员，如果登录用户不是系统管理员，则不查；
+3. 如果传入 `excludeAdmin`，且值为 `true`，则不查询系统管理员
 
 ## Response
 
@@ -74,3 +81,4 @@ Status: 200 OK
 注意：
 
 1. 返回的数据中不包含用户密码
+2. 如果登录用户不是系统管理员，则不能查询系统管理员信息(TBD)

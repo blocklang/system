@@ -57,8 +57,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Page<UserInfo> findAll(Pageable pageable) {
-		Page<UserInfo> result = userDao.findAll(pageable);
+	public Page<UserInfo> findAll(Boolean excludeAdmin, Pageable pageable) {
+		Page<UserInfo> result = null;
+		if(!excludeAdmin) {
+			result = userDao.findAll(pageable);
+		}else {
+			result = userDao.findAllByAdmin(false, pageable);
+		}
 		result.getContent().forEach(item -> {
 			if(item.getDeptId() != null) {
 				deptDao.findById(item.getDeptId()).ifPresent(dept -> {

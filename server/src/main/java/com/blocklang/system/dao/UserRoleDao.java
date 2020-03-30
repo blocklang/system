@@ -9,5 +9,9 @@ import com.blocklang.system.model.UserRoleInfo;
 public interface UserRoleDao extends JpaRepository<UserRoleInfo, String>{
 
 	List<UserRoleInfo> findAllByUserId(String userId);
+	
+	List<UserRoleInfo> findAllByRoleId(String roleId);
+
+	void deleteByRoleIdAndUserId(String roleId, String userId);
 
 }

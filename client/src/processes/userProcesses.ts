@@ -30,9 +30,9 @@ const getCurrentUserCommand = commandFactory(async ({ path }) => {
 	return [replace(path('session'), json)];
 });
 
-const getPagedUserCommand = commandFactory<{ page?: number }>(async ({get, path, payload: {page=0}}) => {
+const getPagedUserCommand = commandFactory<{ page?: number, excludeAdmin?:boolean }>(async ({get, path, payload: {page=0, excludeAdmin=false}}) => {
 	const token = get(path("session", "token"));
-    const response = await request.get(`users?page=${page}`, token);
+    const response = await request.get(`users?page=${page}&exclude_admin=${excludeAdmin}`, token);
     const json = await response.json();
     if(response.ok) {
         return [replace(path("pagedUser"), json)];

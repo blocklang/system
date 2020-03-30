@@ -11,7 +11,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.blocklang.system.dao.AppDao;
 import com.blocklang.system.dao.RoleDao;
+import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.model.RoleInfo;
 import com.blocklang.system.service.RoleService;
 import com.blocklang.system.test.AbstractServiceTest;
@@ -22,6 +24,8 @@ public class RoleServiceImplTest extends AbstractServiceTest{
 	private RoleService roleService;
 	@Autowired
 	private RoleDao roleDao;
+	@Autowired
+	private AppDao appDao;
 	
 	@Test
 	public void findByAppIdAndName_no_data() {
@@ -87,7 +91,15 @@ public class RoleServiceImplTest extends AbstractServiceTest{
 	@Test
 	public void findById_success() {
 		String appId = "1";
+		String appName = "appName";
 		String roleName = "role";
+
+		AppInfo app1 = new AppInfo();
+		app1.setId("1");
+		app1.setName(appName);
+		app1.setCreateUserId("userId");
+		app1.setCreateTime(LocalDateTime.now());
+		appDao.save(app1);
 		
 		RoleInfo role1 = new RoleInfo();
 		role1.setId("1");
@@ -97,7 +109,7 @@ public class RoleServiceImplTest extends AbstractServiceTest{
 		role1.setCreateUserId("1");
 		roleDao.save(role1);
 		
-		assertThat(roleService.findById(appId)).isPresent();
+		assertThat(roleService.findById(appId)).isPresent().get().extracting("appName").isEqualTo(appName);
 	}
 	
 	@Test

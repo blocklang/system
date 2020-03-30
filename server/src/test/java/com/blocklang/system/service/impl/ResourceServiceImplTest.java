@@ -139,4 +139,25 @@ public class ResourceServiceImplTest extends AbstractServiceTest{
 			.isEqualToComparingOnlyGivenFields(resource3, "name");
 	}
 	
+	@Test
+	public void findByAuth_success() {
+		String appId = "1";
+		String parentId = "2";
+		String name = "3";
+		String auth = "auth1";
+		
+		ResourceInfo resource1 = new ResourceInfo();
+		resource1.setId("1");
+		resource1.setAppId(appId);
+		resource1.setParentId(parentId);
+		resource1.setName(name);
+		resource1.setAuth(auth);
+		resource1.setResourceType(ResourceType.PROGRAM);
+		resource1.setCreateTime(LocalDateTime.now());
+		resource1.setCreateUserId("1");
+		resourceDao.save(resource1);
+		
+		assertThat(resourceService.findByAuth(auth)).isPresent();
+		assertThat(resourceService.findByAuth("not-exist-auth")).isEmpty();
+	}
 }

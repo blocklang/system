@@ -76,6 +76,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		NewResourceParam param = new NewResourceParam();
 		param.setParentId(Tree.ROOT_PARENT_ID);
 		param.setName("resource1");
+		param.setAuth("auth");
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -96,6 +97,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		NewResourceParam param = new NewResourceParam();
 		param.setAppId("appId");
 		param.setName("resource1");
+		param.setAuth("auth");
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -116,6 +118,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		NewResourceParam param = new NewResourceParam();
 		param.setAppId("appId");
 		param.setParentId(Tree.ROOT_PARENT_ID);
+		param.setAuth("auth");
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -140,6 +143,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setParentId(parentId);
 		param.setAppId(appId);
 		param.setName(name);
+		param.setAuth("auth");
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.empty());
 		
@@ -167,6 +171,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setParentId(parentId);
 		param.setAppId(appId);
 		param.setName(name);
+		param.setAuth("auth");
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.of(new AppInfo()));
 		
@@ -307,6 +312,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		NewResourceParam param = new NewResourceParam();
 		param.setParentId(Tree.ROOT_PARENT_ID);
 		param.setName("resource1");
+		param.setAuth("auth");
 		
 		String updateResourceId = "1";
 		
@@ -329,6 +335,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		NewResourceParam param = new NewResourceParam();
 		param.setAppId("appId");
 		param.setName("resource1");
+		param.setAuth("auth");
 		
 		String updateResourceId = "1";
 		
@@ -356,6 +363,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setAppId(appId);
 		param.setParentId(parentId);
 		param.setName(name);
+		param.setAuth("auth");
 		
 		when(appService.findById(eq(appId))).thenReturn(Optional.empty());
 		
@@ -380,6 +388,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		NewResourceParam param = new NewResourceParam();
 		param.setAppId("appId");
 		param.setParentId("parentId1");
+		param.setAuth("auth");
 		
 		String updateResourceId = "1";
 		
@@ -407,6 +416,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		param.setParentId(parentId);
 		param.setAppId(appId);
 		param.setName(name);
+		param.setAuth("auth");
 		
 		String updateResourceId = "1";
 		
@@ -562,7 +572,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("appId", appId)
+			.queryParam("appid", appId)
 		.when()
 			.get("resources/{resourceId}/children", parentResourceId)
 		.then()
@@ -580,7 +590,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("appId", appId)
+			.queryParam("appid", appId)
 		.when()
 			.get("resources/{resourceId}/children", parentResourceId)
 		.then()
@@ -625,7 +635,7 @@ public class ResourceControllerTest extends TestWithCurrentUser{
 		given()
 			.contentType(ContentType.JSON)
 			.header("Authorization", "Token " + token)
-			.queryParam("appId", appId)
+			.queryParam("appid", appId)
 		.when()
 			.get("resources/{resourceId}/children", parentResourceId)
 		.then()

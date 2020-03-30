@@ -134,4 +134,5 @@ public class RoleController {
 		RoleInfo role = roleService.findById(roleId).orElseThrow(ResourceNotFoundException::new);
 		return ResponseEntity.ok(role);
 	}
+
 }

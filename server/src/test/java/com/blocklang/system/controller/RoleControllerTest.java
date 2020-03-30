@@ -29,6 +29,7 @@ import com.blocklang.system.model.AppInfo;
 import com.blocklang.system.model.RoleInfo;
 import com.blocklang.system.service.AppService;
 import com.blocklang.system.service.RoleService;
+import com.blocklang.system.service.UserRoleService;
 import com.blocklang.system.test.TestWithCurrentUser;
 
 import io.restassured.http.ContentType;
@@ -40,6 +41,8 @@ public class RoleControllerTest extends TestWithCurrentUser{
 	private AppService appService;
 	@MockBean
 	private RoleService roleService;
+	@MockBean
+	private UserRoleService userRoleService;
 
 	@Test
 	public void newRole_anonymous_user_can_not_create() {

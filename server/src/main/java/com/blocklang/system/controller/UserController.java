@@ -121,11 +121,17 @@ public class UserController {
 	@GetMapping("/users")
 	public ResponseEntity<Page<UserInfo>> listUser(
 			@AuthenticationPrincipal UserInfo user, 
-			@RequestParam(required = false, defaultValue = "0") Integer page) {
+			@RequestParam(required = false, defaultValue = "0") Integer page,
+			@RequestParam(name="exclude_admin", required = false, defaultValue = "false") Boolean excludeAdmin) {
 		permissionService.canExecute(user, Auth.SYSTEM_USER_LIST).orElseThrow(NoAuthorizationException::new);
 
 		Pageable pageable = PageRequest.of(page, WebSite.PAGE_SIZE, Sort.by(Direction.ASC, "username"));
-		Page<UserInfo> users = userService.findAll(pageable).map(item -> {
+		
+		if(!excludeAdmin && !user.isAdmin()) {
+			excludeAdmin = true;
+		}
+		
+		Page<UserInfo> users = userService.findAll(excludeAdmin, pageable).map(item -> {
 			item.setPassword(null); // 不能返回用户密码
 			return item;
 		});

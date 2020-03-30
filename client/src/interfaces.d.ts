@@ -142,6 +142,7 @@ export interface State {
     // 用户管理
     user: UserInfo;
     pagedUser: Pagination<UserInfo>;
+    users: UserInfo[];
     // 角色管理
     role: RoleInfo;
     pagedRole: Pagination<RoleInfo>;

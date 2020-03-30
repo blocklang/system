@@ -40,6 +40,9 @@
 2. [获取一个角色信息](./roles/get-a-role.md)
 3. [创建一个角色](./roles/create-a-role.md)
 4. [更新一个角色](./roles/update-a-role.md)
+5. [获取为一个角色分配的用户列表](./roles/list-role-users.md)
+6. [在角色中添加一个用户](./roles/add-user-to-role.md)
+7. [在角色中删除一个用户](./roles/remove-user-from-role.md)
 
 ## 资源管理
 

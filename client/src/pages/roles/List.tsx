@@ -5,12 +5,13 @@ import icache from '@dojo/framework/core/middleware/icache';
 import { getPagedAppProcess } from '../../processes/appProcesses';
 import { Pagination as PageInfo, RoleInfo } from '../../interfaces';
 import { defaultPagination } from '../../config';
-import { getPagedRoleProcess, resetRoleProcess, getRoleProcess } from '../../processes/roleProcesses';
+import { getPagedRoleProcess, resetRoleProcess, getRoleProcess} from '../../processes/roleProcesses';
 import { changeViewProcess } from '../../processes/pageProcesses';
 import FontAwesomeIcon from 'dojo-fontawesome/FontAwesomeIcon';
 import * as moment from 'moment';
 import { find } from '@dojo/framework/shim/array';
 import Pagination from '../../widgets/Pagination';
+import { getRoleUsersProcess } from '../../processes/userRoleProcesses';
 
 export interface ListProperties {
     appId?: string;
@@ -86,10 +87,19 @@ export default factory(function List({ properties, middleware: {store, icache} }
                                 <td key="description">{role.description}</td>
                                 <td key="createTime">{moment(role.createTime).format("YYYY-MM-DD h:mm")}</td>
                                 <td key="operators">
-                                    <button type="button" classes={[c.btn, c.btn_secondary, c.btn_sm]} onclick={()=>{
+                                    <button type="button" classes={[c.btn, c.btn_secondary, c.btn_sm, c.mr_1]} onclick={()=>{
                                          executor(changeViewProcess)({view: "edit"});
                                          executor(getRoleProcess)({id: role.id});
                                     }}>编辑</button>
+                                    <button type="button" classes={[c.btn, c.btn_secondary, c.btn_sm, c.mr_1]} onclick={()=>{
+                                         executor(changeViewProcess)({view: "role_user"});
+                                         executor(resetRoleProcess)({id: role.id, name: role.name});
+                                         executor(getRoleUsersProcess)({roleId: role.id});
+                                    }}>分配用户</button>
+                                    <button type="button" classes={[c.btn, c.btn_secondary, c.btn_sm]} onclick={()=>{
+                                         executor(changeViewProcess)({view: "role_resource"});
+                                         //executor(getRoleUsersProcess)({roleId: role.id});
+                                    }}>分配资源</button>
                                 </td>
                             </tr>)
                         })

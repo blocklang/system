@@ -54,6 +54,8 @@ public abstract class Auth {
 	public static final String SYSTEM_ROLE_NEW = SYSTEM_ROLE + "/" + OP_NEW;
 	public static final String SYSTEM_ROLE_EDIT = SYSTEM_ROLE + "/" + OP_EDIT;
 	public static final String SYSTEM_ROLE_REMOVE = SYSTEM_ROLE + "/" + OP_REMOVE;
+	public static final String SYSTEM_ROLE_USERS = SYSTEM_ROLE + "/" + "authUser";
+	public static final String SYSTEM_ROLE_RESOURCES = SYSTEM_ROLE + "/" + "authResource";
 	
 	// 部门管理
 	public static final String SYSTEM_DEPT = "sys/sys/dept";

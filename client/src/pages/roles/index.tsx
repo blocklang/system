@@ -8,6 +8,8 @@ import NotFound from "../error/404";
 import List from "./List";
 import New from './New';
 import Edit from './Edit';
+import RoleUsers from './RoleUsers';
+import RoleResources from './RoleResources';
 
 export interface RolesProperties extends ResourceProperties{
 }
@@ -48,6 +50,12 @@ export default factory(function Roles({ properties, middleware: {  store, icache
                 }
                 {
                     view === "edit" && <Edit />
+                }
+                {
+                    view === "role_user" && <RoleUsers />
+                }
+                {
+                    view === "role_resource" && <RoleResources />
                 }
             </section>
         </virtual>

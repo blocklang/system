@@ -68,7 +68,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_LIST))).thenReturn(Optional.of(true));
 		
 		Page<UserInfo> result = new PageImpl<UserInfo>(Collections.emptyList());
-		when(userService.findAll(any())).thenReturn(result);
+		when(userService.findAll(eq(true), any())).thenReturn(result);
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -116,7 +116,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 		actualUser.setCreateUserId(createUserId);
 		Page<UserInfo> result = new PageImpl<UserInfo>(Collections.singletonList(actualUser));
 
-		when(userService.findAll(any())).thenReturn(result);
+		when(userService.findAll(eq(true), any())).thenReturn(result);
 		
 		given()
 			.contentType(ContentType.JSON)
@@ -150,7 +150,7 @@ public class UserControllerTest extends TestWithCurrentUser{
 		when(permissionService.canExecute(any(), eq(Auth.SYSTEM_USER_LIST))).thenReturn(Optional.of(true));
 		
 		Page<UserInfo> result = new PageImpl<UserInfo>(Collections.emptyList());
-		when(userService.findAll(any())).thenReturn(result);
+		when(userService.findAll(eq(true), any())).thenReturn(result);
 		
 		given()
 			.contentType(ContentType.JSON)

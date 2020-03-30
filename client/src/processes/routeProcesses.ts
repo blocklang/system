@@ -18,7 +18,8 @@ const changeRouteCommand = commandFactory<ChangeRoutePayload>(({ path, payload: 
 		remove(path("role")),
 		remove(path("pagedRole")),
 		remove(path("dept")),
-		remove(path("depts"))
+		remove(path("depts")),
+		remove(path("users"))
 	];
 });
 

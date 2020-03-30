@@ -23,5 +23,5 @@ public interface UserService {
 	 */
 	UserInfo login(UserInfo user);
 
-	Page<UserInfo> findAll(Pageable pageable);
+	Page<UserInfo> findAll(Boolean excludeAdmin, Pageable pageable);
 }

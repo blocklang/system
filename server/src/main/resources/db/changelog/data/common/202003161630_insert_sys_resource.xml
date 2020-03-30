@@ -293,6 +293,36 @@
 			<column name="create_user_id" value="-1" />
 			<column name="create_time" valueComputed="${now}" />
 		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010306" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="分配用户" />
+			<column name="parent_id" value="0103" />
+			<column name="seq" valueNumeric="6" />
+			<column name="url" />
+			<column name="icon" value="times"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="sys/sys/role/authUser"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
+		<insert tableName="sys_resource">
+			<column name="dbid" value="010307" />
+			<column name="app_id" value="1" />
+			<column name="res_name" value="分配资源" />
+			<column name="parent_id" value="0103" />
+			<column name="seq" valueNumeric="76" />
+			<column name="url" />
+			<column name="icon" value="times"/>
+			<column name="resource_type" value="03"/>
+			<column name="description"/>
+			<column name="active" valueBoolean="true" />
+			<column name="auth" value="sys/sys/role/authResource"/>
+			<column name="create_user_id" value="-1" />
+			<column name="create_time" valueComputed="${now}" />
+		</insert>
 		<!-- 部门管理 -->
 		<insert tableName="sys_resource">
 			<column name="dbid" value="0104" />
