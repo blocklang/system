@@ -43,6 +43,8 @@
 5. [获取为一个角色分配的用户列表](./roles/list-role-users.md)
 6. [在角色中添加一个用户](./roles/add-user-to-role.md)
 7. [在角色中删除一个用户](./roles/remove-user-from-role.md)
+8. [获取为一个角色分配的资源列表](./roles/list-role-resources.md)
+9. [批量保存 APP 下一个角色的所有授权的资源](./roles/add-app-role-resources.md)
 
 ## 资源管理
 

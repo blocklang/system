@@ -8,16 +8,17 @@
 2. 用户有权访问
 
 ```text
-GET /resources/{resourceId}/children?appid={appId}
+GET /resources/{resourceId}/children?appid={appId}&recursive={recursive}
 ```
 
 ## Parameters
 
-| Name                    | Type     | Description                          |
-| ----------------------- | -------- | ------------------------------------ |
-| `Authorization`(header) | `string` | **Required**. 登录用户的 token       |
-| `resourceId`(path)      | `string` | **Required**. 资源标识               |
-| `appId`(queryParam)     | `string` | **Required**. APP 标识               |
+| Name                    | Type     | Description                                                          |
+| ----------------------- | -------- | -------------------------------------------------------------------- |
+| `Authorization`(header) | `string` | **Required**. 登录用户的 token                                       |
+| `resourceId`(path)      | `string` | **Required**. 资源标识                                               |
+| `appId`(queryParam)     | `string` | **Required**. APP 标识                                               |
+| `recursive`(queryParam) | `string` | 是否递归查询，只要包含该参数，不论为何值，就递归查询；否则逐层查询。 |
 
 注意：
 

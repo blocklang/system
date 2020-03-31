@@ -131,13 +131,18 @@ public class ResourceController {
 	public ResponseEntity<List<ResourceInfo>> listResource(
 			@AuthenticationPrincipal UserInfo user, 
 			@RequestParam("appid") String appId,
+			@RequestParam(required = false, defaultValue = "false") Boolean recursive,
 			@PathVariable("resourceId") String parentResourceId // 要获取此资源下的所有直属资源
 		) {
 		permissionService.canExecute(user, Auth.SYSTEM_RES_LIST).orElseThrow(NoAuthorizationException::new);
 		
 		Sort sort = Sort.by(Direction.ASC, "seq", "name");
-		List<ResourceInfo> resources = resourceService.findChildren(appId, parentResourceId, sort);
-		
+		List<ResourceInfo> resources = null;
+		if(recursive) {
+			resources = resourceService.findAllByAppId(appId);
+		}else {
+			resources = resourceService.findChildren(appId, parentResourceId, sort);
+		}
 		return ResponseEntity.ok(resources);
 	}
 	

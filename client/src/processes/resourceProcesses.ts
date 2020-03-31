@@ -7,7 +7,7 @@ import { ResourceInfo, Errors } from '../interfaces';
 import { ValidateStatus } from '../constant';
 import { getAllChildCount } from '../utils/treeUtil';
 
-const loadChildResourcesCommand = commandFactory<{appId: string, resourceId: string}>(async ({at,get,path, payload: {appId, resourceId}}) => {
+const loadChildResourcesCommand = commandFactory<{appId: string, resourceId: string, showRoot?: boolean, recursive?: boolean}>(async ({at,get,path, payload: {appId, resourceId, showRoot=true, recursive=false}}) => {
     const resources = get(path("resources")) || [];
     
     const token = get(path("session", "token"));
@@ -15,17 +15,21 @@ const loadChildResourcesCommand = commandFactory<{appId: string, resourceId: str
     if(resourceId === "-1") {
         // 在切换 app 时要清除 resources
         result.push(remove(path("resources")));
-        // 让 app 作为根节点
-        const apps = get(path("pagedApp", "content")) || [];
-        const app = find(apps, item => item.id === appId);
-        const rootNode = {id: "-1", parentId: "-2", name: `${app!.name} (APP)`, childrenLoaded: true, level: 0};
-        result.push(add(at(path("resources"), 0), rootNode));
-        const response = await request.get(`resources/${resourceId}/children?appid=${appId}`, token);
+        
+        if(showRoot){
+            // 让 app 作为根节点
+            const apps = get(path("pagedApp", "content")) || [];
+            const app = find(apps, item => item.id === appId);
+            const rootNode = {id: "-1", parentId: "-2", name: `${app!.name} (APP)`, childrenLoaded: true, level: 0};
+            result.push(add(at(path("resources"), 0), rootNode));
+        }
+        
+        const response = await request.get(`resources/${resourceId}/children?appid=${appId}&recursive=${recursive}`, token);
         const json = await response.json();
         if(response.ok) {
             let insertedIndex = 0;
             for(let i = 0; i < json.length; i++) {
-                result.push(add(at(path("resources"), insertedIndex), {...json[i], level: 1}));
+                result.push(add(at(path("resources"), insertedIndex), {...json[i], level: showRoot?1:0}));
                 insertedIndex++;
             }
         }

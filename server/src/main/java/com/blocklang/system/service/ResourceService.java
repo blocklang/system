@@ -28,4 +28,12 @@ public interface ResourceService {
 
 	Optional<ResourceInfo> findByAuth(String auth);
 
+	/**
+	 * 查询出所有资源，包括子孙资源
+	 * 
+	 * @param appId
+	 * @return
+	 */
+	List<ResourceInfo> findAllByAppId(String appId);
+
 }

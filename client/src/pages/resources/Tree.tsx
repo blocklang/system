@@ -97,7 +97,7 @@ export default factory(function Tree({ properties, middleware: {store, icache} }
         }
        
         const result = (<div key={id} classes={[]}>
-            <div classes={[c.d_flex, css.node, c.align_items_start, isActive ? c.bg_primary :undefined]} onclick={()=>{
+            <div classes={[c.d_flex, css.node, c.align_items_start, isActive ? c.bg_secondary :undefined]} onclick={()=>{
                 icache.set<string>("activeNodeId", id);
                 onSelectNode && onSelectNode(id);
                 executor(changeViewProcess)({view: "list"});

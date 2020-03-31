@@ -142,7 +142,6 @@ export interface State {
     // 用户管理
     user: UserInfo;
     pagedUser: Pagination<UserInfo>;
-    users: UserInfo[];
     // 角色管理
     role: RoleInfo;
     pagedRole: Pagination<RoleInfo>;
@@ -152,4 +151,8 @@ export interface State {
     // 资源管理
     resource: ResourceInfo;
     resources: ResourceInfo[];
+    // 角色用户关联
+    users: UserInfo[];
+    // 角色资源关联
+    roleResources: string[] // 存放与角色关联的资源标识
 }

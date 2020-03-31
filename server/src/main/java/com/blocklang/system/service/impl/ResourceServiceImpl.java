@@ -46,4 +46,10 @@ public class ResourceServiceImpl implements ResourceService {
 		return resourceDao.findByAuth(auth);
 	}
 
+	@Override
+	public List<ResourceInfo> findAllByAppId(String appId) {
+		// 获取 APP 下的所有资源
+		return resourceDao.findAllByAppId(appId);
+	}
+
 }
