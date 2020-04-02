@@ -15,23 +15,25 @@
     "test:all": "dojo build --mode unit && dojo build --mode functional && dojo test --all --config local"
   },
   "dependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "@dojo/framework": "^6.0.4",
     "@dojo/themes": "^6.0.0",
     "@dojo/widgets": "^6.2.0",
-    "@types/bootstrap": "^4.3.1",
-    "@types/jquery": "^3.3.33",
-    "@types/moment": "^2.13.0",
+    "@types/bootstrap": "^4.3.2",
+    "@types/jquery": "^3.3.34",
     "@types/lodash": "^4.14.108",
-    "admin-lte": "^3.0.2",
+    "@types/moment": "^2.13.0",
+    "admin-lte": "^3.0.4",
     "bootstrap": "^4.4.1",
     "bootstrap-classes": "^0.0.3-alpha.5",
     "dojo-fontawesome": "^0.0.3-alpha.1",
     "jquery": "^3.4.1",
-    "popper.js": "^1.16.1",
+    "lodash": "^4.17.15",
     "moment": "2.24.0",
-    "tslib": "~1.11.1",
-    "sweetalert2": "^9.10.6",
-    "lodash": "^4.17.15"
+    "popper.js": "^1.16.1",
+    "sweetalert2": "^9.10.8",
+    "tslib": "~1.11.1"
   },
   "devDependencies": {
     "@dojo/cli": "^6.0.0",
@@ -42,6 +44,7 @@
   },
   "husky": {
     "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged"
     }
   },
