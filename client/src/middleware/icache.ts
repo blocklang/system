@@ -1,10 +1,10 @@
-import Map from '@dojo/framework/shim/Map';
-import { create, invalidator, destroy } from '@dojo/framework/core/vdom';
+import Map from "@dojo/framework/shim/Map";
+import { create, invalidator, destroy } from "@dojo/framework/core/vdom";
 
 const factory = create({ invalidator, destroy });
 
 interface CacheWrapper {
-	status: 'pending' | 'resolved';
+	status: "pending" | "resolved";
 	value: any;
 }
 
@@ -65,32 +65,32 @@ export function createICacheMiddleware<S = void>() {
 						this.set(key, value, invalidate);
 					}
 					cachedValue = cacheMap.get(key);
-					if (!cachedValue || cachedValue.status === 'pending') {
+					if (!cachedValue || cachedValue.status === "pending") {
 						return undefined;
 					}
 					return cachedValue.value;
 				},
 				get(key: any): any {
 					const cachedValue = cacheMap.get(key);
-					if (!cachedValue || cachedValue.status === 'pending') {
+					if (!cachedValue || cachedValue.status === "pending") {
 						return undefined;
 					}
 					return cachedValue.value;
 				},
 				set(key: any, value: any, invalidate = true): void {
-					if (typeof value === 'function') {
+					if (typeof value === "function") {
 						value = value();
-						if (value && typeof value.then === 'function') {
+						if (value && typeof value.then === "function") {
 							cacheMap.set(key, {
-								status: 'pending',
-								value
+								status: "pending",
+								value,
 							});
 							value.then((result: any) => {
 								const cachedValue = cacheMap.get(key);
 								if (cachedValue && cachedValue.value === value) {
 									cacheMap.set(key, {
-										status: 'resolved',
-										value: result
+										status: "resolved",
+										value: result,
 									});
 									invalidate && invalidator();
 								}
@@ -99,8 +99,8 @@ export function createICacheMiddleware<S = void>() {
 						}
 					}
 					cacheMap.set(key, {
-						status: 'resolved',
-						value
+						status: "resolved",
+						value,
 					});
 					invalidate && invalidator();
 				},
@@ -114,7 +114,7 @@ export function createICacheMiddleware<S = void>() {
 				clear(invalidate = true): void {
 					cacheMap.clear();
 					invalidate && invalidator();
-				}
+				},
 			};
 		}
 	);

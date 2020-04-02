@@ -1,2 +1,2 @@
-import './App';
-import './pages/all';
+import "./App";
+import "./pages/all";

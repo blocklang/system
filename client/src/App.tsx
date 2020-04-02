@@ -1,25 +1,25 @@
-import { tsx, create } from '@dojo/framework/core/vdom';
-import theme from '@dojo/framework/core/middleware/theme';
-import Outlet from '@dojo/framework/routing/Outlet';
-import dojo from '@dojo/themes/dojo';
+import { tsx, create } from "@dojo/framework/core/vdom";
+import theme from "@dojo/framework/core/middleware/theme";
+import Outlet from "@dojo/framework/routing/Outlet";
+import dojo from "@dojo/themes/dojo";
 
 import * as icons from "./icons";
-import * as css from './App.m.css';
+import * as css from "./App.m.css";
 
 import LayoutManager from "./pages/layoutManager";
-import Home from './pages/home';
-import Login from './pages/login';
-import Register from './pages/register';
+import Home from "./pages/home";
+import Login from "./pages/login";
+import Register from "./pages/register";
 
-import Resources from './pages/resources';
-import Depts from './pages/depts';
+import Resources from "./pages/resources";
+import Depts from "./pages/depts";
 
-import Users from './pages/users';
+import Users from "./pages/users";
 
-import Roles from './pages/roles';
+import Roles from "./pages/roles";
 
-import Apps from './pages/apps';
-import NotFoundPage from './pages/error/404';
+import Apps from "./pages/apps";
+import NotFoundPage from "./pages/error/404";
 
 icons.init();
 
@@ -36,13 +36,17 @@ export default factory(function App({ middleware: { theme } }) {
 				<Outlet id="register" key="register" renderer={() => <Register />} />
 				<Outlet id="home" key="home" renderer={() => <Home />} />
 
-				<Outlet id="apps" key="apps" renderer={(details) => <Apps resId={details.queryParams.resid}/>} />
-				<Outlet id="users" key="users" renderer={(details) => <Users resId={details.queryParams.resid}/>} />
-				<Outlet id="roles" key="roles" renderer={(details) => <Roles resId={details.queryParams.resid}/>} />
-				<Outlet id="depts" key="depts" renderer={(details) => <Depts resId={details.queryParams.resid}/>} />
-				<Outlet id="resources" key="resources" renderer={(details) => <Resources resId={details.queryParams.resid}/>} />
+				<Outlet id="apps" key="apps" renderer={(details) => <Apps resId={details.queryParams.resid} />} />
+				<Outlet id="users" key="users" renderer={(details) => <Users resId={details.queryParams.resid} />} />
+				<Outlet id="roles" key="roles" renderer={(details) => <Roles resId={details.queryParams.resid} />} />
+				<Outlet id="depts" key="depts" renderer={(details) => <Depts resId={details.queryParams.resid} />} />
+				<Outlet
+					id="resources"
+					key="resources"
+					renderer={(details) => <Resources resId={details.queryParams.resid} />}
+				/>
 
-				<Outlet id="errorOutlet" key="errorOutlet" renderer={() => <NotFoundPage />}/>
+				<Outlet id="errorOutlet" key="errorOutlet" renderer={() => <NotFoundPage />} />
 			</LayoutManager>
 		</div>
 	);

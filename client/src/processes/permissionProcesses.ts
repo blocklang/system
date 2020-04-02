@@ -1,10 +1,10 @@
-import { commandFactory } from './utils';
-import * as request from '../utils/request';
-import { replace } from '@dojo/framework/stores/state/operations';
-import { createProcess } from '@dojo/framework/stores/process';
+import { commandFactory } from "./utils";
+import * as request from "../utils/request";
+import { replace } from "@dojo/framework/stores/state/operations";
+import { createProcess } from "@dojo/framework/stores/process";
 
-const loadPermissionCommand = commandFactory<{resId: string}>(async ({get, path, payload: {resId}}) => {
-    const token = get(path("session", "token"));
+const loadPermissionCommand = commandFactory<{ resId: string }>(async ({ get, path, payload: { resId } }) => {
+	const token = get(path("session", "token"));
 	const response = await request.get(`user/resources/${resId}/permissions`, token);
 	const json = await response.json();
 	if (!response.ok) {
@@ -14,4 +14,4 @@ const loadPermissionCommand = commandFactory<{resId: string}>(async ({get, path,
 	return [replace(path("permission"), json)];
 });
 
-export const loadPermissionProcess = createProcess('load-permission', [loadPermissionCommand]);
+export const loadPermissionProcess = createProcess("load-permission", [loadPermissionCommand]);

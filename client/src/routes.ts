@@ -1,35 +1,35 @@
 export default [
 	{
-		path: '',
-		outlet: 'home',
-		defaultRoute: true
+		path: "",
+		outlet: "home",
+		defaultRoute: true,
 	},
 	{
-		path: 'login',
-		outlet: 'login'
+		path: "login",
+		outlet: "login",
 	},
 	{
-		path: 'register',
-		outlet: 'register'
-	}, 
+		path: "register",
+		outlet: "register",
+	},
 	{
 		path: "apps?{resid}",
-		outlet: "apps"
+		outlet: "apps",
 	},
 	{
 		path: "users?{resid}",
-		outlet: "users"
+		outlet: "users",
 	},
 	{
 		path: "roles?{resid}",
-		outlet: "roles"
-	}, 
+		outlet: "roles",
+	},
 	{
 		path: "depts?{resid}",
-		outlet: "depts"
-	}, 
+		outlet: "depts",
+	},
 	{
 		path: "resources?{resid}",
-		outlet: "resources"
-	}
+		outlet: "resources",
+	},
 ];

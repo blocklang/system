@@ -12,24 +12,24 @@ import { faUsers } from "@fortawesome/free-solid-svg-icons/faUsers";
 import { faCircle } from "@fortawesome/free-regular-svg-icons/faCircle";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons/faSignOutAlt";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
-import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons/faExclamationTriangle";
 import { faThLarge } from "@fortawesome/free-solid-svg-icons/faThLarge";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons/faUserFriends";
-import {faSitemap} from "@fortawesome/free-solid-svg-icons/faSitemap";
-import {faStream} from "@fortawesome/free-solid-svg-icons/faStream";
+import { faSitemap } from "@fortawesome/free-solid-svg-icons/faSitemap";
+import { faStream } from "@fortawesome/free-solid-svg-icons/faStream";
 
 export function init() {
 	library.add(
-		faUser, 
-		faLock, 
-		faBars, 
-		faCog, 
+		faUser,
+		faLock,
+		faBars,
+		faCog,
 		faAngleRight,
-		faAngleLeft, 
-		faAngleDown, 
+		faAngleLeft,
+		faAngleDown,
 		faUserEdit,
 		faUsers,
-		faCircle, 
+		faCircle,
 		faSignOutAlt,
 		faPlus,
 		faExclamationTriangle,

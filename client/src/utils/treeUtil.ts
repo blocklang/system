@@ -1,6 +1,6 @@
 /**
  * 获取当前部件（由 selectedIndex 指定）的**所有**子节点的个数，包含孙子节点。
- * 
+ *
  * 来自 github.com/blocklang/designer-core 中的 treeUtils
  *
  * @param treeNodes           数据列表
